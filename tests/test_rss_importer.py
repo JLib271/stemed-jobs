@@ -483,6 +483,24 @@ class RssImporterTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 load_feeds(config_path)
 
+    def test_loads_retain_days_and_rejects_bad_values(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            config_path = Path(temporary_directory) / "feeds.json"
+            config_path.write_text(
+                '{"feeds":[{"name":"A","url":"https://feeds.example/a","retain_days":90},'
+                '{"name":"B","url":"https://feeds.example/b"}]}',
+                encoding="utf-8",
+            )
+            feeds = load_feeds(config_path)
+            self.assertEqual([feed.retain_days for feed in feeds], [90, 0])
+            for bad in ("-1", '"90"', "true", "1.5"):
+                config_path.write_text(
+                    '{"feeds":[{"name":"A","url":"https://feeds.example/a","retain_days":%s}]}' % bad,
+                    encoding="utf-8",
+                )
+                with self.assertRaises(ValueError):
+                    load_feeds(config_path)
+
     def test_loads_disciplined_job_board_registry(self):
         boards = load_job_boards(Path("config/job_boards.json"))
         self.assertEqual(len(boards), 18)

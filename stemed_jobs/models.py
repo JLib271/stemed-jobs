@@ -9,6 +9,10 @@ class Feed:
     # Disciplines used for a posting when its title and hiring department name
     # none, for boards devoted to one field (e.g. MathJobs).
     disciplines: Tuple[str, ...] = ()
+    # For boards that only list their newest postings: keep each posting seen in
+    # an earlier run for this many days after it was posted, even when the board
+    # no longer lists it. 0 (the default) keeps nothing extra.
+    retain_days: int = 0
 
 
 @dataclass(frozen=True)

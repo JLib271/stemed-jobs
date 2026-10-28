@@ -9,6 +9,11 @@ stored between runs.
 A failed feed's previous jobs are reused for at most ``max_stale_days`` after
 its last successful fetch, so postings that have really expired at the source
 do not linger indefinitely.
+
+The same record also lets boards that only list their newest postings build up
+a longer history: a feed with ``retain_days`` keeps postings seen in earlier
+runs for that many days after they were posted, even once the board has pushed
+them out of its window.
 """
 
 import json
@@ -19,6 +24,7 @@ from typing import Dict, List, Optional
 from urllib.request import Request, urlopen
 
 from stemed_jobs.classification import classify_job
+from stemed_jobs.dedup import canonical_url
 from stemed_jobs.disciplines import classify_disciplines
 from stemed_jobs.models import Feed, FeedResult, Job
 
@@ -121,6 +127,36 @@ def _reclassify(job: Job, feed: Feed) -> Job:
     return replace(job, categories=categories, functions=functions, disciplines=disciplines)
 
 
+def _published_date(job: Job) -> Optional[datetime]:
+    try:
+        return datetime.strptime((job.published or "")[:10], "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
+
+def _retained_jobs(feed: Feed, fresh: List[Job], stored: List[Job], now: datetime) -> List[Job]:
+    """Earlier-seen jobs a working feed no longer lists, kept for ``feed.retain_days``.
+
+    Boards that show only their newest postings drop older ones even though they
+    may still be open. Postings are kept for ``retain_days`` after their posting
+    date, so running daily builds up the ones the board has pushed out of its
+    window. A job still listed by the feed is replaced by the fresh copy, and a
+    job with no posting date cannot be aged, so it is not kept.
+    """
+    if feed.retain_days <= 0 or not stored:
+        return []
+    fresh_urls = {canonical_url(job.url) for job in fresh}
+    kept = []
+    for job in stored:
+        posted = _published_date(job)
+        if posted is None or (now.date() - posted.date()).days > feed.retain_days:
+            continue
+        if canonical_url(job.url) in fresh_urls:
+            continue
+        kept.append(_reclassify(job, feed))
+    return kept
+
+
 def _success_status(feed: Feed, jobs: List[Job], now: datetime) -> dict:
     """Status for a feed that loaded, including how far back its items reach.
 
@@ -157,7 +193,11 @@ def apply_carryover(
     for result in results:
         feed = result.feed
         if result.error is None:
+            retained = _retained_jobs(feed, result.jobs, previous_by_source.get(feed.url, []), now)
             status[feed.url] = _success_status(feed, result.jobs, now)
+            if retained:
+                status[feed.url]["retained"] = len(retained)
+                result = replace(result, jobs=result.jobs + retained)
             updated.append(result)
             continue
 

@@ -71,6 +71,19 @@ which shows whether a board only lists its latest postings and so cannot show
 older ones; the same summary is printed in the run log. If the previous output
 cannot be read (for example on the very first deployment) the failed feed simply
 has no fallback.
+
+Many job boards (AAPT, AGU, Chronicle, Science Careers, Physics Today) only list
+their newest 20-25 postings, so older but still-open positions fall out of the
+feed. To build up a longer history, give a feed `"retain_days": 90` in
+`config/feeds.json`. With `--previous` set, each run then keeps any posting it
+saw earlier that the board no longer lists, until it is that many days past its
+posting date. The daily deployment makes this accumulate over time: the site
+reaches back as far as the oldest run, up to `retain_days`. Notes: history
+starts from the first run with this setting (older postings the boards already
+dropped cannot be recovered); postings with no posting date are not kept; a
+closed posting can linger until its window ends; and the run log shows
+`plus N kept from earlier runs` per feed. The PER Jobs (Blogger) feed instead
+asks for up to 100 entries with `max-results=100`.
 Jobs are deduplicated when their posting URLs match (ignoring tracking
 parameters and trailing slashes) or when their title and employer both match;
 the first feed listed in `config/feeds.json` wins. The normalized JSON fields are

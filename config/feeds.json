@@ -2,60 +2,71 @@
   "feeds": [
     {
       "name": "PER Jobs",
-      "url": "https://perjobs.blogspot.com/feeds/posts/default?alt=rss",
+      "url": "https://perjobs.blogspot.com/feeds/posts/default?alt=rss&max-results=100",
       "disciplines": ["Physics"]
     },
     {
       "name": "AAPT Career Center",
       "url": "https://careers.aapt.org/jobsrss/?countrycode=US",
-      "disciplines": ["Physics"]
+      "disciplines": ["Physics"],
+      "retain_days": 90
     },
     {
       "name": "AGU Career Center",
       "url": "https://findajob.agu.org/jobsrss/?countrycode=US",
-      "disciplines": ["Earth Science"]
+      "disciplines": ["Earth Science"],
+      "retain_days": 90
     },
     {
       "name": "Chronicle Careers - Education",
-      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=24&countrycode=US"
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=24&countrycode=US",
+      "retain_days": 90
     },
     {
       "name": "Chronicle Careers - Mathematics",
       "url": "https://jobs.chronicle.com/jobsrss/?PositionType=79&countrycode=US",
-      "disciplines": ["Mathematics"]
+      "disciplines": ["Mathematics"],
+      "retain_days": 90
     },
     {
       "name": "Chronicle Careers - Engineering",
       "url": "https://jobs.chronicle.com/jobsrss/?PositionType=77&countrycode=US",
-      "disciplines": ["Engineering"]
+      "disciplines": ["Engineering"],
+      "retain_days": 90
     },
     {
       "name": "Chronicle Careers - Biology & Life Sciences",
       "url": "https://jobs.chronicle.com/jobsrss/?PositionType=73&countrycode=US",
-      "disciplines": ["Bioscience"]
+      "disciplines": ["Bioscience"],
+      "retain_days": 90
     },
     {
       "name": "Chronicle Careers - Chemistry",
       "url": "https://jobs.chronicle.com/jobsrss/?PositionType=75&countrycode=US",
-      "disciplines": ["Chemistry"]
+      "disciplines": ["Chemistry"],
+      "retain_days": 90
     },
     {
       "name": "Chronicle Careers - Physics & Space Sciences",
       "url": "https://jobs.chronicle.com/jobsrss/?PositionType=81&countrycode=US",
-      "disciplines": ["Physics"]
+      "disciplines": ["Physics"],
+      "retain_days": 90
     },
     {
       "name": "Chronicle Careers - Agriculture & Animal Sciences",
       "url": "https://jobs.chronicle.com/jobsrss/?PositionType=72&countrycode=US",
-      "disciplines": ["Agriculture"]
+      "disciplines": ["Agriculture"],
+      "retain_days": 90
     },
     {
       "name": "Chronicle Careers - Science & Mathematics",
-      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=71&countrycode=US"
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=71&countrycode=US",
+      "retain_days": 90
     },
     {
       "name": "Chronicle Careers - Faculty Positions",
-      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=1&countrycode=US"
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=1&countrycode=US",
+      "retain_days": 90
     },
     {
       "name": "AcademicJobsOnline",
@@ -63,7 +74,8 @@
     },
     {
       "name": "Science Careers",
-      "url": "https://jobs.sciencecareers.org/jobsrss/?countrycode=US"
+      "url": "https://jobs.sciencecareers.org/jobsrss/?countrycode=US",
+      "retain_days": 90
     },
     {
       "name": "MathJobs",
@@ -73,7 +85,8 @@
     {
       "name": "Physics Today Jobs",
       "url": "https://jobs.physicstoday.org/jobsrss/?countrycode=US",
-      "disciplines": ["Physics"]
+      "disciplines": ["Physics"],
+      "retain_days": 90
     }
   ]
 }

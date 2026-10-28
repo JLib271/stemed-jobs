@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from unittest.mock import patch
 from urllib.error import HTTPError
 
@@ -198,18 +199,22 @@ class CliFallbackTests(_CliHarness, unittest.TestCase):
         )
         self.assertEqual(code, 0)
         self.assertEqual([job["id"] for job in saved], ["1"])
-        self.assertIn("Failed feeds have no fallback", stdout)
+        self.assertIn("any failed feed has no fallback", stdout)
 
-    def test_previous_output_is_not_read_when_every_feed_succeeds(self):
-        with patch("stemed_jobs.cli.load_previous") as load:
-            code, _, _, saved, status = self._run(
-                [FeedResult(GOOD, [_job("1")]), FeedResult(BROKEN, [_job("2", BROKEN)])],
-                previous_files={},
-            )
-        load.assert_not_called()
+    def test_working_feed_with_retain_days_keeps_older_postings_from_the_previous_output(self):
+        capped = Feed("Capped", "https://feeds.example/capped", (), 90)
+        older = _job("older", capped, "Teaching Faculty in Mathematics")
+        older_dict = older.to_dict()
+        older_dict["published"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        code, stdout, _, saved, status = self._run(
+            [FeedResult(GOOD, [_job("1")]), FeedResult(capped, [_job("2", capped)])],
+            previous_files={"jobs.json": [older_dict], "feed_status.json": {"feeds": {}}},
+        )
         self.assertEqual(code, 0)
-        self.assertEqual(len(saved), 2)
-        self.assertEqual(set(status["feeds"]), {GOOD.url, BROKEN.url})
+        self.assertEqual({job["id"] for job in saved}, {"1", "2", "older"})
+        self.assertEqual(status["feeds"][capped.url]["retained"], 1)
+        self.assertIn("plus 1 kept from earlier runs", stdout)
+        self.assertNotIn("retained", status["feeds"][GOOD.url])
 
 
 if __name__ == "__main__":

@@ -30,6 +30,11 @@ def load_feeds(path: Path) -> List[Feed]:
         invalid = [discipline for discipline in disciplines if discipline not in DISCIPLINES]
         if invalid:
             raise ValueError("Feed '{}' has unknown discipline(s): {}.".format(name, ", ".join(map(str, invalid))))
-        feeds.append(Feed(name=name.strip(), url=url.strip(), disciplines=tuple(disciplines)))
+        retain_days = item.get("retain_days", 0)
+        if isinstance(retain_days, bool) or not isinstance(retain_days, int) or retain_days < 0:
+            raise ValueError("Feed '{}' retain_days must be a whole number of days, 0 or more.".format(name))
+        feeds.append(
+            Feed(name=name.strip(), url=url.strip(), disciplines=tuple(disciplines), retain_days=retain_days)
+        )
 
     return feeds

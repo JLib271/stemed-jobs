@@ -54,7 +54,8 @@ def main() -> int:
         metavar="URL_OR_DIR",
         help="Where the previous output lives: the published site's base URL or a local "
         "directory containing jobs.json and feed_status.json. When a feed fails, its "
-        "jobs from there are kept instead of disappearing.",
+        "jobs from there are kept instead of disappearing, and feeds with retain_days "
+        "keep the older postings they no longer list.",
     )
     parser.add_argument(
         "--max-stale-days",
@@ -82,10 +83,12 @@ def main() -> int:
             return 1
 
         previous = Previous([], {})
-        if errors and args.previous:
+        if args.previous:
             previous = load_previous(args.previous)
             if previous.note:
-                notes.append("Failed feeds have no fallback: " + previous.note + ".")
+                notes.append(
+                    previous.note + "; older postings from earlier runs cannot be kept and any failed feed has no fallback."
+                )
         carried = apply_carryover(results, previous, datetime.now(timezone.utc), args.max_stale_days)
         notes.extend(carried.notes)
 
@@ -107,7 +110,8 @@ def main() -> int:
     for entry in carried.status.values():
         if "items" in entry:
             window = ", {} to {}".format(entry["oldest"], entry["newest"]) if "oldest" in entry else ""
-            print("Feed {}: {} item(s){}".format(entry["name"], entry["items"], window))
+            kept = ", plus {} kept from earlier runs".format(entry["retained"]) if entry.get("retained") else ""
+            print("Feed {}: {} item(s){}{}".format(entry["name"], entry["items"], window, kept))
     for error in errors:
         _report_feed_error(error)
     for note in notes:

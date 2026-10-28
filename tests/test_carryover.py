@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import tempfile
 import unittest
@@ -139,6 +139,57 @@ class ApplyCarryOverTests(unittest.TestCase):
         carried = apply_carryover([_failed(MATH)], Previous([], {}), NOW)
         self.assertEqual(carried.results[0].jobs, [])
         self.assertEqual(carried.notes, [])
+
+
+CAPPED = Feed("Capped board", "https://feeds.example/capped", (), 90)
+
+
+def _posted(job, days_ago):
+    return Job(**{**job.__dict__, "published": (NOW - timedelta(days=days_ago)).strftime("%Y-%m-%dT00:00:00Z")})
+
+
+class RetentionTests(unittest.TestCase):
+    def _apply(self, fresh, stored, feed=CAPPED):
+        return apply_carryover([FeedResult(feed, fresh)], Previous(stored, {}), NOW)
+
+    def test_a_posting_the_feed_no_longer_lists_is_kept_within_the_window(self):
+        old = _posted(_job("old", CAPPED), 40)
+        carried = self._apply([_job("new", CAPPED)], [old])
+        self.assertEqual([job.id for job in carried.results[0].jobs], ["new", "old"])
+        self.assertEqual(carried.status[CAPPED.url]["retained"], 1)
+        self.assertEqual(carried.status[CAPPED.url]["items"], 1)  # items counts only what the feed returned
+        self.assertIsNone(carried.results[0].error)
+
+    def test_retained_postings_are_resorted_with_the_current_rules(self):
+        stored = _posted(
+            _job("old", CAPPED, title="Assistant Teaching Faculty in Mathematics", disciplines=["Engineering"]), 5
+        )
+        kept = self._apply([], [stored]).results[0].jobs[0]
+        self.assertEqual(kept.disciplines, ["Mathematics"])
+
+    def test_a_posting_is_kept_through_the_last_day_of_the_window_and_dropped_after(self):
+        on_last_day = _posted(_job("last", CAPPED), 90)
+        too_old = _posted(_job("late", CAPPED), 91)
+        carried = self._apply([], [on_last_day, too_old])
+        self.assertEqual([job.id for job in carried.results[0].jobs], ["last"])
+
+    def test_the_fresh_copy_wins_and_nothing_is_duplicated(self):
+        listed = _posted(_job("same", CAPPED), 3)
+        carried = self._apply([listed], [_posted(_job("same", CAPPED), 3)])
+        self.assertEqual(len(carried.results[0].jobs), 1)
+        self.assertNotIn("retained", carried.status[CAPPED.url])
+
+    def test_a_posting_with_no_date_cannot_be_aged_so_it_is_not_kept(self):
+        self.assertEqual(self._apply([], [_job("undated", CAPPED)]).results[0].jobs, [])
+
+    def test_only_the_same_feeds_postings_are_kept(self):
+        stored = [_posted(_job("mine", CAPPED), 5), _posted(_job("theirs", OTHER), 5)]
+        self.assertEqual([job.id for job in self._apply([], stored).results[0].jobs], ["mine"])
+
+    def test_feeds_without_retain_days_keep_nothing_extra(self):
+        no_retention = Feed("Deep board", "https://feeds.example/deep")
+        stored = [_posted(_job("old", no_retention), 5)]
+        self.assertEqual(self._apply([], stored, no_retention).results[0].jobs, [])
 
 
 class WriteStatusTests(unittest.TestCase):
