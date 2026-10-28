@@ -7,18 +7,19 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
     (
         "Bioscience",
         re.compile(
-            r"\bbio(?:logy|logical|science|medical|medical|engineering)?\b"
+            r"\bbio(?:logy|logical|science|engineering)?\b"
             r"|\blife sciences?\b|\bmolecular biology\b|\bgenetics\b|\becology\b"
-            r"|\bmicrobiology\b|\banatomy\b|\bphysiology\b",
+            r"|\bmicrobiology\b|\banatomy\b|\bphysiology\b|\bBER\b",
             re.IGNORECASE,
         ),
     ),
-    ("Chemistry", re.compile(r"\bchemistr(?:y|ies)\b|\bchemical sciences?\b|\bchemical education\b", re.IGNORECASE)),
+    ("Chemistry", re.compile(    r"\bchemistr(?:y|ies)\b|\bchemical sciences?\b|\bchemical education\b|\bCER\b", re.IGNORECASE)),
     (
         "Earth Science",
         re.compile(
             r"\bearth sciences?\b|\bgeosciences?\b|\bgeology\b|\bclimate\b"
-            r"|\benvironmental sciences?\b|\bmeteorology\b|\boceanography\b",
+            r"|\benvironmental sciences?\b|\benvironmental education\b|\bmeteorology\b"
+            r"|\boceanography\b|\bGER\b",
             re.IGNORECASE,
         ),
     ),
@@ -35,7 +36,7 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
     (
         "Physics",
         re.compile(
-            r"\bphysics\b|\bphysicist\b|\bphysics education\b|\bphysical sciences?\b"
+            r"\bphysics\b|\bphysicist\b|\bphysics education\b|\bphysical sciences?\b|\bPER\b"
             r"|\bquantum\b|\bastrophysics\b|\bastronomy\b",
             re.IGNORECASE,
         ),
@@ -64,7 +65,6 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
 DISCIPLINES = tuple(name for name, _ in DISCIPLINE_RULES) + ("Other",)
 
 
-def classify_disciplines(title: str, summary: str) -> List[str]:
-    text = "{} {}".format(title, summary)
-    matches = [name for name, pattern in DISCIPLINE_RULES if pattern.search(text)]
+def classify_disciplines(title: str) -> List[str]:
+    matches = [name for name, pattern in DISCIPLINE_RULES if pattern.search(title)]
     return matches or ["Other"]

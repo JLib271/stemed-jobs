@@ -51,30 +51,30 @@ class _Response:
 class RssImporterTests(unittest.TestCase):
     def test_relevance_filter_keeps_stem_education_and_related_roles(self):
         examples = [
-            ("Assistant Professor of Physics Education Research", "Study physics learning.", ["Physics"], True),
-            ("Human Dimensions of Climate Science Fellow", "Research climate impacts.", ["Earth Science"], True),
-            ("Postdoctoral Fellow in Cognitive Science of Biology Learning", "Study STEM learners.", ["Bioscience"], True),
-            ("Physics Teaching Assistant Professor", "Teach introductory physics.", ["Physics"], True),
-            ("Assistant Professor of Physics SoTL", "Study student learning.", ["Physics"], True),
-            ("Assistant Professor of Physics", "Education research in introductory physics.", ["Physics"], False),
-            ("Cognitive Science Researcher", "Study memory and perception.", ["Learning Science"], False),
-            ("Assistant Professor of Machine Learning", "Study machine learning in physics.", ["Physics"], False),
-            (
-                "Assistant Professor of Machine Learning",
-                "Committed to undergraduate education while researching machine learning in physics.",
-                ["Physics"],
-                False,
-            ),
-            (
-                "Assistant Professor of Machine Learning and STEM Education",
-                "Research machine learning for STEM education.",
-                ["Physics"],
-                True,
-            ),
-            ("Assistant Professor of Experimental Physics", "Research photonics and quantum materials.", ["Physics"], False),
-            ("Graduate Research Assistant in Chemistry", "Synthesize novel catalysts.", ["Chemistry"], False),
+            ("Physics Education Research Faculty", "Physics", ["faculty"], True),
+            ("PER Postdoctoral Fellow", "Physics", ["postdocs"], True),
+            ("Quantum Education Research Assistant", "Physics", ["graduates"], True),
+            ("Physics Research with Education Students", "Physics", ["faculty"], False),
+            ("Chemistry Education Research Faculty", "Chemistry", ["faculty"], True),
+            ("CER Postdoctoral Fellow", "Chemistry", ["postdocs"], True),
+            ("Chemistry Teaching Lecturer", "Chemistry", ["faculty"], True),
+            ("Chemistry Lecturer", "Chemistry", ["faculty"], False),
+            ("GER Graduate Fellow", "Earth Science", ["graduates"], True),
+            ("Earth Science Education Researcher", "Earth Science", ["postdocs"], True),
+            ("Geoscience Education Faculty", "Earth Science", ["faculty"], True),
+            ("Environmental Education Postdoc", "Earth Science", ["postdocs"], True),
+            ("Environmental Science Education Fellow", "Earth Science", ["graduates"], True),
+            ("BER Postdoctoral Fellow", "Bioscience", ["postdocs"], True),
+            ("Bioscience Education Researcher", "Bioscience", ["faculty"], True),
+            ("Biology Education Graduate Fellow", "Bioscience", ["graduates"], True),
+            ("Genetics Education Researcher", "Bioscience", ["postdocs"], True),
+            ("Genetics Research Fellow", "Bioscience", ["postdocs"], False),
+            ("Physics Teaching Professor", "Physics", ["faculty"], True),
+            ("Physics SoTL Faculty", "Physics", ["faculty"], True),
+            ("Physics Instructor", "Physics", ["faculty"], True),
+            ("Physics Teaching Postdoctoral Fellow", "Physics", ["postdocs"], False),
         ]
-        for index, (title, summary, disciplines, expected) in enumerate(examples):
+        for index, (title, discipline, categories, expected) in enumerate(examples):
             with self.subTest(title=title):
                 job = Job(
                     id=str(index),
@@ -83,14 +83,14 @@ class RssImporterTests(unittest.TestCase):
                     location="",
                     url="https://jobs.example/{}".format(index),
                     published="",
-                    summary=summary,
+                    summary="The description says education research and teaching, but must not affect title filtering.",
                     source="Test",
                     source_url="https://feeds.example/test",
-                    categories=["faculty"],
+                    categories=categories,
                     functions=[],
-                    disciplines=disciplines,
+                    disciplines=[discipline],
                 )
-                self.assertEqual(is_stem_education_relevant(job), expected)
+                self.assertEqual(is_stem_education_relevant(job, discipline), expected)
 
     def test_generates_pages_index_with_audience_and_feed_links(self):
         html = render_index_html()

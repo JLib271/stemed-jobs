@@ -50,7 +50,7 @@ def parse_feed(content: bytes, feed: Feed) -> List[Job]:
         identifier = str(entry.get("id") or url).strip()
         summary = _plain_text(entry.get("summary", ""))
         categories, functions = classify_job(title, summary)
-        disciplines = classify_disciplines(title, summary)
+        disciplines = classify_disciplines(title)
         jobs.append(
             Job(
                 id=identifier,

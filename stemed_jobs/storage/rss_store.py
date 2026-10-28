@@ -38,7 +38,7 @@ def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
         if (
             audience not in job.categories
             or discipline not in job.disciplines
-            or not is_stem_education_relevant(job)
+            or not is_stem_education_relevant(job, discipline)
         ):
             continue
         item = ElementTree.SubElement(channel, "item")
