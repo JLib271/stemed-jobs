@@ -100,6 +100,8 @@ will be available at URLs such as
 `https://<owner>.github.io/stemed-jobs/feeds/faculty/physics.xml` (unless a
 custom domain is configured). The HTML snippets link to the actual Pages base
 URL returned by GitHub.
+The workflow pins Ubuntu 24.04 to avoid automatic `ubuntu-latest` image
+migrations; update that runner version deliberately when you are ready.
 
 Publishing to GitHub Pages makes the generated outputs public, but does not
 edit the WordPress pages on Seekers Hub. Paste the generated audience HTML
