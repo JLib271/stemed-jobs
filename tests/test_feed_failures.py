@@ -109,6 +109,16 @@ class _CliHarness:
 
 
 class CliTests(_CliHarness, unittest.TestCase):
+    def test_prints_how_many_items_each_working_feed_returned_and_how_far_back(self):
+        dated = Job(**{**_job("1").__dict__, "published": "2026-10-01T00:00:00Z"})
+        newer = Job(**{**_job("2").__dict__, "published": "2026-10-20T00:00:00Z"})
+        _, stdout, _, _, status = self._run(
+            [FeedResult(GOOD, [dated, newer]), FeedResult(BROKEN, [_job("3", BROKEN)])]
+        )
+        self.assertIn("Feed Good feed: 2 item(s), 2026-10-01 to 2026-10-20", stdout)
+        self.assertIn("Feed Broken feed: 1 item(s)", stdout)
+        self.assertEqual(status["feeds"][GOOD.url]["items"], 2)
+
     def test_without_the_flag_a_failed_feed_still_exits_nonzero(self):
         code, _, stderr, saved, _ = self._run([FeedResult(GOOD, [_job("1")]), _failed(BROKEN)])
         self.assertEqual(code, 1)

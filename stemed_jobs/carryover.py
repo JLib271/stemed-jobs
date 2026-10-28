@@ -121,6 +121,19 @@ def _reclassify(job: Job, feed: Feed) -> Job:
     return replace(job, categories=categories, functions=functions, disciplines=disciplines)
 
 
+def _success_status(feed: Feed, jobs: List[Job], now: datetime) -> dict:
+    """Status for a feed that loaded, including how far back its items reach.
+
+    A feed that only lists its most recent postings cannot show older ones, so
+    the item count and date range show whether a board's window is too short.
+    """
+    entry = {"name": feed.name, "last_success": _iso(now), "items": len(jobs)}
+    dates = sorted(job.published[:10] for job in jobs if job.published)
+    if dates:
+        entry["oldest"], entry["newest"] = dates[0], dates[-1]
+    return entry
+
+
 def apply_carryover(
     results: List[FeedResult],
     previous: Previous,
@@ -144,7 +157,7 @@ def apply_carryover(
     for result in results:
         feed = result.feed
         if result.error is None:
-            status[feed.url] = {"name": feed.name, "last_success": _iso(now)}
+            status[feed.url] = _success_status(feed, result.jobs, now)
             updated.append(result)
             continue
 

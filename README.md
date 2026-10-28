@@ -33,6 +33,14 @@ Install the dependency and add the public RSS feed URLs you want to monitor to
 The optional `disciplines` list is a fallback for boards devoted to one field;
 see the discipline rules below.
 
+Chronicle Careers has one RSS feed per category, and a job appears only in the
+categories it is tagged with: `jobsrss/?PositionType=<id>&countrycode=US`. The
+IDs in use are Faculty Positions 1, Education 24, Science & Mathematics 71,
+Agriculture & Animal Sciences 72, Biology & Life Sciences 73, Chemistry 75,
+Engineering 77, Mathematics 79, and Physics & Space Sciences 81 (each category
+page links its own "Subscribe to RSS" URL). A STEM education faculty ad is often
+tagged only Faculty Positions, so the Education feed alone misses it.
+
 Then run:
 
 ```sh

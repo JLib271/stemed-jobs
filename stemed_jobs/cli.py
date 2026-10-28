@@ -104,6 +104,10 @@ def main() -> int:
     print("Wrote {} jobs from {} feed(s) to {}.".format(len(jobs), len(feeds) - len(errors), args.output))
     print("Wrote {} audience/discipline RSS feeds to {}.".format(feed_count, args.feed_output))
     print("Wrote Pages index and audience HTML sections for {} to {}.".format(", ".join(AUDIENCES), args.html_output))
+    for entry in carried.status.values():
+        if "items" in entry:
+            window = ", {} to {}".format(entry["oldest"], entry["newest"]) if "oldest" in entry else ""
+            print("Feed {}: {} item(s){}".format(entry["name"], entry["items"], window))
     for error in errors:
         _report_feed_error(error)
     for note in notes:

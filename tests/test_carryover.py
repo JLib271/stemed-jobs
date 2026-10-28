@@ -73,8 +73,21 @@ class ApplyCarryOverTests(unittest.TestCase):
         result = FeedResult(MATH, [_job("new", MATH)])
         carried = apply_carryover([result], Previous([_job("old", MATH)], {}), NOW)
         self.assertEqual(carried.results, [result])
-        self.assertEqual(carried.status[MATH.url], {"name": "MathJobs", "last_success": "2026-10-28T12:00:00Z"})
+        self.assertEqual(
+            carried.status[MATH.url], {"name": "MathJobs", "last_success": "2026-10-28T12:00:00Z", "items": 1}
+        )
         self.assertEqual(carried.notes, [])
+
+    def test_successful_feed_status_records_how_far_back_its_items_reach(self):
+        newest = _job("new", MATH)
+        oldest = _job("old", MATH)
+        mid = _job("mid", MATH)
+        newest = Job(**{**newest.__dict__, "published": "2026-10-20T09:00:00Z"})
+        oldest = Job(**{**oldest.__dict__, "published": "2026-10-01T09:00:00Z"})
+        mid = Job(**{**mid.__dict__, "published": "2026-10-10T09:00:00Z"})
+        carried = apply_carryover([FeedResult(MATH, [newest, oldest, mid])], Previous([], {}), NOW)
+        entry = carried.status[MATH.url]
+        self.assertEqual((entry["items"], entry["oldest"], entry["newest"]), (3, "2026-10-01", "2026-10-20"))
 
     def test_failed_feed_keeps_only_its_own_previous_jobs(self):
         previous = Previous([_job("math-old", MATH), _job("other-old", OTHER)], {})

@@ -20,6 +20,44 @@
       "url": "https://jobs.chronicle.com/jobsrss/?PositionType=24&countrycode=US"
     },
     {
+      "name": "Chronicle Careers - Mathematics",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=79&countrycode=US",
+      "disciplines": ["Mathematics"]
+    },
+    {
+      "name": "Chronicle Careers - Engineering",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=77&countrycode=US",
+      "disciplines": ["Engineering"]
+    },
+    {
+      "name": "Chronicle Careers - Biology & Life Sciences",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=73&countrycode=US",
+      "disciplines": ["Bioscience"]
+    },
+    {
+      "name": "Chronicle Careers - Chemistry",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=75&countrycode=US",
+      "disciplines": ["Chemistry"]
+    },
+    {
+      "name": "Chronicle Careers - Physics & Space Sciences",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=81&countrycode=US",
+      "disciplines": ["Physics"]
+    },
+    {
+      "name": "Chronicle Careers - Agriculture & Animal Sciences",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=72&countrycode=US",
+      "disciplines": ["Agriculture"]
+    },
+    {
+      "name": "Chronicle Careers - Science & Mathematics",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=71&countrycode=US"
+    },
+    {
+      "name": "Chronicle Careers - Faculty Positions",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=1&countrycode=US"
+    },
+    {
       "name": "AcademicJobsOnline",
       "url": "https://academicjobsonline.org/ajo?joblist-0-0-0-----rss--"
     },
