@@ -65,8 +65,12 @@ output, re-sorted with the current rules. They are kept for at most
 `--max-stale-days` (default 7) after the feed's last successful fetch, so
 postings that expired at the source do not linger. Each run also writes
 `output/feed_status.json`, recording every feed's `last_success` time and, for a
-failing feed, its `last_error`. If the previous output cannot be read (for
-example on the very first deployment) the failed feed simply has no fallback.
+failing feed, its `last_error`. For a working feed it also records `items` (how
+many postings the feed returned) and the `oldest` and `newest` dates among them,
+which shows whether a board only lists its latest postings and so cannot show
+older ones; the same summary is printed in the run log. If the previous output
+cannot be read (for example on the very first deployment) the failed feed simply
+has no fallback.
 Jobs are deduplicated when their posting URLs match (ignoring tracking
 parameters and trailing slashes) or when their title and employer both match;
 the first feed listed in `config/feeds.json` wins. The normalized JSON fields are
