@@ -5,7 +5,8 @@ from urllib.parse import urlparse
 
 from stemed_jobs.disciplines import DISCIPLINES
 from stemed_jobs.models import Job, JobBoard
-from stemed_jobs.storage.rss_store import feed_relative_path
+from stemed_jobs.relevance import is_dber_title, is_stem_education_relevant
+from stemed_jobs.storage.rss_store import AUDIENCES, feed_relative_path
 
 
 def render_index_html() -> str:
@@ -84,9 +85,16 @@ def render_audience_html(
     for job in jobs:
         if audience not in job.categories:
             continue
-        disciplines = [name for name in job.disciplines if name in grouped] or ["Other"]
-        for discipline in disciplines:
-            grouped[discipline].append(job)
+        if is_dber_title(job.title):
+            for discipline in DISCIPLINES:
+                grouped[discipline].append(job)
+            continue
+        for discipline in DISCIPLINES:
+            if (
+                discipline in job.disciplines
+                and is_stem_education_relevant(job, discipline)
+            ):
+                grouped[discipline].append(job)
 
     feed_base_url = feed_base_url.rstrip("/")
     lines = [

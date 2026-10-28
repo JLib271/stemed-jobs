@@ -36,9 +36,10 @@ def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
 
     for job in jobs:
         is_global_dber = is_dber_title(job.title)
+        if audience not in job.categories:
+            continue
         if not is_global_dber and (
-            audience not in job.categories
-            or discipline not in job.disciplines
+            discipline not in job.disciplines
             or not is_stem_education_relevant(job, discipline)
         ):
             continue

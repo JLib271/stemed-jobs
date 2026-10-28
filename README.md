@@ -66,6 +66,9 @@ discipline buttons linking to section anchors, the filtered jobs, RSS links,
 and relevant job-board links from `config/job_boards.json`. The board registry
 includes all discussed boards, including those not ingested because they
 currently have no verified RSS/API.
+HTML job listings use the same title-based relevance rules as the RSS feeds;
+titles containing `DBER` appear in every discipline section for their inferred
+audience category only.
 
 The run generates 33 filtered RSS 2.0 feeds (three audiences across 11
 disciplines) under `output/feeds/{audience}/{discipline}.xml`; for example,
@@ -80,9 +83,14 @@ and Learning Science have corresponding education-research title signals.
 Faculty jobs additionally qualify when their title contains Teaching, SoTL,
 or Instructor. This intentionally excludes conventional STEM research roles
 even when their descriptions mention education or teaching.
-Any title containing `DBER` is an explicit exception and appears in every
-audience/discipline RSS feed. Conventional titles such as condensed-matter
-theory remain excluded unless they meet the faculty teaching-title rule.
+Any title containing `DBER` is an explicit discipline exception and appears
+across all discipline feeds for its inferred audience category only.
+Conventional titles such as condensed-matter theory remain excluded unless
+they meet the faculty teaching-title rule.
+Faculty STEM postings also qualify when their description explicitly requires
+a PhD/EdD (or doctoral degree) in education, learning sciences, DBER, or SoTL.
+This degree-check exception reads descriptions only to verify that requirement;
+all other relevance signals remain title-only.
 When publishing, host the `output/feeds/` directory at that public URL path, or
 set `--feed-base-url` to the URL where you host it. Paste each generated HTML
 snippet into a Custom HTML block on its corresponding category page. Buttons

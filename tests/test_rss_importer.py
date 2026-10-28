@@ -11,7 +11,7 @@ from stemed_jobs.feed_sources.boards import load_job_boards
 from stemed_jobs.importers.rss import fetch_feed, ingest_feeds, parse_feed
 from stemed_jobs.models import Feed
 from stemed_jobs.models import Job
-from stemed_jobs.relevance import is_stem_education_relevant
+from stemed_jobs.relevance import is_stem_education_relevant, requires_education_doctorate
 from stemed_jobs.storage.html_store import render_audience_html, render_index_html, write_index_html
 from stemed_jobs.storage.json_store import write_jobs
 from stemed_jobs.storage.rss_store import render_rss, write_rss_feeds
@@ -94,6 +94,62 @@ class RssImporterTests(unittest.TestCase):
                     disciplines=[discipline],
                 )
                 self.assertEqual(is_stem_education_relevant(job, discipline), expected)
+
+    def test_faculty_doctorate_in_education_is_an_inclusion_exception(self):
+        cases = [
+            (
+                "Assistant Professor of Biology",
+                "Minimum qualifications: Ph.D. in science education required.",
+                ["faculty"],
+                ["Bioscience"],
+                True,
+            ),
+            (
+                "Engineering Education Faculty",
+                "Applicants must have an Ed.D. in learning sciences.",
+                ["faculty"],
+                ["Engineering"],
+                True,
+            ),
+            (
+                "Assistant Professor of Biology",
+                "A Ph.D. in molecular biology is required.",
+                ["faculty"],
+                ["Bioscience"],
+                False,
+            ),
+            (
+                "Assistant Professor of Biology",
+                "A Ph.D. in education is preferred, not required.",
+                ["faculty"],
+                ["Bioscience"],
+                False,
+            ),
+            (
+                "Postdoctoral Fellow in Biology Education",
+                "A Ph.D. in science education is required.",
+                ["postdocs"],
+                ["Bioscience"],
+                False,
+            ),
+        ]
+        for index, (title, summary, categories, disciplines, expected) in enumerate(cases):
+            with self.subTest(title=title, summary=summary):
+                job = Job(
+                    id=str(index),
+                    title=title,
+                    company="",
+                    location="",
+                    url="https://jobs.example/degree-{}".format(index),
+                    published="",
+                    summary=summary,
+                    source="Test",
+                    source_url="https://feeds.example/test",
+                    categories=categories,
+                    functions=[],
+                    disciplines=disciplines,
+                )
+                self.assertEqual(requires_education_doctorate(job), expected)
 
     def test_generates_pages_index_with_audience_and_feed_links(self):
         html = render_index_html()
@@ -181,6 +237,10 @@ class RssImporterTests(unittest.TestCase):
             <link>https://jobs.example/postdoc</link></item>
           <item><title>Graduate Research Assistantship in Chemistry Education Research</title>
             <link>https://jobs.example/graduate</link></item>
+          <item><title>PhD position in Condensed Matter Theory</title>
+            <link>https://jobs.example/unrelated-graduate</link></item>
+          <item><title>Three DBER Graduate Assistantships</title>
+            <link>https://jobs.example/dber</link></item>
         </channel></rss>"""
         jobs = parse_feed(xml, Feed("Test & Feed", "https://feeds.example/test"))
         boards = load_job_boards(Path("config/job_boards.json"))
@@ -192,9 +252,72 @@ class RssImporterTests(unittest.TestCase):
         self.assertIn("Assistant Professor of Physics Education Research", html)
         self.assertNotIn("Postdoctoral Fellow in Biology Education Research", html)
         self.assertNotIn("Graduate Research Assistantship in Chemistry Education Research", html)
+        self.assertNotIn("PhD position in Condensed Matter Theory", html)
+        self.assertNotIn("Three DBER Graduate Assistantships", html)
         self.assertIn('href="https://feeds.example/output/faculty/physics.xml"', html)
         self.assertIn('href="https://careers.aapt.org/"', html)
         self.assertIn('href="https://perjobs.blogspot.com/"', html)
+
+    def test_dber_posting_appears_in_every_html_audience_and_discipline(self):
+        jobs = parse_feed(
+            b"""<rss version="2.0"><channel>
+              <item><title>Three DBER Graduate Assistantships, Auburn AL</title>
+                <link>https://jobs.example/dber</link></item>
+            </channel></rss>""",
+            Feed("PER Jobs", "https://feeds.example/per"),
+        )
+        boards = []
+
+        for audience in ("graduates", "postdocs", "faculty"):
+            html = render_audience_html(jobs, audience, boards)
+            for discipline in (
+                "agriculture",
+                "bioscience",
+                "chemistry",
+                "earth-science",
+                "engineering",
+                "learning-science",
+                "mathematics",
+                "physics",
+                "science-education",
+                "technology",
+                "other",
+            ):
+                with self.subTest(audience=audience, discipline=discipline):
+                    section = html.split('<h2 id="discipline-{}">'.format(discipline), 1)[1]
+                    section = section.split("</section>", 1)[0]
+                    if audience == "graduates":
+                        self.assertIn("Three DBER Graduate Assistantships", section)
+                    else:
+                        self.assertNotIn("Three DBER Graduate Assistantships", section)
+
+    def test_dber_posting_cross_lists_disciplines_only_within_its_audience(self):
+        jobs = parse_feed(
+            b"""<rss version="2.0"><channel>
+              <item><title>Three DBER Graduate Assistantships</title>
+                <link>https://jobs.example/dber</link></item>
+            </channel></rss>""",
+            Feed("PER Jobs", "https://feeds.example/per"),
+        )
+
+        for audience in ("graduates", "postdocs", "faculty"):
+            for discipline in (
+                "Agriculture",
+                "Bioscience",
+                "Chemistry",
+                "Earth Science",
+                "Engineering",
+                "Learning Science",
+                "Mathematics",
+                "Physics",
+                "Science Education",
+                "Technology",
+                "Other",
+            ):
+                root = ElementTree.fromstring(render_rss(jobs, audience, discipline))
+                has_dber = root.find("./channel/item") is not None
+                with self.subTest(audience=audience, discipline=discipline):
+                    self.assertEqual(has_dber, audience == "graduates")
 
     def test_renders_rss_for_an_audience_and_discipline(self):
         xml = b"""<rss version="2.0"><channel>
@@ -208,13 +331,18 @@ class RssImporterTests(unittest.TestCase):
             <link>https://jobs.example/condensed-matter</link></item>
         </channel></rss>"""
         jobs = parse_feed(xml, Feed("Test", "https://feeds.example/test"))
-        rss = render_rss(jobs, "postdocs", "Bioscience")
-        root = ElementTree.fromstring(rss)
+        graduate_root = ElementTree.fromstring(render_rss(jobs, "graduates", "Bioscience"))
+        postdoc_root = ElementTree.fromstring(render_rss(jobs, "postdocs", "Bioscience"))
+        faculty_root = ElementTree.fromstring(render_rss(jobs, "faculty", "Bioscience"))
 
-        self.assertEqual(root.findtext("./channel/title"), "STEMEd Jobs: Bioscience jobs — Postdocs")
-        self.assertEqual(root.findtext("./channel/item/title"), "Postdoctoral Fellow in Biology Education Research")
-        self.assertEqual(root.findtext("./channel/item[2]/title"), "Three DBER Graduate Assistantships")
-        self.assertIsNone(root.find("./channel/item[3]"))
+        self.assertEqual(postdoc_root.findtext("./channel/title"), "STEMEd Jobs: Bioscience jobs — Postdocs")
+        self.assertEqual(postdoc_root.findtext("./channel/item/title"), "Postdoctoral Fellow in Biology Education Research")
+        self.assertIsNone(postdoc_root.find("./channel/item[2]"))
+        self.assertEqual(
+            graduate_root.findtext("./channel/item/title"),
+            "Three DBER Graduate Assistantships",
+        )
+        self.assertIsNone(faculty_root.find("./channel/item"))
 
     def test_writes_rss_files_for_three_audiences_and_all_disciplines(self):
         jobs = parse_feed(
@@ -235,8 +363,8 @@ class RssImporterTests(unittest.TestCase):
 
         self.assertEqual(count, 33)
         self.assertEqual(len(graduate_feed.findall("./channel/item")), 2)
-        self.assertEqual(len(faculty_feed.findall("./channel/item")), 1)
-        self.assertEqual(len(postdoc_feed.findall("./channel/item")), 1)
+        self.assertEqual(len(faculty_feed.findall("./channel/item")), 0)
+        self.assertEqual(len(postdoc_feed.findall("./channel/item")), 0)
 
     def test_deduplicates_jobs_by_url(self):
         feeds = [Feed("First", "https://feeds.example/1"), Feed("Second", "https://feeds.example/2")]
