@@ -17,24 +17,24 @@ _STEM_DISCIPLINES = {
 
 _DISCIPLINE_SIGNALS: Dict[str, Pattern[str]] = {
     "Physics": re.compile(
-        r"\bphysics education\b|\bPER\b"
+        r"\bphysics education\b|\b(?-i:PER)\b"
         r"|\b(?:quantum|astronomy|astrophysics|particle|nuclear|optics|mechanics|"
         r"thermodynamics|electromagnetism|acoustics) education\b",
         re.IGNORECASE,
     ),
-    "Chemistry": re.compile(r"\bchemistry education\b|\bCER\b", re.IGNORECASE),
+    "Chemistry": re.compile(r"\bchemistry education\b|\b(?-i:CER)\b", re.IGNORECASE),
     "Earth Science": re.compile(
-        r"\bGER\b|\bearth science education\b|\bgeoscience education\b"
+        r"\b(?-i:GER)\b|\bearth science education\b|\bgeoscience education\b"
         r"|\benvironmental education\b|\benvironmental science education\b",
         re.IGNORECASE,
     ),
     "Bioscience": re.compile(
-        r"\bBER\b|\bbioscience education\b|\bbiology education\b"
+        r"\b(?-i:BER)\b|\bbioscience education\b|\bbiology education\b"
         r"|\b(?:genetics|ecology|evolution|microbiology|molecular biology|"
         r"cell biology|anatomy|physiology) education\b",
         re.IGNORECASE,
     ),
-    "Engineering": re.compile(r"\bengineering education\b|\bEER\b", re.IGNORECASE),
+    "Engineering": re.compile(r"\bengineering education\b|\b(?-i:EER)\b", re.IGNORECASE),
     "Mathematics": re.compile(r"\bmathematics education\b|\bmath education\b", re.IGNORECASE),
     "Agriculture": re.compile(r"\bagricultural education\b|\bagriculture education\b", re.IGNORECASE),
     "Science Education": re.compile(r"\bSTEM education\b|\bscience education\b|\bDBER\b", re.IGNORECASE),

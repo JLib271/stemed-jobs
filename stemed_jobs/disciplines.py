@@ -9,14 +9,14 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
         re.compile(
             r"\bbio(?:logy|logical|science|engineering)?\b"
             r"|\blife sciences?\b|\bmolecular biology\b|\bgenetics\b|\becology\b"
-            r"|\bmicrobiology\b|\banatomy\b|\bphysiology\b|\bBER\b",
+            r"|\bmicrobiology\b|\banatomy\b|\bphysiology\b|\b(?-i:BER)\b",
             re.IGNORECASE,
         ),
     ),
     (
         "Chemistry",
         re.compile(
-            r"\bchemistr(?:y|ies)\b|\bchemical sciences?\b|\bchemical education\b|\bCER\b",
+            r"\bchemistr(?:y|ies)\b|\bchemical sciences?\b|\bchemical education\b|\b(?-i:CER)\b",
             re.IGNORECASE,
         ),
     ),
@@ -25,7 +25,7 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
         re.compile(
             r"\bearth sciences?\b|\bgeosciences?\b|\bgeology\b|\bclimate\b"
             r"|\benvironmental sciences?\b|\benvironmental education\b|\bmeteorology\b"
-            r"|\boceanography\b|\bGER\b",
+            r"|\boceanography\b|\b(?-i:GER)\b",
             re.IGNORECASE,
         ),
     ),
@@ -42,7 +42,7 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
     (
         "Physics",
         re.compile(
-            r"\bphysics\b|\bphysicist\b|\bphysics education\b|\bphysical sciences?\b|\bPER\b"
+            r"\bphysics\b|\bphysicist\b|\bphysics education\b|\bphysical sciences?\b|\b(?-i:PER)\b"
             r"|\bquantum\b|\bastrophysics\b|\bastronomy\b",
             re.IGNORECASE,
         ),

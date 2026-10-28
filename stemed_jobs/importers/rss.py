@@ -8,6 +8,7 @@ from urllib.request import Request, urlopen
 import feedparser
 
 from stemed_jobs.classification import classify_job
+from stemed_jobs.dedup import dedupe_jobs
 from stemed_jobs.disciplines import classify_disciplines
 from stemed_jobs.models import Feed, Job
 
@@ -82,18 +83,11 @@ def fetch_feed(feed: Feed, timeout: int = 20) -> List[Job]:
 def ingest_feeds(feeds: List[Feed]) -> Tuple[List[Job], List[str]]:
     jobs = []
     errors = []
-    seen_urls = set()
 
     for feed in feeds:
         try:
-            feed_jobs = fetch_feed(feed)
+            jobs.extend(fetch_feed(feed))
         except (OSError, TimeoutError, URLError, ValueError) as error:
             errors.append("{} ({}): {}".format(feed.name, feed.url, error))
-            continue
 
-        for job in feed_jobs:
-            if job.url not in seen_urls:
-                seen_urls.add(job.url)
-                jobs.append(job)
-
-    return jobs, errors
+    return dedupe_jobs(jobs), errors
