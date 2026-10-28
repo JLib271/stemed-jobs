@@ -44,6 +44,7 @@ jobs:
         run: >-
           python -m stemed_jobs
           --allow-feed-errors
+          --previous "${{ steps.pages.outputs.base_url }}"
           --feed-base-url "${{ steps.pages.outputs.base_url }}/feeds"
 
       - name: Upload Pages artifact

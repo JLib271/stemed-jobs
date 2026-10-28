@@ -9,7 +9,7 @@ import feedparser
 from stemed_jobs.classification import classify_job
 from stemed_jobs.dedup import dedupe_jobs
 from stemed_jobs.disciplines import classify_disciplines
-from stemed_jobs.models import Feed, Job
+from stemed_jobs.models import Feed, FeedResult, Job
 
 
 class _TextExtractor(HTMLParser):
@@ -79,14 +79,19 @@ def fetch_feed(feed: Feed, timeout: int = 20) -> List[Job]:
         return parse_feed(content, feed)
 
 
-def ingest_feeds(feeds: List[Feed]) -> Tuple[List[Job], List[str]]:
-    jobs = []
-    errors = []
-
+def fetch_all(feeds: List[Feed]) -> List[FeedResult]:
+    """Fetch every feed, recording a failure instead of raising."""
+    results = []
     for feed in feeds:
         try:
-            jobs.extend(fetch_feed(feed))
+            results.append(FeedResult(feed, fetch_feed(feed)))
         except Exception as error:  # noqa: BLE001 - one broken feed must never stop the others
-            errors.append("{} ({}): {}: {}".format(feed.name, feed.url, type(error).__name__, error))
+            message = "{} ({}): {}: {}".format(feed.name, feed.url, type(error).__name__, error)
+            results.append(FeedResult(feed, [], message))
+    return results
 
-    return dedupe_jobs(jobs), errors
+
+def ingest_feeds(feeds: List[Feed]) -> Tuple[List[Job], List[str]]:
+    results = fetch_all(feeds)
+    jobs = [job for result in results for job in result.jobs]
+    return dedupe_jobs(jobs), [result.error for result in results if result.error]

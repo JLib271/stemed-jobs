@@ -1,4 +1,4 @@
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import List, Optional, Tuple
 
 
@@ -35,3 +35,12 @@ class Job:
 
     def to_dict(self) -> dict:
         return asdict(self)
+
+
+@dataclass(frozen=True)
+class FeedResult:
+    """What one feed produced in a run: its jobs, or the error that stopped it."""
+
+    feed: Feed
+    jobs: List[Job] = field(default_factory=list)
+    error: Optional[str] = None

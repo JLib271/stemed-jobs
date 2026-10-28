@@ -47,8 +47,18 @@ while the other feeds are still imported, and the output is still written. By
 default the command then exits nonzero so failures are noticed; with
 `--allow-feed-errors` it exits successfully as long as at least one feed was
 imported. If every feed fails, nothing is written, so the existing output is
-never replaced by an empty one, and the command exits nonzero either way. Note
-that a skipped feed's jobs are missing from that run's output until it recovers.
+never replaced by an empty one, and the command exits nonzero either way.
+
+Because every run rebuilds the output from scratch, a skipped feed's jobs would
+otherwise vanish until it recovers. Pass `--previous` the base URL of the
+published site (or a local directory holding the previous `jobs.json` and
+`feed_status.json`) and a failed feed keeps the jobs it had in that previous
+output, re-sorted with the current rules. They are kept for at most
+`--max-stale-days` (default 7) after the feed's last successful fetch, so
+postings that expired at the source do not linger. Each run also writes
+`output/feed_status.json`, recording every feed's `last_success` time and, for a
+failing feed, its `last_error`. If the previous output cannot be read (for
+example on the very first deployment) the failed feed simply has no fallback.
 Jobs are deduplicated when their posting URLs match (ignoring tracking
 parameters and trailing slashes) or when their title and employer both match;
 the first feed listed in `config/feeds.json` wins. The normalized JSON fields are
@@ -142,9 +152,11 @@ started manually from the repository's Actions tab. It installs dependencies,
 runs tests, regenerates the JSON/HTML/RSS files using the repository's Pages
 base URL, then deploys the complete `output/` directory to GitHub Pages. It runs
 the aggregator with `--allow-feed-errors`, so one broken feed does not stop the
-deployment. Each skipped feed is shown as a warning annotation on the run page
-(and in the log as `Feed error:`), so a green run can still have skipped feeds;
-check the annotations. If every feed fails the run fails and nothing is deployed.
+deployment, and with `--previous` set to the site's own URL, so a failed feed
+keeps its last good jobs for up to a week. Each skipped feed is shown as a
+warning annotation on the run page (and in the log as `Feed error:`), so a green
+run can still have skipped feeds; check the annotations. If every feed fails the
+run fails and nothing is deployed.
 
 To enable deployment, open the repository's **Settings → Pages**, choose
 **GitHub Actions** as the build and deployment source, and save. Commit and push
