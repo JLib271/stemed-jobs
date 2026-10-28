@@ -55,6 +55,9 @@ class RssImporterTests(unittest.TestCase):
             ("PER Postdoctoral Fellow", "Physics", ["postdocs"], True),
             ("Quantum Education Research Assistant", "Physics", ["graduates"], True),
             ("Physics Research with Education Students", "Physics", ["faculty"], False),
+            ("Condensed Matter Theory Faculty", "Physics", ["faculty"], False),
+            ("Postdoctoral Scholar in Theoretical Condensed Matter Physics", "Physics", ["postdocs"], False),
+            ("PhD Position in Condensed Matter Theory and Quantum Computing", "Physics", ["graduates"], False),
             ("Chemistry Education Research Faculty", "Chemistry", ["faculty"], True),
             ("CER Postdoctoral Fellow", "Chemistry", ["postdocs"], True),
             ("Chemistry Teaching Lecturer", "Chemistry", ["faculty"], True),
@@ -199,6 +202,10 @@ class RssImporterTests(unittest.TestCase):
             <link>https://jobs.example/postdoc</link></item>
           <item><title>Assistant Professor of Physics Education Research</title>
             <link>https://jobs.example/faculty</link></item>
+          <item><title>Three DBER Graduate Assistantships</title>
+            <link>https://jobs.example/dber</link></item>
+          <item><title>Postdoctoral Scholar in Theoretical Condensed Matter Physics</title>
+            <link>https://jobs.example/condensed-matter</link></item>
         </channel></rss>"""
         jobs = parse_feed(xml, Feed("Test", "https://feeds.example/test"))
         rss = render_rss(jobs, "postdocs", "Bioscience")
@@ -206,13 +213,16 @@ class RssImporterTests(unittest.TestCase):
 
         self.assertEqual(root.findtext("./channel/title"), "STEMEd Jobs: Bioscience jobs — Postdocs")
         self.assertEqual(root.findtext("./channel/item/title"), "Postdoctoral Fellow in Biology Education Research")
-        self.assertIsNone(root.find("./channel/item[2]"))
+        self.assertEqual(root.findtext("./channel/item[2]/title"), "Three DBER Graduate Assistantships")
+        self.assertIsNone(root.find("./channel/item[3]"))
 
     def test_writes_rss_files_for_three_audiences_and_all_disciplines(self):
         jobs = parse_feed(
             b"""<rss version="2.0"><channel>
               <item><title>Graduate Research Assistantship in Chemistry Education Research</title>
                 <link>https://jobs.example/graduate</link></item>
+              <item><title>Three DBER Graduate Assistantships</title>
+                <link>https://jobs.example/dber</link></item>
             </channel></rss>""",
             Feed("Test", "https://feeds.example/test"),
         )
@@ -221,10 +231,12 @@ class RssImporterTests(unittest.TestCase):
             count = write_rss_feeds(jobs, feed_directory)
             graduate_feed = ElementTree.parse(feed_directory / "graduates" / "chemistry.xml")
             faculty_feed = ElementTree.parse(feed_directory / "faculty" / "chemistry.xml")
+            postdoc_feed = ElementTree.parse(feed_directory / "postdocs" / "physics.xml")
 
         self.assertEqual(count, 33)
-        self.assertEqual(len(graduate_feed.findall("./channel/item")), 1)
-        self.assertEqual(len(faculty_feed.findall("./channel/item")), 0)
+        self.assertEqual(len(graduate_feed.findall("./channel/item")), 2)
+        self.assertEqual(len(faculty_feed.findall("./channel/item")), 1)
+        self.assertEqual(len(postdoc_feed.findall("./channel/item")), 1)
 
     def test_deduplicates_jobs_by_url(self):
         feeds = [Feed("First", "https://feeds.example/1"), Feed("Second", "https://feeds.example/2")]

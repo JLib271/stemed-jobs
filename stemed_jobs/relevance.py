@@ -34,11 +34,18 @@ _FACULTY_INCLUDE: Pattern[str] = re.compile(
     r"\bteaching\b|\bSoTL\b|\binstructor\b",
     re.IGNORECASE,
 )
+_DBER: Pattern[str] = re.compile(r"\bDBER\b", re.IGNORECASE)
+
+
+def is_dber_title(title: str) -> bool:
+    return bool(_DBER.search(title))
 
 
 def is_stem_education_relevant(job: Job, discipline: str) -> bool:
     """Include education-research title signals or explicitly requested faculty teaching roles."""
     title = job.title
+    if is_dber_title(title):
+        return True
     if "faculty" in job.categories and _FACULTY_INCLUDE.search(title):
         return discipline in job.disciplines
 

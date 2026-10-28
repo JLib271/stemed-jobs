@@ -80,6 +80,9 @@ and Learning Science have corresponding education-research title signals.
 Faculty jobs additionally qualify when their title contains Teaching, SoTL,
 or Instructor. This intentionally excludes conventional STEM research roles
 even when their descriptions mention education or teaching.
+Any title containing `DBER` is an explicit exception and appears in every
+audience/discipline RSS feed. Conventional titles such as condensed-matter
+theory remain excluded unless they meet the faculty teaching-title rule.
 When publishing, host the `output/feeds/` directory at that public URL path, or
 set `--feed-base-url` to the URL where you host it. Paste each generated HTML
 snippet into a Custom HTML block on its corresponding category page. Buttons
