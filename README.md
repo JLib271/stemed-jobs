@@ -54,8 +54,15 @@ description.
 Jobs also have a `disciplines` array using the labels on the Seekers Hub
 Faculty page: Agriculture, Bioscience, Chemistry, Earth Science, Engineering,
 Learning Science, Mathematics, Physics, Science Education, Technology, and
-Other. After a posting qualifies for an audience and STEM education relevance,
-its title and description are used to assign its discipline or disciplines.
+Other. Disciplines are assigned from the strongest evidence available: a
+discipline named in the title or in the hiring department or program
+("Department of Physics", "Mathematics Program") counts first. Only when
+neither names one is the description counted, ignoring college and school names
+(a physics department in a College of Engineering is not an engineering job)
+and keeping disciplines mentioned more than half as often as the most-mentioned
+one. College and school names are used only as a last resort. `DBER` titles are
+the exception: they are cross-listed under every discipline in the title or
+description.
 A posting may appear in multiple discipline groups; Other is used only when no
 discipline evidence is identified.
 
