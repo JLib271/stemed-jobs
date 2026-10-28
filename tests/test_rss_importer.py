@@ -10,7 +10,7 @@ from stemed_jobs.feed_sources.config import load_feeds
 from stemed_jobs.feed_sources.boards import load_job_boards
 from stemed_jobs.importers.rss import fetch_feed, ingest_feeds, parse_feed
 from stemed_jobs.models import Feed
-from stemed_jobs.storage.html_store import render_audience_html
+from stemed_jobs.storage.html_store import render_audience_html, render_index_html, write_index_html
 from stemed_jobs.storage.json_store import write_jobs
 from stemed_jobs.storage.rss_store import render_rss, write_rss_feeds
 
@@ -47,6 +47,20 @@ class _Response:
 
 
 class RssImporterTests(unittest.TestCase):
+    def test_generates_pages_index_with_audience_and_feed_links(self):
+        html = render_index_html()
+
+        self.assertIn('<a href="faculty-jobs.html">Faculty</a>', html)
+        self.assertIn('<a href="postdocs-jobs.html">Postdocs</a>', html)
+        self.assertIn('<a href="graduates-jobs.html">Graduates</a>', html)
+        self.assertIn('<a href="feeds/faculty/physics.xml">Physics, Faculty</a>', html)
+        self.assertTrue(html.startswith("<!doctype html>"))
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            path = Path(temporary_directory) / "output" / "index.html"
+            write_index_html(path)
+            self.assertEqual(path.read_text(encoding="utf-8"), html)
+
     def test_ingests_multiple_feeds_and_writes_one_json_file(self):
         feeds = [Feed("Lab", "https://feeds.example/lab"), Feed("Schools", "https://feeds.example/schools")]
 

@@ -5,7 +5,7 @@ import sys
 from stemed_jobs.feed_sources.config import load_feeds
 from stemed_jobs.feed_sources.boards import load_job_boards
 from stemed_jobs.importers.rss import ingest_feeds
-from stemed_jobs.storage.html_store import write_audience_html
+from stemed_jobs.storage.html_store import write_audience_html, write_index_html
 from stemed_jobs.storage.json_store import write_jobs
 from stemed_jobs.storage.rss_store import AUDIENCES, write_rss_feeds
 
@@ -32,6 +32,7 @@ def main() -> int:
         jobs, errors = ingest_feeds(feeds)
         write_jobs(jobs, args.output)
         feed_count = write_rss_feeds(jobs, args.feed_output)
+        write_index_html(args.html_output / "index.html")
         for audience in AUDIENCES:
             output_path = args.html_output / "{}-jobs.html".format(audience)
             write_audience_html(jobs, audience, boards, output_path, args.feed_base_url)
@@ -41,7 +42,7 @@ def main() -> int:
 
     print("Wrote {} jobs from {} feed(s) to {}.".format(len(jobs), len(feeds), args.output))
     print("Wrote {} audience/discipline RSS feeds to {}.".format(feed_count, args.feed_output))
-    print("Wrote audience HTML sections for {} to {}.".format(", ".join(AUDIENCES), args.html_output))
+    print("Wrote Pages index and audience HTML sections for {} to {}.".format(", ".join(AUDIENCES), args.html_output))
     for error in errors:
         print("Feed error: {}".format(error), file=sys.stderr)
     return 1 if errors else 0

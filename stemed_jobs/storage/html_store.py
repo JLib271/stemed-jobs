@@ -8,6 +8,58 @@ from stemed_jobs.models import Job, JobBoard
 from stemed_jobs.storage.rss_store import feed_relative_path
 
 
+def render_index_html() -> str:
+    lines = [
+        "<!doctype html>",
+        '<html lang="en">',
+        "<head>",
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1">',
+        "<title>STEMEd Jobs</title>",
+        "</head>",
+        "<body>",
+        "<main>",
+        "<h1>STEMEd Jobs</h1>",
+        "<p>STEM education research and teaching opportunities, organized by audience and discipline.</p>",
+        "<h2>Browse jobs</h2>",
+        "<ul>",
+    ]
+    for audience in ("graduates", "postdocs", "faculty"):
+        lines.append(
+            '<li><a href="{}-jobs.html">{}</a></li>'.format(
+                escape(audience), escape(audience.title())
+            )
+        )
+    lines.extend(
+        [
+            "</ul>",
+            "<h2>Subscribe to RSS feeds</h2>",
+            "<p>Choose an audience and discipline for a filtered RSS feed:</p>",
+            "<ul>",
+        ]
+    )
+    for audience, discipline in (
+        ("graduates", "science-education"),
+        ("postdocs", "bioscience"),
+        ("faculty", "physics"),
+    ):
+        relative_url = "feeds/{}/{}.xml".format(audience, discipline)
+        lines.append(
+            '<li><a href="{}">{}, {}</a></li>'.format(
+                escape(relative_url, quote=True),
+                escape(discipline.replace("-", " ").title()),
+                escape(audience.title()),
+            )
+        )
+    lines.extend(["</ul>", "</main>", "</body>", "</html>", ""])
+    return "\n".join(lines)
+
+
+def write_index_html(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_index_html(), encoding="utf-8")
+
+
 def _anchor_id(discipline: str) -> str:
     return "discipline-" + "-".join(discipline.lower().split())
 

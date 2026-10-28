@@ -58,7 +58,8 @@ Other. Discipline labels are inferred from titles and descriptions; a posting
 may appear in multiple discipline groups, and unmatched postings go under
 Other.
 
-The default run also generates WordPress-ready HTML snippets for graduates,
+The default run generates `output/index.html` as the Pages site homepage, plus
+WordPress-ready HTML snippets for graduates,
 postdocs, and faculty in `output/graduates-jobs.html`,
 `output/postdocs-jobs.html`, and `output/faculty-jobs.html`. Each includes
 discipline buttons linking to section anchors, the filtered jobs, RSS links,
