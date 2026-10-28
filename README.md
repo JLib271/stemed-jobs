@@ -24,10 +24,14 @@ Install the dependency and add the public RSS feed URLs you want to monitor to
 {
   "feeds": [
     { "name": "University careers", "url": "https://example.org/jobs.rss" },
-    { "name": "Research institute", "url": "https://example.org/careers/feed" }
+    { "name": "Research institute", "url": "https://example.org/careers/feed" },
+    { "name": "Math board", "url": "https://example.org/math.rss", "disciplines": ["Mathematics"] }
   ]
 }
 ```
+
+The optional `disciplines` list is a fallback for boards devoted to one field;
+see the discipline rules below.
 
 Then run:
 
@@ -40,7 +44,9 @@ Jobs are written to `output/jobs.json` by default. Override either path with
 `--feeds path/to/feeds.json` or `--output path/to/jobs.json`. A failing feed is
 reported while the other feeds are still imported; the JSON output is still
 written and the command exits nonzero to make scheduled runs detect failures.
-Jobs are deduplicated by their posting URL. The normalized JSON fields are
+Jobs are deduplicated when their posting URLs match (ignoring tracking
+parameters and trailing slashes) or when their title and employer both match;
+the first feed listed in `config/feeds.json` wins. The normalized JSON fields are
 `id`, `title`, `company`, `location`, `url`, `published`, `summary`, `source`,
 and `source_url`; feeds that do not provide a field leave it empty.
 Each job also has `categories` and `functions` arrays. Categories are
@@ -51,20 +57,29 @@ job may have both research and teaching functions. Audience categories are
 inferred from the title, while functions are inferred from the title and
 description.
 
-Jobs also have a `disciplines` array using the labels on the Seekers Hub
-Faculty page: Agriculture, Bioscience, Chemistry, Earth Science, Engineering,
-Learning Science, Mathematics, Physics, Science Education, Technology, and
-Other. Disciplines are assigned from the strongest evidence available: a
-discipline named in the title or in the hiring department or program
-("Department of Physics", "Mathematics Program") counts first. Only when
-neither names one is the description counted, ignoring college and school names
-(a physics department in a College of Engineering is not an engineering job)
-and keeping disciplines mentioned more than half as often as the most-mentioned
-one. College and school names are used only as a last resort. `DBER` titles are
-the exception: they are cross-listed under every discipline in the title or
-description.
-A posting may appear in multiple discipline groups; Other is used only when no
-discipline evidence is identified.
+Jobs also have a `disciplines` array using nine labels: Agriculture,
+Bioscience, Chemistry, Earth Science, Engineering, Learning Science,
+Mathematics, Physics, and Science Education. Disciplines are assigned from the
+strongest evidence available, and the first step that finds one decides:
+
+1. A discipline named in the title, plus the first hiring department or program
+   named in the posting ("Department of Physics", "Computer Engineering
+   Department", "Systems Engineering Program"). Later departments are ignored
+   because they are usually collaborators.
+2. The feed's own `disciplines` default in `config/feeds.json`, for boards
+   devoted to one field (for example MathJobs is Mathematics). It is only a
+   fallback and never overrides the title or department.
+3. The first school, college or institute named ("School of Electrical and
+   Computer Engineering"). It ranks below the feed default because a
+   college is often only the parent of the real department (a physics
+   department in a College of Engineering is not an engineering job).
+4. Disciplines the description mentions at least twice and more than half as
+   often as the most-mentioned one. A passing mention never counts.
+
+`DBER` titles are the exception: they are cross-listed under every discipline in
+the title or description. A posting may appear in multiple discipline groups. A
+posting with no discipline evidence gets an empty `disciplines` array and
+appears in no discipline list, rather than being guessed into one.
 
 The default run generates `output/index.html` as the Pages site homepage, plus
 WordPress-ready HTML snippets for graduates,
@@ -78,7 +93,7 @@ HTML job listings use the same relevance and discipline rules as the RSS
 feeds. Titles containing `DBER` are included only in the inferred audience
 category and the disciplines identified from the title and description.
 
-The run generates 33 filtered RSS 2.0 feeds (three audiences across 11
+The run generates 27 filtered RSS 2.0 feeds (three audiences across 9
 disciplines) under `output/feeds/{audience}/{discipline}.xml`; for example,
 `output/feeds/graduates/chemistry.xml`. The HTML links default to `/feeds/...`.
 RSS research inclusion uses job titles only; descriptions are never used to

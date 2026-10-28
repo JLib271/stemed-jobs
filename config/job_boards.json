@@ -3,12 +3,12 @@
     {
       "name": "NARST Career Center",
       "url": "https://narst.careerwebsite.com/",
-      "disciplines": ["Science Education", "Other"]
+      "disciplines": ["Science Education"]
     },
     {
       "name": "AERA Career Center",
       "url": "https://careers.aera.net/",
-      "disciplines": ["Learning Science", "Science Education", "Other"]
+      "disciplines": ["Learning Science", "Science Education"]
     },
     {
       "name": "NSTA Career Center",
@@ -58,27 +58,27 @@
     {
       "name": "HigherEdJobs",
       "url": "https://www.higheredjobs.com/search/",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education", "Technology", "Other"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education"]
     },
     {
       "name": "HERC Jobs",
       "url": "https://main.hercjobs.org/",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education", "Technology", "Other"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education"]
     },
     {
       "name": "Chronicle Careers",
       "url": "https://jobs.chronicle.com/",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education", "Technology", "Other"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education"]
     },
     {
       "name": "AcademicJobsOnline",
       "url": "https://academicjobsonline.org/ajo/jobs",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education", "Technology", "Other"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education"]
     },
     {
       "name": "Science Careers",
       "url": "https://jobs.sciencecareers.org/jobs/",
-      "disciplines": ["Bioscience", "Chemistry", "Earth Science", "Engineering", "Physics", "Science Education", "Technology", "Other"]
+      "disciplines": ["Bioscience", "Chemistry", "Earth Science", "Engineering", "Physics", "Science Education"]
     },
     {
       "name": "MathJobs",

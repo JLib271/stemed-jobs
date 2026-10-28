@@ -12,7 +12,6 @@ _STEM_DISCIPLINES = {
     "Engineering",
     "Mathematics",
     "Physics",
-    "Technology",
 }
 
 _DISCIPLINE_SIGNALS: Dict[str, Pattern[str]] = {
@@ -97,7 +96,7 @@ def is_stem_education_relevant(job: Job, discipline: str) -> bool:
     if requires_education_doctorate(job):
         return discipline in job.disciplines
     if "faculty" in job.categories and _FACULTY_INCLUDE.search(title):
-        return discipline != "Other" and discipline in job.disciplines
+        return discipline in job.disciplines
 
     pattern = _DISCIPLINE_SIGNALS.get(discipline)
     return bool(pattern and pattern.search(title))

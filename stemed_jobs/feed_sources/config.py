@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from typing import List
 
+from stemed_jobs.disciplines import DISCIPLINES
 from stemed_jobs.models import Feed
 
 
@@ -23,6 +24,12 @@ def load_feeds(path: Path) -> List[Feed]:
             raise ValueError("Feed {} must have a non-empty name.".format(index + 1))
         if not isinstance(url, str) or not url.strip():
             raise ValueError("Feed '{}' must have a non-empty URL.".format(name))
-        feeds.append(Feed(name=name.strip(), url=url.strip()))
+        disciplines = item.get("disciplines", [])
+        if not isinstance(disciplines, list):
+            raise ValueError("Feed '{}' disciplines must be a list.".format(name))
+        invalid = [discipline for discipline in disciplines if discipline not in DISCIPLINES]
+        if invalid:
+            raise ValueError("Feed '{}' has unknown discipline(s): {}.".format(name, ", ".join(map(str, invalid))))
+        feeds.append(Feed(name=name.strip(), url=url.strip(), disciplines=tuple(disciplines)))
 
     return feeds

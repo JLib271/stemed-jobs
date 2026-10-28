@@ -2,15 +2,18 @@
   "feeds": [
     {
       "name": "PER Jobs",
-      "url": "https://perjobs.blogspot.com/feeds/posts/default?alt=rss"
+      "url": "https://perjobs.blogspot.com/feeds/posts/default?alt=rss",
+      "disciplines": ["Physics"]
     },
     {
       "name": "AAPT Career Center",
-      "url": "https://careers.aapt.org/jobsrss/?countrycode=US"
+      "url": "https://careers.aapt.org/jobsrss/?countrycode=US",
+      "disciplines": ["Physics"]
     },
     {
       "name": "AGU Career Center",
-      "url": "https://findajob.agu.org/jobsrss/?countrycode=US"
+      "url": "https://findajob.agu.org/jobsrss/?countrycode=US",
+      "disciplines": ["Earth Science"]
     },
     {
       "name": "Chronicle Careers - Education",
@@ -26,11 +29,13 @@
     },
     {
       "name": "MathJobs",
-      "url": "https://www.mathjobs.org/jobs?joblst------rss"
+      "url": "https://www.mathjobs.org/jobs?joblst------rss",
+      "disciplines": ["Mathematics"]
     },
     {
       "name": "Physics Today Jobs",
-      "url": "https://jobs.physicstoday.org/jobsrss/?countrycode=US"
+      "url": "https://jobs.physicstoday.org/jobsrss/?countrycode=US",
+      "disciplines": ["Physics"]
     }
   ]
 }

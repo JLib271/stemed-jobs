@@ -1,11 +1,14 @@
 from dataclasses import asdict, dataclass
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 
 @dataclass(frozen=True)
 class Feed:
     name: str
     url: str
+    # Disciplines used for a posting when its title and hiring department name
+    # none, for boards devoted to one field (e.g. MathJobs).
+    disciplines: Tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

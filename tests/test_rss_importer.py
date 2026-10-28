@@ -6,6 +6,7 @@ import unittest
 from unittest.mock import patch
 from xml.etree import ElementTree
 
+from stemed_jobs.disciplines import DISCIPLINES
 from stemed_jobs.feed_sources.config import load_feeds
 from stemed_jobs.feed_sources.boards import load_job_boards
 from stemed_jobs.importers.rss import fetch_feed, ingest_feeds, parse_feed
@@ -75,7 +76,6 @@ class RssImporterTests(unittest.TestCase):
             ("Physics Teaching Professor", "Physics", ["faculty"], True),
             ("Physics SoTL Faculty", "Physics", ["faculty"], True),
             ("Physics Instructor", "Physics", ["faculty"], True),
-            ("Teaching Assistant Professor in German Studies", "Other", ["faculty"], False),
             ("Physics Teaching Postdoctoral Fellow", "Physics", ["postdocs"], False),
         ]
         for index, (title, discipline, categories, expected) in enumerate(examples):
@@ -304,8 +304,6 @@ class RssImporterTests(unittest.TestCase):
                 "mathematics",
                 "physics",
                 "science-education",
-                "technology",
-                "other",
             ):
                 with self.subTest(audience=audience, discipline=discipline):
                     section = html.split('<h2 id="discipline-{}">'.format(discipline), 1)[1]
@@ -344,8 +342,6 @@ class RssImporterTests(unittest.TestCase):
                 "Mathematics",
                 "Physics",
                 "Science Education",
-                "Technology",
-                "Other",
             ):
                 root = ElementTree.fromstring(render_rss(jobs, audience, discipline))
                 has_dber = root.find("./channel/item") is not None
@@ -397,7 +393,7 @@ class RssImporterTests(unittest.TestCase):
             faculty_feed = ElementTree.parse(feed_directory / "faculty" / "chemistry.xml")
             postdoc_feed = ElementTree.parse(feed_directory / "postdocs" / "physics.xml")
 
-        self.assertEqual(count, 33)
+        self.assertEqual(count, 27)
         self.assertEqual(len(graduate_feed.findall("./channel/item")), 1)
         self.assertEqual(len(faculty_feed.findall("./channel/item")), 0)
         self.assertEqual(len(postdoc_feed.findall("./channel/item")), 0)
@@ -426,6 +422,66 @@ class RssImporterTests(unittest.TestCase):
                 encoding="utf-8",
             )
             self.assertEqual(load_feeds(config_path), [Feed("Lab", "https://feeds.example/lab")])
+
+    def test_technology_and_other_are_not_disciplines(self):
+        self.assertEqual(
+            DISCIPLINES,
+            (
+                "Agriculture",
+                "Bioscience",
+                "Chemistry",
+                "Earth Science",
+                "Engineering",
+                "Learning Science",
+                "Mathematics",
+                "Physics",
+                "Science Education",
+            ),
+        )
+        for board in load_job_boards(Path("config/job_boards.json")):
+            self.assertNotIn("Technology", board.disciplines)
+            self.assertNotIn("Other", board.disciplines)
+
+    def test_job_with_no_discipline_evidence_appears_in_no_discipline_list(self):
+        jobs = parse_feed(
+            b"""<rss version="2.0"><channel>
+              <item><title>Teaching Assistant Professor in German Studies</title>
+                <link>https://jobs.example/german</link>
+                <description>Teach courses in German language and literature.</description></item>
+            </channel></rss>""",
+            Feed("Test", "https://feeds.example/test"),
+        )
+        self.assertEqual(jobs[0].disciplines, [])
+        html = render_audience_html(jobs, "faculty", [])
+        self.assertNotIn("German Studies", html)
+
+    def test_feed_default_discipline_is_used_when_posting_names_none(self):
+        content = b"""<rss version="2.0"><channel>
+          <item><title>Chern Instructor</title><link>https://jobs.example/chern</link>
+            <description>Applications are invited for a three-year position.</description></item>
+        </channel></rss>"""
+        with_default = parse_feed(content, Feed("MathJobs", "https://feeds.example/m", ("Mathematics",)))
+        without_default = parse_feed(content, Feed("Other board", "https://feeds.example/o"))
+        self.assertEqual(with_default[0].disciplines, ["Mathematics"])
+        self.assertEqual(without_default[0].disciplines, [])
+
+    def test_loads_feed_default_disciplines_and_rejects_unknown_ones(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            config_path = Path(temporary_directory) / "feeds.json"
+            config_path.write_text(
+                '{"feeds":[{"name":"MathJobs","url":"https://feeds.example/m","disciplines":["Mathematics"]}]}',
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                load_feeds(config_path),
+                [Feed("MathJobs", "https://feeds.example/m", ("Mathematics",))],
+            )
+            config_path.write_text(
+                '{"feeds":[{"name":"X","url":"https://feeds.example/x","disciplines":["Technology"]}]}',
+                encoding="utf-8",
+            )
+            with self.assertRaises(ValueError):
+                load_feeds(config_path)
 
     def test_loads_disciplined_job_board_registry(self):
         boards = load_job_boards(Path("config/job_boards.json"))

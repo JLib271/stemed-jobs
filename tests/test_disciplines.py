@@ -3,7 +3,7 @@ import unittest
 from stemed_jobs.disciplines import classify_disciplines
 
 
-class DisciplineEvidenceTests(unittest.TestCase):
+class TitleAndDepartmentTests(unittest.TestCase):
     def test_physics_department_in_engineering_college_is_only_physics(self):
         disciplines = classify_disciplines(
             "FT Teaching Assistant Professor, Urbana-Champaign IL",
@@ -31,7 +31,31 @@ class DisciplineEvidenceTests(unittest.TestCase):
     def test_generic_title_uses_department_name(self):
         disciplines = classify_disciplines(
             "Assistant Professor, Teaching Stream - Advanced Manufacturing & Automation",
-            "The Department of Mechanical & Industrial Engineering invites applications.",
+            "The Department of Mechanical & Industrial Engineering in the Faculty of Applied "
+            "Science & Engineering invites applications.",
+        )
+        self.assertEqual(disciplines, ["Engineering"])
+
+    def test_department_named_with_the_word_department_last(self):
+        disciplines = classify_disciplines(
+            "Instructor",
+            "The Computer Engineering Department in the College of Engineering seeks an instructor.",
+        )
+        self.assertEqual(disciplines, ["Engineering"])
+
+    def test_program_named_with_the_word_program_last(self):
+        disciplines = classify_disciplines(
+            "Teaching Professor",
+            "The Cornell Systems Engineering Program seeks a teaching professor. Focus areas include "
+            "biotechnology and life sciences.",
+        )
+        self.assertEqual(disciplines, ["Engineering"])
+
+    def test_biomedical_engineering_department_is_engineering_not_bioscience(self):
+        disciplines = classify_disciplines(
+            "BME Teaching Faculty",
+            "The Boston University Department of Biomedical Engineering seeks teaching faculty "
+            "in thermodynamics. Neuroscience and photonics centers collaborate.",
         )
         self.assertEqual(disciplines, ["Engineering"])
 
@@ -44,12 +68,74 @@ class DisciplineEvidenceTests(unittest.TestCase):
 
     def test_department_and_title_are_combined(self):
         disciplines = classify_disciplines(
-            "Teaching Assistant Professor - Department of Physics",
-            "The Department of Physics and Astronomy is in the College of Engineering.",
+            "Assistant Professor of Science Education",
+            "The Department of Physics and Astronomy seeks a science education researcher.",
+        )
+        self.assertEqual(disciplines, ["Physics", "Science Education"])
+
+    def test_hiring_department_wins_over_collaborating_department(self):
+        disciplines = classify_disciplines(
+            "Teaching Faculty",
+            "The Department of Physics seeks a lecturer. You will collaborate with the "
+            "Department of Chemistry and the Department of Mathematics.",
         )
         self.assertEqual(disciplines, ["Physics"])
 
-    def test_most_mentioned_discipline_wins_when_no_title_or_department(self):
+    def test_department_of_physics_does_not_absorb_the_parent_college(self):
+        disciplines = classify_disciplines(
+            "Teaching Faculty",
+            "The Department of Physics and the Grainger College of Engineering seek a lecturer.",
+        )
+        self.assertEqual(disciplines, ["Physics"])
+
+
+class SchoolAndFeedDefaultTests(unittest.TestCase):
+    def test_school_is_the_hiring_unit_when_no_department_is_named(self):
+        disciplines = classify_disciplines(
+            "Assistant Teaching Professor 2026-27",
+            "The School of Electrical and Computer Engineering at Cornell University seeks a "
+            "teaching professor for programming, digital logic and embedded systems.",
+        )
+        self.assertEqual(disciplines, ["Engineering"])
+
+    def test_college_name_is_used_only_when_nothing_better_exists(self):
+        disciplines = classify_disciplines(
+            "Teaching Professor",
+            "Join the School of Engineering as a full-time teaching professor.",
+        )
+        self.assertEqual(disciplines, ["Engineering"])
+
+    def test_feed_default_beats_a_school_name(self):
+        disciplines = classify_disciplines(
+            "Open Rank - Fixed Term - Teaching Professor",
+            "The School of Science and Engineering invites applications.",
+            ("Mathematics",),
+        )
+        self.assertEqual(disciplines, ["Mathematics"])
+
+    def test_feed_default_applies_when_posting_names_nothing(self):
+        disciplines = classify_disciplines(
+            "Chern Instructor",
+            "Applications are invited for a three-year position.",
+            ("Mathematics",),
+        )
+        self.assertEqual(disciplines, ["Mathematics"])
+
+    def test_feed_default_never_overrides_title_or_department(self):
+        self.assertEqual(
+            classify_disciplines("Assistant Professor of Physics", "A great job.", ("Mathematics",)),
+            ["Physics"],
+        )
+        self.assertEqual(
+            classify_disciplines(
+                "Teaching Faculty", "The Department of Chemistry seeks a lecturer.", ("Mathematics",)
+            ),
+            ["Chemistry"],
+        )
+
+
+class DescriptionFallbackTests(unittest.TestCase):
+    def test_most_mentioned_discipline_wins_when_nothing_else_names_one(self):
         disciplines = classify_disciplines(
             "Teaching Faculty",
             "We seek someone to teach chemistry courses and supervise chemistry labs. "
@@ -60,20 +146,20 @@ class DisciplineEvidenceTests(unittest.TestCase):
     def test_equally_mentioned_disciplines_are_both_kept(self):
         disciplines = classify_disciplines(
             "Teaching Faculty",
-            "Teach courses in chemistry and in biology.",
+            "Teach chemistry and biology. Chemistry labs and biology labs are part of the role.",
         )
         self.assertEqual(disciplines, ["Bioscience", "Chemistry"])
 
-    def test_college_name_is_used_only_as_a_last_resort(self):
-        disciplines = classify_disciplines(
-            "Teaching Professor",
-            "Join the School of Engineering as a full-time teaching professor.",
+    def test_a_single_passing_mention_is_not_enough(self):
+        self.assertEqual(
+            classify_disciplines("Teaching Professor", "We value work in climate science."), []
         )
-        self.assertEqual(disciplines, ["Engineering"])
 
-    def test_no_evidence_is_other(self):
-        self.assertEqual(classify_disciplines("Teaching Professor", "Great benefits."), ["Other"])
+    def test_no_evidence_gives_no_discipline(self):
+        self.assertEqual(classify_disciplines("Teaching Professor", "Great benefits."), [])
 
+
+class DberTests(unittest.TestCase):
     def test_dber_title_is_cross_listed_from_the_description(self):
         disciplines = classify_disciplines(
             "Three DBER Graduate Assistantships, Auburn AL",
