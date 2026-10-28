@@ -2,7 +2,6 @@ from html.parser import HTMLParser
 import gzip
 import time
 from typing import List, Tuple
-from urllib.error import URLError
 from urllib.request import Request, urlopen
 
 import feedparser
@@ -87,7 +86,7 @@ def ingest_feeds(feeds: List[Feed]) -> Tuple[List[Job], List[str]]:
     for feed in feeds:
         try:
             jobs.extend(fetch_feed(feed))
-        except (OSError, TimeoutError, URLError, ValueError) as error:
-            errors.append("{} ({}): {}".format(feed.name, feed.url, error))
+        except Exception as error:  # noqa: BLE001 - one broken feed must never stop the others
+            errors.append("{} ({}): {}: {}".format(feed.name, feed.url, type(error).__name__, error))
 
     return dedupe_jobs(jobs), errors

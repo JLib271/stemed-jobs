@@ -41,9 +41,14 @@ python -m stemed_jobs
 ```
 
 Jobs are written to `output/jobs.json` by default. Override either path with
-`--feeds path/to/feeds.json` or `--output path/to/jobs.json`. A failing feed is
-reported while the other feeds are still imported; the JSON output is still
-written and the command exits nonzero to make scheduled runs detect failures.
+`--feeds path/to/feeds.json` or `--output path/to/jobs.json`. A failing feed
+(any error, including a timeout or a malformed feed) is skipped and reported
+while the other feeds are still imported, and the output is still written. By
+default the command then exits nonzero so failures are noticed; with
+`--allow-feed-errors` it exits successfully as long as at least one feed was
+imported. If every feed fails, nothing is written, so the existing output is
+never replaced by an empty one, and the command exits nonzero either way. Note
+that a skipped feed's jobs are missing from that run's output until it recovers.
 Jobs are deduplicated when their posting URLs match (ignoring tracking
 parameters and trailing slashes) or when their title and employer both match;
 the first feed listed in `config/feeds.json` wins. The normalized JSON fields are
@@ -135,7 +140,11 @@ python -m unittest discover -s tests
 The `Regenerate job feeds` workflow runs daily at 06:00 UTC and can also be
 started manually from the repository's Actions tab. It installs dependencies,
 runs tests, regenerates the JSON/HTML/RSS files using the repository's Pages
-base URL, then deploys the complete `output/` directory to GitHub Pages.
+base URL, then deploys the complete `output/` directory to GitHub Pages. It runs
+the aggregator with `--allow-feed-errors`, so one broken feed does not stop the
+deployment. Each skipped feed is shown as a warning annotation on the run page
+(and in the log as `Feed error:`), so a green run can still have skipped feeds;
+check the annotations. If every feed fails the run fails and nothing is deployed.
 
 To enable deployment, open the repository's **Settings → Pages**, choose
 **GitHub Actions** as the build and deployment source, and save. Commit and push

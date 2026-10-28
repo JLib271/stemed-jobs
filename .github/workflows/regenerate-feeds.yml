@@ -43,6 +43,7 @@ jobs:
       - name: Regenerate jobs and feeds
         run: >-
           python -m stemed_jobs
+          --allow-feed-errors
           --feed-base-url "${{ steps.pages.outputs.base_url }}/feeds"
 
       - name: Upload Pages artifact
