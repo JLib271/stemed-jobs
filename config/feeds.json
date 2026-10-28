@@ -112,11 +112,6 @@
       "name": "jobRxiv - STEM education",
       "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=STEM%20education",
       "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - teaching",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=teaching",
-      "retain_days": 90
     }
   ]
 }
