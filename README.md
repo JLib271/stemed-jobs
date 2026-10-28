@@ -70,6 +70,14 @@ currently have no verified RSS/API.
 The run generates 33 filtered RSS 2.0 feeds (three audiences across 11
 disciplines) under `output/feeds/{audience}/{discipline}.xml`; for example,
 `output/feeds/graduates/chemistry.xml`. The HTML links default to `/feeds/...`.
+RSS items are screened for STEM education research, STEM teaching roles,
+human-dimensions work, or cognitive-science work within a STEM discipline.
+Titles must signal education, learning, DBER, SoTL, human dimensions, cognitive
+science, or a clear teaching role. Generic "machine learning" titles are not
+treated as education-related unless their title also signals one of those
+areas. This removes conventional STEM research postings that have no clear
+education or human/social-science connection; borderline cases may still need
+review.
 When publishing, host the `output/feeds/` directory at that public URL path, or
 set `--feed-base-url` to the URL where you host it. Paste each generated HTML
 snippet into a Custom HTML block on its corresponding category page. Buttons

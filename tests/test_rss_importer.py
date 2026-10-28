@@ -10,6 +10,8 @@ from stemed_jobs.feed_sources.config import load_feeds
 from stemed_jobs.feed_sources.boards import load_job_boards
 from stemed_jobs.importers.rss import fetch_feed, ingest_feeds, parse_feed
 from stemed_jobs.models import Feed
+from stemed_jobs.models import Job
+from stemed_jobs.relevance import is_stem_education_relevant
 from stemed_jobs.storage.html_store import render_audience_html, render_index_html, write_index_html
 from stemed_jobs.storage.json_store import write_jobs
 from stemed_jobs.storage.rss_store import render_rss, write_rss_feeds
@@ -47,6 +49,49 @@ class _Response:
 
 
 class RssImporterTests(unittest.TestCase):
+    def test_relevance_filter_keeps_stem_education_and_related_roles(self):
+        examples = [
+            ("Assistant Professor of Physics Education Research", "Study physics learning.", ["Physics"], True),
+            ("Human Dimensions of Climate Science Fellow", "Research climate impacts.", ["Earth Science"], True),
+            ("Postdoctoral Fellow in Cognitive Science of Biology Learning", "Study STEM learners.", ["Bioscience"], True),
+            ("Physics Teaching Assistant Professor", "Teach introductory physics.", ["Physics"], True),
+            ("Assistant Professor of Physics SoTL", "Study student learning.", ["Physics"], True),
+            ("Assistant Professor of Physics", "Education research in introductory physics.", ["Physics"], False),
+            ("Cognitive Science Researcher", "Study memory and perception.", ["Learning Science"], False),
+            ("Assistant Professor of Machine Learning", "Study machine learning in physics.", ["Physics"], False),
+            (
+                "Assistant Professor of Machine Learning",
+                "Committed to undergraduate education while researching machine learning in physics.",
+                ["Physics"],
+                False,
+            ),
+            (
+                "Assistant Professor of Machine Learning and STEM Education",
+                "Research machine learning for STEM education.",
+                ["Physics"],
+                True,
+            ),
+            ("Assistant Professor of Experimental Physics", "Research photonics and quantum materials.", ["Physics"], False),
+            ("Graduate Research Assistant in Chemistry", "Synthesize novel catalysts.", ["Chemistry"], False),
+        ]
+        for index, (title, summary, disciplines, expected) in enumerate(examples):
+            with self.subTest(title=title):
+                job = Job(
+                    id=str(index),
+                    title=title,
+                    company="",
+                    location="",
+                    url="https://jobs.example/{}".format(index),
+                    published="",
+                    summary=summary,
+                    source="Test",
+                    source_url="https://feeds.example/test",
+                    categories=["faculty"],
+                    functions=[],
+                    disciplines=disciplines,
+                )
+                self.assertEqual(is_stem_education_relevant(job), expected)
+
     def test_generates_pages_index_with_audience_and_feed_links(self):
         html = render_index_html()
 
@@ -129,9 +174,9 @@ class RssImporterTests(unittest.TestCase):
         xml = b"""<rss version="2.0"><channel>
           <item><title>Assistant Professor of Physics Education Research</title>
             <link>https://jobs.example/physics</link><description>Research and teaching.</description></item>
-          <item><title>Postdoctoral Fellow in Biology Research</title>
+          <item><title>Postdoctoral Fellow in Biology Education Research</title>
             <link>https://jobs.example/postdoc</link></item>
-          <item><title>Graduate Research Assistantship in Chemistry</title>
+          <item><title>Graduate Research Assistantship in Chemistry Education Research</title>
             <link>https://jobs.example/graduate</link></item>
         </channel></rss>"""
         jobs = parse_feed(xml, Feed("Test & Feed", "https://feeds.example/test"))
@@ -142,15 +187,15 @@ class RssImporterTests(unittest.TestCase):
         self.assertIn('href="#discipline-physics"', html)
         self.assertIn('<h2 id="discipline-physics">Physics</h2>', html)
         self.assertIn("Assistant Professor of Physics Education Research", html)
-        self.assertNotIn("Postdoctoral Fellow in Biology Research", html)
-        self.assertNotIn("Graduate Research Assistantship in Chemistry", html)
+        self.assertNotIn("Postdoctoral Fellow in Biology Education Research", html)
+        self.assertNotIn("Graduate Research Assistantship in Chemistry Education Research", html)
         self.assertIn('href="https://feeds.example/output/faculty/physics.xml"', html)
         self.assertIn('href="https://careers.aapt.org/"', html)
         self.assertIn('href="https://perjobs.blogspot.com/"', html)
 
     def test_renders_rss_for_an_audience_and_discipline(self):
         xml = b"""<rss version="2.0"><channel>
-          <item><title>Postdoctoral Fellow in Biology Research</title>
+          <item><title>Postdoctoral Fellow in Biology Education Research</title>
             <link>https://jobs.example/postdoc</link></item>
           <item><title>Assistant Professor of Physics Education Research</title>
             <link>https://jobs.example/faculty</link></item>
@@ -160,13 +205,13 @@ class RssImporterTests(unittest.TestCase):
         root = ElementTree.fromstring(rss)
 
         self.assertEqual(root.findtext("./channel/title"), "STEMEd Jobs: Bioscience jobs — Postdocs")
-        self.assertEqual(root.findtext("./channel/item/title"), "Postdoctoral Fellow in Biology Research")
+        self.assertEqual(root.findtext("./channel/item/title"), "Postdoctoral Fellow in Biology Education Research")
         self.assertIsNone(root.find("./channel/item[2]"))
 
     def test_writes_rss_files_for_three_audiences_and_all_disciplines(self):
         jobs = parse_feed(
             b"""<rss version="2.0"><channel>
-              <item><title>Graduate Research Assistantship in Chemistry</title>
+              <item><title>Graduate Research Assistantship in Chemistry Education Research</title>
                 <link>https://jobs.example/graduate</link></item>
             </channel></rss>""",
             Feed("Test", "https://feeds.example/test"),

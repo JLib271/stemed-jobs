@@ -6,6 +6,7 @@ from xml.etree import ElementTree
 
 from stemed_jobs.disciplines import DISCIPLINES
 from stemed_jobs.models import Job
+from stemed_jobs.relevance import is_stem_education_relevant
 
 
 AUDIENCES = ("graduates", "postdocs", "faculty")
@@ -25,13 +26,20 @@ def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
     title = "{} jobs — {}".format(discipline, audience.title())
     ElementTree.SubElement(channel, "title").text = "STEMEd Jobs: " + title
     ElementTree.SubElement(channel, "description").text = (
-        "{} opportunities in {} across STEM education research and teaching.".format(audience.title(), discipline)
+        "{} opportunities in {} across STEM education research and teaching. "
+        "Listings are screened for STEM education research, STEM teaching, human dimensions, or cognitive science.".format(
+            audience.title(), discipline
+        )
     )
     ElementTree.SubElement(channel, "link").text = "https://theseekershub.stemedplus.org/"
     ElementTree.SubElement(channel, "language").text = "en"
 
     for job in jobs:
-        if audience not in job.categories or discipline not in job.disciplines:
+        if (
+            audience not in job.categories
+            or discipline not in job.disciplines
+            or not is_stem_education_relevant(job)
+        ):
             continue
         item = ElementTree.SubElement(channel, "item")
         ElementTree.SubElement(item, "title").text = job.title
