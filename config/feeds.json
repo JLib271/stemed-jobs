@@ -87,6 +87,11 @@
       "url": "https://jobs.physicstoday.org/jobsrss/?countrycode=US",
       "disciplines": ["Physics"],
       "retain_days": 90
+    },
+    {
+      "name": "jobRxiv",
+      "url": "https://jobrxiv.org/?feed=job_feed",
+      "retain_days": 90
     }
   ]
 }

@@ -55,8 +55,10 @@ def parse_feed(content: bytes, feed: Feed) -> List[Job]:
             Job(
                 id=identifier,
                 title=title,
-                company=_plain_text(entry.get("author", "")),
-                location=_plain_text(entry.get("location", "")),
+                # WP Job Manager boards (e.g. jobRxiv) put the employer and place in
+                # job_listing:* elements; dc:creator there is only the poster.
+                company=_plain_text(entry.get("job_listing_company") or entry.get("author", "")),
+                location=_plain_text(entry.get("job_listing_location") or entry.get("location", "")),
                 url=url,
                 published=_published(entry),
                 summary=summary,
