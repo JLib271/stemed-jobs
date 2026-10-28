@@ -1,1 +1,8 @@
 venv/
+__pycache__/
+*.py[cod]
+output/jobs.json
+output/faculty-jobs.html
+output/graduates-jobs.html
+output/postdocs-jobs.html
+output/feeds/

@@ -1,0 +1,36 @@
+{
+  "feeds": [
+    {
+      "name": "PER Jobs",
+      "url": "https://perjobs.blogspot.com/feeds/posts/default?alt=rss"
+    },
+    {
+      "name": "AAPT Career Center",
+      "url": "https://careers.aapt.org/jobsrss/?countrycode=US"
+    },
+    {
+      "name": "AGU Career Center",
+      "url": "https://findajob.agu.org/jobsrss/?countrycode=US"
+    },
+    {
+      "name": "Chronicle Careers - Education",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=24&countrycode=US"
+    },
+    {
+      "name": "AcademicJobsOnline",
+      "url": "https://academicjobsonline.org/ajo?joblist-0-0-0-----rss--"
+    },
+    {
+      "name": "Science Careers",
+      "url": "https://jobs.sciencecareers.org/jobsrss/?countrycode=US"
+    },
+    {
+      "name": "MathJobs",
+      "url": "https://www.mathjobs.org/jobs?joblst------rss"
+    },
+    {
+      "name": "Physics Today Jobs",
+      "url": "https://jobs.physicstoday.org/jobsrss/?countrycode=US"
+    }
+  ]
+}

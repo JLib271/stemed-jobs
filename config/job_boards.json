@@ -1,0 +1,94 @@
+{
+  "job_boards": [
+    {
+      "name": "NARST Career Center",
+      "url": "https://narst.careerwebsite.com/",
+      "disciplines": ["Science Education", "Other"]
+    },
+    {
+      "name": "AERA Career Center",
+      "url": "https://careers.aera.net/",
+      "disciplines": ["Learning Science", "Science Education", "Other"]
+    },
+    {
+      "name": "NSTA Career Center",
+      "url": "https://careers.nsta.org/",
+      "disciplines": ["Science Education"]
+    },
+    {
+      "name": "SABER Job Board",
+      "url": "https://saberbio.mcjobboard.net/jobs",
+      "disciplines": ["Bioscience"]
+    },
+    {
+      "name": "PER Jobs",
+      "url": "https://perjobs.blogspot.com/",
+      "disciplines": ["Physics"]
+    },
+    {
+      "name": "AAPT Career Center",
+      "url": "https://careers.aapt.org/",
+      "disciplines": ["Physics"]
+    },
+    {
+      "name": "AGU Career Center",
+      "url": "https://findajob.agu.org/jobs",
+      "disciplines": ["Earth Science"]
+    },
+    {
+      "name": "NAAEE eeJOBS",
+      "url": "https://jobs.naaee.org/",
+      "disciplines": ["Earth Science", "Science Education"]
+    },
+    {
+      "name": "ESWN Job Board",
+      "url": "https://eswnonline.org/online/earth-and-environmental-science-jobs/",
+      "disciplines": ["Earth Science"]
+    },
+    {
+      "name": "ACS Career Navigator",
+      "url": "https://www.acs.org/careers/career-navigator.html",
+      "disciplines": ["Chemistry"]
+    },
+    {
+      "name": "AAAE Jobs",
+      "url": "https://aaaeonline.org/Jobs",
+      "disciplines": ["Agriculture"]
+    },
+    {
+      "name": "HigherEdJobs",
+      "url": "https://www.higheredjobs.com/search/",
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education", "Technology", "Other"]
+    },
+    {
+      "name": "HERC Jobs",
+      "url": "https://main.hercjobs.org/",
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education", "Technology", "Other"]
+    },
+    {
+      "name": "Chronicle Careers",
+      "url": "https://jobs.chronicle.com/",
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education", "Technology", "Other"]
+    },
+    {
+      "name": "AcademicJobsOnline",
+      "url": "https://academicjobsonline.org/ajo/jobs",
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education", "Technology", "Other"]
+    },
+    {
+      "name": "Science Careers",
+      "url": "https://jobs.sciencecareers.org/jobs/",
+      "disciplines": ["Bioscience", "Chemistry", "Earth Science", "Engineering", "Physics", "Science Education", "Technology", "Other"]
+    },
+    {
+      "name": "MathJobs",
+      "url": "https://www.mathjobs.org/jobs",
+      "disciplines": ["Mathematics"]
+    },
+    {
+      "name": "Physics Today Jobs",
+      "url": "https://jobs.physicstoday.org/",
+      "disciplines": ["Physics"]
+    }
+  ]
+}
