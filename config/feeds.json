@@ -90,7 +90,32 @@
     },
     {
       "name": "jobRxiv",
-      "url": "https://jobrxiv.org/?feed=job_feed",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - education research",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=education%20research",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - DBER",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=DBER",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - science education",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=science%20education",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - STEM education",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=STEM%20education",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - teaching",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=teaching",
       "retain_days": 90
     }
   ]
