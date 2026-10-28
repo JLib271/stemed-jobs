@@ -13,7 +13,13 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
             re.IGNORECASE,
         ),
     ),
-    ("Chemistry", re.compile(    r"\bchemistr(?:y|ies)\b|\bchemical sciences?\b|\bchemical education\b|\bCER\b", re.IGNORECASE)),
+    (
+        "Chemistry",
+        re.compile(
+            r"\bchemistr(?:y|ies)\b|\bchemical sciences?\b|\bchemical education\b|\bCER\b",
+            re.IGNORECASE,
+        ),
+    ),
     (
         "Earth Science",
         re.compile(
@@ -65,6 +71,7 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
 DISCIPLINES = tuple(name for name, _ in DISCIPLINE_RULES) + ("Other",)
 
 
-def classify_disciplines(title: str) -> List[str]:
-    matches = [name for name, pattern in DISCIPLINE_RULES if pattern.search(title)]
+def classify_disciplines(title: str, summary: str) -> List[str]:
+    text = "{} {}".format(title, summary)
+    matches = [name for name, pattern in DISCIPLINE_RULES if pattern.search(text)]
     return matches or ["Other"]

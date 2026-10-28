@@ -6,7 +6,7 @@ from xml.etree import ElementTree
 
 from stemed_jobs.disciplines import DISCIPLINES
 from stemed_jobs.models import Job
-from stemed_jobs.relevance import is_dber_title, is_stem_education_relevant
+from stemed_jobs.relevance import is_stem_education_relevant
 
 
 AUDIENCES = ("graduates", "postdocs", "faculty")
@@ -35,10 +35,9 @@ def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
     ElementTree.SubElement(channel, "language").text = "en"
 
     for job in jobs:
-        is_global_dber = is_dber_title(job.title)
         if audience not in job.categories:
             continue
-        if not is_global_dber and (
+        if (
             discipline not in job.disciplines
             or not is_stem_education_relevant(job, discipline)
         ):

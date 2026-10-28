@@ -54,9 +54,10 @@ description.
 Jobs also have a `disciplines` array using the labels on the Seekers Hub
 Faculty page: Agriculture, Bioscience, Chemistry, Earth Science, Engineering,
 Learning Science, Mathematics, Physics, Science Education, Technology, and
-Other. Discipline labels are inferred from titles; a posting
-may appear in multiple discipline groups, and unmatched postings go under
-Other.
+Other. After a posting qualifies for an audience and STEM education relevance,
+its title and description are used to assign its discipline or disciplines.
+A posting may appear in multiple discipline groups; Other is used only when no
+discipline evidence is identified.
 
 The default run generates `output/index.html` as the Pages site homepage, plus
 WordPress-ready HTML snippets for graduates,
@@ -66,9 +67,9 @@ discipline buttons linking to section anchors, the filtered jobs, RSS links,
 and relevant job-board links from `config/job_boards.json`. The board registry
 includes all discussed boards, including those not ingested because they
 currently have no verified RSS/API.
-HTML job listings use the same title-based relevance rules as the RSS feeds;
-titles containing `DBER` appear in every discipline section for their inferred
-audience category only.
+HTML job listings use the same relevance and discipline rules as the RSS
+feeds. Titles containing `DBER` are included only in the inferred audience
+category and the disciplines identified from the title and description.
 
 The run generates 33 filtered RSS 2.0 feeds (three audiences across 11
 disciplines) under `output/feeds/{audience}/{discipline}.xml`; for example,
@@ -83,8 +84,9 @@ and Learning Science have corresponding education-research title signals.
 Faculty jobs additionally qualify when their title contains Teaching, SoTL,
 or Instructor. This intentionally excludes conventional STEM research roles
 even when their descriptions mention education or teaching.
-Any title containing `DBER` is an explicit discipline exception and appears
-across all discipline feeds for its inferred audience category only.
+Any title containing `DBER` is an explicit relevance exception. It appears
+only in its inferred audience category and only in disciplines found in the
+posting title or description.
 Conventional titles such as condensed-matter theory remain excluded unless
 they meet the faculty teaching-title rule.
 Faculty STEM postings also qualify when their description explicitly requires

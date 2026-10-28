@@ -75,6 +75,7 @@ class RssImporterTests(unittest.TestCase):
             ("Physics Teaching Professor", "Physics", ["faculty"], True),
             ("Physics SoTL Faculty", "Physics", ["faculty"], True),
             ("Physics Instructor", "Physics", ["faculty"], True),
+            ("Teaching Assistant Professor in German Studies", "Other", ["faculty"], False),
             ("Physics Teaching Postdoctoral Fellow", "Physics", ["postdocs"], False),
         ]
         for index, (title, discipline, categories, expected) in enumerate(examples):
@@ -123,6 +124,15 @@ class RssImporterTests(unittest.TestCase):
                 "A Ph.D. in education is preferred, not required.",
                 ["faculty"],
                 ["Bioscience"],
+                False,
+            ),
+            (
+                "Full Professorship (W3) for Pure Mathematics",
+                "Participation in academic self-governance and contributions to teaching are required. "
+                "Prerequisites include a university degree, an outstanding doctorate, successful teaching "
+                "experience, and a habilitation under the Higher Education Law.",
+                ["faculty"],
+                ["Mathematics"],
                 False,
             ),
             (
@@ -258,13 +268,27 @@ class RssImporterTests(unittest.TestCase):
         self.assertIn('href="https://careers.aapt.org/"', html)
         self.assertIn('href="https://perjobs.blogspot.com/"', html)
 
-    def test_dber_posting_appears_in_every_html_audience_and_discipline(self):
+    def test_dber_posting_is_cross_listed_using_description_disciplines(self):
         jobs = parse_feed(
             b"""<rss version="2.0"><channel>
               <item><title>Three DBER Graduate Assistantships, Auburn AL</title>
-                <link>https://jobs.example/dber</link></item>
+                <link>https://jobs.example/dber</link>
+                <description>Graduate fellowships in physics, engineering, biological sciences,
+                  geosciences, mathematics and chemistry education research.</description></item>
             </channel></rss>""",
             Feed("PER Jobs", "https://feeds.example/per"),
+        )
+        self.assertEqual(
+            set(jobs[0].disciplines),
+            {
+                "Bioscience",
+                "Chemistry",
+                "Earth Science",
+                "Engineering",
+                "Mathematics",
+                "Physics",
+                "Science Education",
+            },
         )
         boards = []
 
@@ -286,16 +310,25 @@ class RssImporterTests(unittest.TestCase):
                 with self.subTest(audience=audience, discipline=discipline):
                     section = html.split('<h2 id="discipline-{}">'.format(discipline), 1)[1]
                     section = section.split("</section>", 1)[0]
-                    if audience == "graduates":
+                    if audience == "graduates" and discipline in {
+                        "bioscience",
+                        "chemistry",
+                        "earth-science",
+                        "engineering",
+                        "mathematics",
+                        "physics",
+                        "science-education",
+                    }:
                         self.assertIn("Three DBER Graduate Assistantships", section)
                     else:
                         self.assertNotIn("Three DBER Graduate Assistantships", section)
 
-    def test_dber_posting_cross_lists_disciplines_only_within_its_audience(self):
+    def test_dber_posting_uses_description_disciplines_only_within_its_audience(self):
         jobs = parse_feed(
             b"""<rss version="2.0"><channel>
               <item><title>Three DBER Graduate Assistantships</title>
-                <link>https://jobs.example/dber</link></item>
+                <link>https://jobs.example/dber</link>
+                <description>Fellowships in physics and engineering education research.</description></item>
             </channel></rss>""",
             Feed("PER Jobs", "https://feeds.example/per"),
         )
@@ -317,7 +350,10 @@ class RssImporterTests(unittest.TestCase):
                 root = ElementTree.fromstring(render_rss(jobs, audience, discipline))
                 has_dber = root.find("./channel/item") is not None
                 with self.subTest(audience=audience, discipline=discipline):
-                    self.assertEqual(has_dber, audience == "graduates")
+                    self.assertEqual(
+                        has_dber,
+                        audience == "graduates" and discipline in ("Physics", "Engineering", "Science Education"),
+                    )
 
     def test_renders_rss_for_an_audience_and_discipline(self):
         xml = b"""<rss version="2.0"><channel>
@@ -331,7 +367,7 @@ class RssImporterTests(unittest.TestCase):
             <link>https://jobs.example/condensed-matter</link></item>
         </channel></rss>"""
         jobs = parse_feed(xml, Feed("Test", "https://feeds.example/test"))
-        graduate_root = ElementTree.fromstring(render_rss(jobs, "graduates", "Bioscience"))
+        graduate_root = ElementTree.fromstring(render_rss(jobs, "graduates", "Science Education"))
         postdoc_root = ElementTree.fromstring(render_rss(jobs, "postdocs", "Bioscience"))
         faculty_root = ElementTree.fromstring(render_rss(jobs, "faculty", "Bioscience"))
 
@@ -362,7 +398,7 @@ class RssImporterTests(unittest.TestCase):
             postdoc_feed = ElementTree.parse(feed_directory / "postdocs" / "physics.xml")
 
         self.assertEqual(count, 33)
-        self.assertEqual(len(graduate_feed.findall("./channel/item")), 2)
+        self.assertEqual(len(graduate_feed.findall("./channel/item")), 1)
         self.assertEqual(len(faculty_feed.findall("./channel/item")), 0)
         self.assertEqual(len(postdoc_feed.findall("./channel/item")), 0)
 
