@@ -37,8 +37,14 @@ _DISCIPLINE_SIGNALS: Dict[str, Pattern[str]] = {
     "Mathematics": re.compile(r"\bmathematics education\b|\bmath education\b", re.IGNORECASE),
     "Agriculture": re.compile(r"\bagricultural education\b|\bagriculture education\b", re.IGNORECASE),
     "Science Education": re.compile(r"\bSTEM education\b|\bscience education\b|\bDBER\b", re.IGNORECASE),
-    "Learning Science": re.compile(r"\bcognitive science\b|\blearning science\b", re.IGNORECASE),
+    "Learning Science": re.compile(
+        r"\bcognitive sciences?\b|\blearning sciences?\b|\beducational psychology\b", re.IGNORECASE
+    ),
 }
+
+# These field names are specific enough that naming one anywhere in the posting
+# (title or description), not just the title, shows the job belongs to the field.
+_LEARNING_SCIENCE_TERMS: Pattern[str] = _DISCIPLINE_SIGNALS["Learning Science"]
 
 _FACULTY_INCLUDE: Pattern[str] = re.compile(
     r"\bteaching\b|\bSoTL\b|\binstructor\b",
@@ -97,6 +103,9 @@ def is_stem_education_relevant(job: Job, discipline: str) -> bool:
         return discipline in job.disciplines
     if "faculty" in job.categories and _FACULTY_INCLUDE.search(title):
         return discipline in job.disciplines
+
+    if discipline == "Learning Science" and discipline in job.disciplines:
+        return bool(_LEARNING_SCIENCE_TERMS.search(title) or _LEARNING_SCIENCE_TERMS.search(job.summary))
 
     pattern = _DISCIPLINE_SIGNALS.get(discipline)
     return bool(pattern and pattern.search(title))

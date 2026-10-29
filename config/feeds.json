@@ -114,6 +114,21 @@
       "retain_days": 90
     },
     {
+      "name": "jobRxiv - learning science",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=learning%20science",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - cognitive science",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=cognitive%20science",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - educational psychology",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=educational%20psychology",
+      "retain_days": 90
+    },
+    {
       "name": "CIRTL Job Board",
       "url": "https://cirtl.net/category/job/feed/",
       "retain_days": 90
