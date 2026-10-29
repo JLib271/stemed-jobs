@@ -129,6 +129,26 @@
       "retain_days": 90
     },
     {
+      "name": "jobRxiv - medical education",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=medical%20education",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - nursing education",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=nursing%20education",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - health professions education",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=health%20professions%20education",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - pharmacy education",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=pharmacy%20education",
+      "retain_days": 90
+    },
+    {
       "name": "CIRTL Job Board",
       "url": "https://cirtl.net/category/job/feed/",
       "retain_days": 90

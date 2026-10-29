@@ -30,6 +30,22 @@ PHYSICS_TERMS = (
     r"|space sciences?|space physics|space weather|heliophysics|planetary sciences?|biophysics"
     r"|condensed matter|optics|photonics"
 )
+# "Medical" also begins benefits boilerplate ("medical, dental and vision
+# coverage"), which must not tag a job as Health Education.
+HEALTH_TERMS = (
+    r"medical(?!,?\s*(?:and\s+)?(?:dental|vision|insurance|benefits?|coverage|leave|plans?|history))"
+    r"|medicine|nurs(?:e|es|ing)|midwifery|pharmacy|pharmacists?|pharmaceutical sciences?|pharmaceutics"
+    r"|pharmacotherapy|pharmacology|dentistry|dental (?:school|hygiene|medicine|education)|dentists?"
+    r"|orthodontics|public health|global health|community health|population health|environmental health"
+    r"|occupational health|health sciences?|health professions?|health ?care (?:education|professions?|sciences?"
+    r"|administration)|allied health|health education|health informatics|health policy|health services"
+    r"|physical therapy|physiotherapy|occupational therapy|speech[- ]language pathology|audiology"
+    r"|respiratory therapy|athletic training|physician assistants?|optometry|radiolog(?:y|ic|ical) (?:sciences?|technology)"
+    r"|radiology|medical laboratory|clinical laboratory|diagnostic imaging|sonography|paramedics?|kinesiology"
+    r"|exercise (?:science|physiology)|nutrition|dietetics|dietitians?|epidemiolog(?:y|ists?)|biostatistics"
+    r"|veterinary|osteopathic|physicians?|clinical (?:sciences?|medicine|education|faculty|instructors?)"
+    r"|rehabilitation|gerontology|biomedical sciences?|biomedicine"
+)
 
 
 def _terms(alternation: str) -> str:
@@ -45,6 +61,7 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
     ("Chemistry", re.compile(_terms(CHEMISTRY_TERMS) + r"|\b(?-i:CER)\b", re.IGNORECASE)),
     ("Earth Science", re.compile(_terms(EARTH_TERMS) + r"|\b(?-i:GER)\b", re.IGNORECASE)),
     ("Engineering", re.compile(r"\bengineering\b|\bengineer(?:s|ing)?\b", re.IGNORECASE)),
+    ("Health Education", re.compile(_terms(HEALTH_TERMS), re.IGNORECASE)),
     (
         "Learning Science",
         re.compile(

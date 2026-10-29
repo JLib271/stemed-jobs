@@ -56,5 +56,23 @@ class SubfieldEducationTests(unittest.TestCase):
         self.assertFalse(is_stem_education_relevant(_job("Postdoc in Geophysics", disciplines=("Earth Science",)), "Earth Science"))
 
 
+class HealthEducationRelevanceTests(unittest.TestCase):
+    def test_health_education_titles_are_relevant(self):
+        for title in (
+            "Postdoc in Medical Education Research", "Nursing Education Fellow", "Pharmacy Education Research Postdoc",
+            "Health Professions Education Postdoctoral Fellow", "Public Health Education Postdoc",
+        ):
+            job = _job(title, disciplines=("Health Education",))
+            self.assertTrue(is_stem_education_relevant(job, "Health Education"), title)
+
+    def test_a_faculty_teaching_role_is_relevant(self):
+        job = _job("Assistant Teaching Professor of Nursing", disciplines=("Health Education",), categories=("faculty",))
+        self.assertTrue(is_stem_education_relevant(job, "Health Education"))
+
+    def test_a_plain_clinical_research_title_is_not(self):
+        job = _job("Postdoc in Oncology Nursing Research", disciplines=("Health Education",))
+        self.assertFalse(is_stem_education_relevant(job, "Health Education"))
+
+
 if __name__ == "__main__":
     unittest.main()

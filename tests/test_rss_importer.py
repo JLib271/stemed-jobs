@@ -393,7 +393,7 @@ class RssImporterTests(unittest.TestCase):
             faculty_feed = ElementTree.parse(feed_directory / "faculty" / "chemistry.xml")
             postdoc_feed = ElementTree.parse(feed_directory / "postdocs" / "physics.xml")
 
-        self.assertEqual(count, 27)
+        self.assertEqual(count, 30)
         self.assertEqual(len(graduate_feed.findall("./channel/item")), 1)
         self.assertEqual(len(faculty_feed.findall("./channel/item")), 0)
         self.assertEqual(len(postdoc_feed.findall("./channel/item")), 0)
@@ -432,6 +432,7 @@ class RssImporterTests(unittest.TestCase):
                 "Chemistry",
                 "Earth Science",
                 "Engineering",
+                "Health Education",
                 "Learning Science",
                 "Mathematics",
                 "Physics",

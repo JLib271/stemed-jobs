@@ -112,9 +112,13 @@ job may have both research and teaching functions. Audience categories are
 inferred from the title, while functions are inferred from the title and
 description.
 
-Jobs also have a `disciplines` array using nine labels: Agriculture,
-Bioscience, Chemistry, Earth Science, Engineering, Learning Science,
-Mathematics, Physics, and Science Education. Each label covers its subfields: Earth Science includes geology, geophysics,
+Jobs also have a `disciplines` array using ten labels: Agriculture,
+Bioscience, Chemistry, Earth Science, Engineering, Health Education, Learning
+Science, Mathematics, Physics, and Science Education. Health Education covers
+medicine, nursing, pharmacy, dentistry, public health, allied health (physical
+and occupational therapy, kinesiology, nutrition and similar), epidemiology and
+veterinary medicine (`HEALTH_TERMS`); benefits boilerplate such as "medical,
+dental and vision coverage" is ignored. Each label covers its subfields: Earth Science includes geology, geophysics,
 hydrology, atmospheric science, oceanography, paleontology, planetary and soil
 science and similar; Chemistry includes biochemistry, chemical biology and
 geochemistry; Bioscience includes genetics, genomics, animal and plant science,

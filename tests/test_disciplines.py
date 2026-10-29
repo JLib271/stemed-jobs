@@ -211,5 +211,28 @@ class SubfieldTests(unittest.TestCase):
         self.check("Assistant Professor of Biomedical Engineering", ["Engineering"])
 
 
+class HealthEducationTests(unittest.TestCase):
+    def test_medical_nursing_pharmacy_and_related_fields(self):
+        for title in (
+            "Assistant Professor of Nursing", "Clinical Assistant Professor, College of Pharmacy",
+            "Lecturer in Public Health", "Medical Education Postdoc", "Postdoc in Kinesiology",
+            "Assistant Professor of Physical Therapy", "Instructor, Dental Hygiene", "Lecturer in Nutrition",
+            "Assistant Professor of Epidemiology", "Physician Assistant Program Faculty", "Assistant Professor of Veterinary Medicine",
+            "Allied Health Instructor", "Postdoctoral Fellow, Health Professions Education",
+        ):
+            self.assertIn("Health Education", classify_disciplines(title, ""), title)
+
+    def test_benefits_boilerplate_does_not_make_a_job_health_education(self):
+        text = "We offer medical, dental and vision coverage. Medical leave and a 401k are included."
+        self.assertEqual(classify_disciplines("Research Associate", text), [])
+
+    def test_biomedical_engineering_is_not_health_education(self):
+        self.assertEqual(classify_disciplines("Assistant Professor of Biomedical Engineering", ""), ["Engineering"])
+
+    def test_a_medical_school_unit_in_the_description_is_health_education(self):
+        found = classify_disciplines("Assistant Professor", "Department of Nursing, College of Health Sciences")
+        self.assertEqual(found, ["Health Education"])
+
+
 if __name__ == "__main__":
     unittest.main()

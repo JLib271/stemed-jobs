@@ -58,22 +58,22 @@
     {
       "name": "HigherEdJobs",
       "url": "https://www.higheredjobs.com/search/",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "Learning Science", "Mathematics", "Physics", "Science Education"]
     },
     {
       "name": "HERC Jobs",
       "url": "https://main.hercjobs.org/",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "Learning Science", "Mathematics", "Physics", "Science Education"]
     },
     {
       "name": "Chronicle Careers",
       "url": "https://jobs.chronicle.com/",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "Learning Science", "Mathematics", "Physics", "Science Education"]
     },
     {
       "name": "AcademicJobsOnline",
       "url": "https://academicjobsonline.org/ajo/jobs",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Learning Science", "Mathematics", "Physics", "Science Education"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "Learning Science", "Mathematics", "Physics", "Science Education"]
     },
     {
       "name": "Science Careers",

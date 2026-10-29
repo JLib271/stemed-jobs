@@ -1,7 +1,7 @@
 import re
 from typing import Dict, Pattern
 
-from stemed_jobs.disciplines import BIOSCIENCE_TERMS, CHEMISTRY_TERMS, EARTH_TERMS, PHYSICS_TERMS
+from stemed_jobs.disciplines import BIOSCIENCE_TERMS, CHEMISTRY_TERMS, EARTH_TERMS, HEALTH_TERMS, PHYSICS_TERMS
 from stemed_jobs.models import Job
 
 
@@ -30,6 +30,11 @@ _DISCIPLINE_SIGNALS: Dict[str, Pattern[str]] = {
         _education_in(EARTH_TERMS) + r"|\benvironmental education\b|\b(?-i:GER)\b", re.IGNORECASE
     ),
     "Bioscience": re.compile(_education_in(BIOSCIENCE_TERMS) + r"|\b(?-i:BER)\b", re.IGNORECASE),
+    "Health Education": re.compile(
+        _education_in(HEALTH_TERMS) + r"|\bhealth education\b|\bhealth ?care education\b|\bmedical education\b"
+        r"|\bnursing education\b|\bhealth professions education\b",
+        re.IGNORECASE,
+    ),
     "Engineering": re.compile(r"\bengineering education\b|\b(?-i:EER)\b", re.IGNORECASE),
     "Mathematics": re.compile(r"\bmathematics education\b|\bmath education\b", re.IGNORECASE),
     "Agriculture": re.compile(r"\bagricultural education\b|\bagriculture education\b", re.IGNORECASE),
