@@ -36,6 +36,8 @@ class Job:
     categories: List[str]
     functions: List[str]
     disciplines: List[str]
+    # Application deadline (YYYY-MM-DD) when the posting states one, else "".
+    deadline: str = ""
 
     def to_dict(self) -> dict:
         return asdict(self)

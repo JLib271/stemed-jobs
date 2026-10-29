@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import sys
 
-from stemed_jobs.academic_year import academic_year_start, filter_since, parse_day
+from stemed_jobs.academic_year import DEFAULT_GRACE_DAYS, academic_year_start, filter_current, parse_day
 from stemed_jobs.carryover import (
     DEFAULT_MAX_STALE_DAYS,
     STATUS_FILE,
@@ -68,9 +68,16 @@ def main() -> int:
     parser.add_argument(
         "--since",
         metavar="YYYY-MM-DD",
-        help="Only keep advertisements posted on or after this date. Default: the start "
-        "of the current academic hiring year (the most recent May 1). Jobs with no "
-        "posting date are kept.",
+        help="For advertisements that state no application deadline, only keep those posted "
+        "on or after this date. Default: the start of the current academic hiring year "
+        "(the most recent May 1). Jobs with no posting date are kept.",
+    )
+    parser.add_argument(
+        "--deadline-grace-days",
+        type=int,
+        default=DEFAULT_GRACE_DAYS,
+        help="Keep an advertisement with a stated application deadline until this many days "
+        "after it (default: {}).".format(DEFAULT_GRACE_DAYS),
     )
     args = parser.parse_args()
 
@@ -103,8 +110,14 @@ def main() -> int:
         now = datetime.now(timezone.utc)
         since = parse_day(args.since) if args.since else academic_year_start(now.date())
         all_jobs = dedupe_jobs([job for result in carried.results for job in result.jobs])
-        jobs = filter_since(all_jobs, since)
-        notes.append("Kept advertisements posted since {}; left out {} older one(s).".format(since, len(all_jobs) - len(jobs)))
+        jobs = filter_current(all_jobs, now.date(), since, args.deadline_grace_days)
+        with_deadline = sum(1 for job in jobs if job.deadline)
+        notes.append(
+            "Left out {} advertisement(s): more than {} days past their application deadline, or "
+            "(with no stated deadline) posted before {}. {} of the {} kept state a deadline.".format(
+                len(all_jobs) - len(jobs), args.deadline_grace_days, since, with_deadline, len(jobs)
+            )
+        )
         write_jobs(jobs, args.output)
         write_status(carried.status, args.html_output / STATUS_FILE)
         feed_count = write_rss_feeds(jobs, args.feed_output)

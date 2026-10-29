@@ -81,6 +81,7 @@ def _job_from_dict(item: object) -> Optional[Job]:
         categories=[],
         functions=[],
         disciplines=[],
+        deadline=_text(item, "deadline"),
     )
 
 

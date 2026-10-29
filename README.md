@@ -72,11 +72,18 @@ older ones; the same summary is printed in the run log. If the previous output
 cannot be read (for example on the very first deployment) the failed feed simply
 has no fallback.
 
-Only the current academic hiring year is kept: advertisements posted on or
-after the most recent May 1 (so 2026-05-01 until 2027-05-01 is replaced by
-2027-05-01 on that date). Override it with `--since YYYY-MM-DD`. A posting with no
-posting date cannot be placed in a year, so it is kept. The run log says how many
-older advertisements were left out.
+Advertisements are kept only while they are current. When the posting states an
+application deadline (read from phrases like "application deadline is January 8,
+2027" or "submit your application by 23 November 2026" in the title, summary and
+full text; "review of applications begins..." is not a deadline), it stays until
+30 days after that deadline, whenever it was posted (`--deadline-grace-days`
+changes the 30). The date is saved as `deadline` in `jobs.json`. A posting that
+states no deadline falls back to its posting date: it is kept if posted on or
+after the most recent May 1 (the academic hiring year start; override with
+`--since YYYY-MM-DD`). A posting with neither date is kept. The run log says how
+many advertisements were left out and how many of those kept state a deadline.
+Deadlines are only found when the feed's text includes them, and many boards
+publish short summaries, so expect many ads to use the posting-date fallback.
 
 Many job boards (AAPT, AGU, Chronicle, Science Careers, Physics Today) only list
 their newest 20-25 postings, so older but still-open positions fall out of the

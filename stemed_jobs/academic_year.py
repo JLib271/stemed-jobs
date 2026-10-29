@@ -1,17 +1,21 @@
-"""Limit the output to the current academic hiring year.
+"""Decide which advertisements are still current.
 
-Academic hiring years run from May 1 to the next April 30, so in October 2026
-only advertisements posted on or after 2026-05-01 are kept, and on 2027-05-01
-the cutoff moves to 2027-05-01.
+A posting that states an application deadline stays until
+``deadline_grace_days`` after it (default one month), whenever it was posted.
+A posting with no stated deadline falls back to its posting date: it is kept
+if posted on or after the start of the current academic hiring year (the most
+recent May 1). A posting with neither date is kept, since nothing says it is old.
 """
 
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import List, Optional
 
+from stemed_jobs.deadlines import parse_day as _day
 from stemed_jobs.models import Job
 
 START_MONTH = 5
 START_DAY = 1
+DEFAULT_GRACE_DAYS = 30
 
 
 def academic_year_start(today: date) -> date:
@@ -24,17 +28,13 @@ def parse_day(value: str) -> date:
     return datetime.strptime(value, "%Y-%m-%d").date()
 
 
-def _posted_day(job: Job) -> Optional[date]:
-    try:
-        return parse_day((job.published or "")[:10])
-    except ValueError:
-        return None
+def is_current(job: Job, today: date, since: date, grace_days: int = DEFAULT_GRACE_DAYS) -> bool:
+    deadline: Optional[date] = _day(job.deadline)
+    if deadline is not None:
+        return deadline + timedelta(days=grace_days) >= today
+    posted = _day(job.published or "")
+    return posted is None or posted >= since
 
 
-def filter_since(jobs: List[Job], since: date) -> List[Job]:
-    """Drop jobs posted before ``since``.
-
-    A job with no usable posting date cannot be placed in a year, so it is kept
-    rather than silently lost.
-    """
-    return [job for job in jobs if _posted_day(job) is None or _posted_day(job) >= since]
+def filter_current(jobs: List[Job], today: date, since: date, grace_days: int = DEFAULT_GRACE_DAYS) -> List[Job]:
+    return [job for job in jobs if is_current(job, today, since, grace_days)]
