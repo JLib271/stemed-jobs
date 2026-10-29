@@ -162,7 +162,7 @@ category and the disciplines identified from the title and description.
 
 The run generates 27 filtered RSS 2.0 feeds (three audiences across 9
 disciplines) under `output/feeds/{audience}/{discipline}.xml`; for example,
-`output/feeds/graduates/chemistry.xml`. The HTML links default to `/feeds/...`.
+`output/feeds/graduates/chemistry.xml`. A feed with no jobs holds one placeholder item titled "No current postings", so feed readers and WordPress RSS widgets show that instead of an error; it disappears as soon as a job matches. The HTML links default to `/feeds/...`.
 RSS research inclusion uses job titles only; descriptions are never used to
 qualify a research listing. The discipline-specific title signals include
 Physics Education/PER (or a physics topic paired with Education), Chemistry

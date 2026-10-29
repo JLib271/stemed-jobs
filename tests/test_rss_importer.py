@@ -15,7 +15,7 @@ from stemed_jobs.models import Job
 from stemed_jobs.relevance import is_stem_education_relevant, requires_education_doctorate
 from stemed_jobs.storage.html_store import render_audience_html, render_index_html, write_index_html
 from stemed_jobs.storage.json_store import write_jobs
-from stemed_jobs.storage.rss_store import render_rss, write_rss_feeds
+from stemed_jobs.storage.rss_store import NO_POSTINGS_TITLE, render_rss, write_rss_feeds
 
 
 RSS_ONE = b"""<?xml version="1.0"?>
@@ -47,6 +47,15 @@ class _Response:
 
     def read(self):
         return self.content
+
+
+def _job_titles(root):
+    """Titles of the real jobs in a rendered feed, leaving out the empty-feed placeholder."""
+    return [
+        title
+        for title in (item.findtext("title") for item in root.findall("./channel/item"))
+        if title != NO_POSTINGS_TITLE
+    ]
 
 
 class RssImporterTests(unittest.TestCase):
@@ -344,7 +353,7 @@ class RssImporterTests(unittest.TestCase):
                 "Science Education",
             ):
                 root = ElementTree.fromstring(render_rss(jobs, audience, discipline))
-                has_dber = root.find("./channel/item") is not None
+                has_dber = _job_titles(root) != []
                 with self.subTest(audience=audience, discipline=discipline):
                     self.assertEqual(
                         has_dber,
@@ -374,7 +383,7 @@ class RssImporterTests(unittest.TestCase):
             graduate_root.findtext("./channel/item/title"),
             "Three DBER Graduate Assistantships",
         )
-        self.assertIsNone(faculty_root.find("./channel/item"))
+        self.assertEqual(_job_titles(faculty_root), [])
 
     def test_writes_rss_files_for_three_audiences_and_all_disciplines(self):
         jobs = parse_feed(
@@ -395,8 +404,13 @@ class RssImporterTests(unittest.TestCase):
 
         self.assertEqual(count, 30)
         self.assertEqual(len(graduate_feed.findall("./channel/item")), 1)
-        self.assertEqual(len(faculty_feed.findall("./channel/item")), 0)
-        self.assertEqual(len(postdoc_feed.findall("./channel/item")), 0)
+        self.assertEqual(_job_titles(faculty_feed), [])
+        self.assertEqual(_job_titles(postdoc_feed), [])
+        # An empty feed holds one placeholder item instead of nothing, so feed
+        # readers and WordPress widgets do not report an error.
+        self.assertEqual(
+            [item.findtext("title") for item in faculty_feed.findall("./channel/item")], ["No current postings"]
+        )
 
     def test_deduplicates_jobs_by_url(self):
         feeds = [Feed("First", "https://feeds.example/1"), Feed("Second", "https://feeds.example/2")]
@@ -506,6 +520,27 @@ class RssImporterTests(unittest.TestCase):
         boards = load_job_boards(Path("config/job_boards.json"))
         self.assertEqual(len(boards), 23)
         self.assertIn("Physics", next(board for board in boards if board.name == "AAPT Career Center").disciplines)
+
+
+class EmptyFeedTests(unittest.TestCase):
+    def test_a_feed_with_no_jobs_holds_one_placeholder_with_a_link(self):
+        root = ElementTree.fromstring(render_rss([], "faculty", "Physics"))
+        items = root.findall("./channel/item")
+        self.assertEqual(len(items), 1)
+        self.assertEqual(items[0].findtext("title"), "No current postings")
+        self.assertIn("faculty", items[0].findtext("description"))
+        self.assertIn("Physics", items[0].findtext("description"))
+        self.assertTrue(items[0].findtext("link").startswith("https://"))
+        self.assertEqual(items[0].findtext("guid"), "no-current-postings-faculty-physics")
+
+    def test_the_placeholder_disappears_when_there_are_jobs(self):
+        job = Job(
+            id="1", title="Assistant Teaching Professor of Physics", company="", location="",
+            url="https://jobs.example/1", published="", summary="", source="s", source_url="u",
+            categories=["faculty"], functions=[], disciplines=["Physics"],
+        )
+        titles = [i.findtext("title") for i in ElementTree.fromstring(render_rss([job], "faculty", "Physics")).findall("./channel/item")]
+        self.assertEqual(titles, ["Assistant Teaching Professor of Physics"])
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
 from typing import Iterable, List
@@ -8,6 +8,9 @@ from stemed_jobs.disciplines import DISCIPLINES
 from stemed_jobs.models import Job
 from stemed_jobs.relevance import is_stem_education_relevant
 
+
+NO_POSTINGS_TITLE = "No current postings"
+CHANNEL_LINK = "https://theseekershub.stemedplus.org/"
 
 AUDIENCES = ("graduates", "postdocs", "faculty")
 
@@ -31,9 +34,10 @@ def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
             audience.title(), discipline
         )
     )
-    ElementTree.SubElement(channel, "link").text = "https://theseekershub.stemedplus.org/"
+    ElementTree.SubElement(channel, "link").text = CHANNEL_LINK
     ElementTree.SubElement(channel, "language").text = "en"
 
+    listed = 0
     for job in jobs:
         if audience not in job.categories:
             continue
@@ -42,6 +46,7 @@ def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
             or not is_stem_education_relevant(job, discipline)
         ):
             continue
+        listed += 1
         item = ElementTree.SubElement(channel, "item")
         ElementTree.SubElement(item, "title").text = job.title
         ElementTree.SubElement(item, "link").text = job.url
@@ -58,6 +63,23 @@ def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
         for function in job.functions:
             ElementTree.SubElement(item, "category").text = function.title()
         ElementTree.SubElement(item, "source", {"url": job.source_url}).text = job.source
+
+    if not listed:
+        # A feed with no items makes many readers and WordPress RSS widgets show
+        # "an error has occurred... the feed is down". One placeholder item says
+        # plainly that the feed works and has nothing to list right now.
+        item = ElementTree.SubElement(channel, "item")
+        ElementTree.SubElement(item, "title").text = NO_POSTINGS_TITLE
+        ElementTree.SubElement(item, "link").text = CHANNEL_LINK
+        ElementTree.SubElement(item, "guid", {"isPermaLink": "false"}).text = "no-current-postings-{}-{}".format(
+            _slug(audience), _slug(discipline)
+        )
+        ElementTree.SubElement(item, "description").text = (
+            "There are no current {} postings in {} right now. This list updates daily; check back soon.".format(
+                audience, discipline
+            )
+        )
+        ElementTree.SubElement(item, "pubDate").text = format_datetime(datetime.now(timezone.utc))
 
     return ElementTree.tostring(root, encoding="utf-8", xml_declaration=True)
 
