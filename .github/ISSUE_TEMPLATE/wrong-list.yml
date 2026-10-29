@@ -1,0 +1,38 @@
+name: A job is in the wrong list, or missing
+description: Report a job that is sorted into the wrong discipline or audience, shows when it should not, or is missing.
+title: "Sorting: "
+labels: ["sorting"]
+body:
+  - type: input
+    id: job
+    attributes:
+      label: Job title and link
+      placeholder: Title, then link
+    validations:
+      required: true
+  - type: dropdown
+    id: problem
+    attributes:
+      label: What is wrong?
+      options:
+        - It is in the wrong discipline
+        - It is in the wrong audience (graduate, postdoc, faculty)
+        - It should not appear at all
+        - It is missing
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where did you see it?
+      description: For example "Chemistry, Postdocs".
+  - type: input
+    id: expected
+    attributes:
+      label: Where should it be?
+      description: For example "Bioscience, Faculty", or "not listed".
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: The wording in the ad that shows where it belongs, such as the department name or an application deadline.

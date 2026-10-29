@@ -1,0 +1,59 @@
+name: Suggest a job board or feed
+description: Suggest a board that publishes an RSS feed or API we could read.
+title: "Board: "
+labels: ["new-board"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project only reads existing RSS or API feeds. It does not scrape web pages,
+        so a board without a feed can only be added to the list of boards that readers search themselves.
+  - type: input
+    id: name
+    attributes:
+      label: Board name
+    validations:
+      required: true
+  - type: input
+    id: site
+    attributes:
+      label: Board website
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: feed
+    attributes:
+      label: Feed address (RSS or API)
+      description: Open it in a browser. It should show XML with <item> entries from this year. Leave blank if you could not find one.
+      placeholder: https://
+  - type: dropdown
+    id: disciplines
+    attributes:
+      label: Disciplines it covers
+      multiple: true
+      options:
+        - Agriculture
+        - Bioscience
+        - Chemistry
+        - Earth Science
+        - Engineering
+        - Health Education
+        - Learning Science
+        - Mathematics
+        - Physics
+        - Science Education
+  - type: dropdown
+    id: audiences
+    attributes:
+      label: Who posts there
+      multiple: true
+      options:
+        - Graduate students
+        - Postdocs
+        - Faculty
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: For example, whether the feed only lists the newest few postings.
