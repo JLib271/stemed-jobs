@@ -402,7 +402,7 @@ class RssImporterTests(unittest.TestCase):
             faculty_feed = ElementTree.parse(feed_directory / "faculty" / "chemistry.xml")
             postdoc_feed = ElementTree.parse(feed_directory / "postdocs" / "physics.xml")
 
-        self.assertEqual(count, 30)
+        self.assertEqual(count, 40)
         self.assertEqual(len(graduate_feed.findall("./channel/item")), 1)
         self.assertEqual(_job_titles(faculty_feed), [])
         self.assertEqual(_job_titles(postdoc_feed), [])

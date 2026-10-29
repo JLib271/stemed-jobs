@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from stemed_jobs.disciplines import DISCIPLINES
 from stemed_jobs.models import Job, JobBoard
 from stemed_jobs.relevance import is_stem_education_relevant
-from stemed_jobs.storage.rss_store import AUDIENCES, feed_relative_path
+from stemed_jobs.storage.rss_store import AUDIENCES, audience_label, feed_relative_path
 
 
 def render_index_html() -> str:
@@ -25,10 +25,10 @@ def render_index_html() -> str:
         "<h2>Browse jobs</h2>",
         "<ul>",
     ]
-    for audience in ("graduates", "postdocs", "faculty"):
+    for audience in AUDIENCES:
         lines.append(
             '<li><a href="{}-jobs.html">{}</a></li>'.format(
-                escape(audience), escape(audience.title())
+                escape(audience), escape(audience_label(audience))
             )
         )
     lines.extend(
@@ -43,13 +43,14 @@ def render_index_html() -> str:
         ("graduates", "science-education"),
         ("postdocs", "bioscience"),
         ("faculty", "physics"),
+        ("staff", "learning-science"),
     ):
         relative_url = "feeds/{}/{}.xml".format(audience, discipline)
         lines.append(
             '<li><a href="{}">{}, {}</a></li>'.format(
                 escape(relative_url, quote=True),
                 escape(discipline.replace("-", " ").title()),
-                escape(audience.title()),
+                escape(audience_label(audience)),
             )
         )
     lines.extend(["</ul>", "</main>", "</body>", "</html>", ""])
@@ -78,7 +79,7 @@ def render_audience_html(
     boards: Sequence[JobBoard],
     feed_base_url: str = "/feeds",
 ) -> str:
-    if audience not in ("graduates", "postdocs", "faculty"):
+    if audience not in AUDIENCES:
         raise ValueError("Unsupported audience: {}".format(audience))
 
     grouped: Dict[str, List[Job]] = {discipline: [] for discipline in DISCIPLINES}
@@ -94,7 +95,7 @@ def render_audience_html(
 
     feed_base_url = feed_base_url.rstrip("/")
     lines = [
-        '<nav aria-label="{} jobs by discipline">'.format(escape(audience.title())),
+        '<nav aria-label="{} jobs by discipline">'.format(escape(audience_label(audience))),
         '<div class="wp-block-buttons is-content-justification-center">',
     ]
     for discipline in DISCIPLINES:
@@ -114,7 +115,7 @@ def render_audience_html(
         )
         lines.append(
             '<p><a href="{}" type="application/rss+xml">RSS feed: {} {}</a></p>'.format(
-                feed_url, escape(discipline), escape(audience)
+                feed_url, escape(discipline), escape(audience_label(audience))
             )
         )
 
@@ -131,7 +132,7 @@ def render_audience_html(
             lines.append("</ul>")
 
         if not grouped[discipline]:
-            lines.append("<p>No matching {} jobs in the current feed.</p>".format(escape(audience)))
+            lines.append("<p>No matching {} jobs in the current feed.</p>".format(escape(audience_label(audience).lower())))
         else:
             lines.append("<ul>")
             for job in grouped[discipline]:

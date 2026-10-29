@@ -243,5 +243,19 @@ class ClinicalFacultyTests(unittest.TestCase):
         self.assertEqual(classify_disciplines(title, ""), ["Bioscience"])
 
 
+class DesignerRolesTests(unittest.TestCase):
+    def test_design_and_development_roles_are_learning_science(self):
+        for title in (
+            "Instructional Designer", "Educational Designer", "Learning Experience Designer",
+            "Curriculum Developer", "Educational Developer", "Senior Instructional Technologist",
+            "Academic Technologist", "Faculty Development Specialist",
+        ):
+            self.assertIn("Learning Science", classify_disciplines(title, ""), title)
+
+    def test_a_named_department_adds_its_discipline(self):
+        found = classify_disciplines("Instructional Designer, Department of Nursing", "")
+        self.assertEqual(found, ["Health Education", "Learning Science"])
+
+
 if __name__ == "__main__":
     unittest.main()

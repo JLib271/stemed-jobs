@@ -12,7 +12,13 @@ from stemed_jobs.relevance import is_stem_education_relevant
 NO_POSTINGS_TITLE = "No current postings"
 CHANNEL_LINK = "https://theseekershub.stemedplus.org/"
 
-AUDIENCES = ("graduates", "postdocs", "faculty")
+AUDIENCES = ("graduates", "postdocs", "faculty", "staff")
+AUDIENCE_LABELS = {"staff": "Professional Staff"}
+
+
+def audience_label(audience: str) -> str:
+    """How an audience is named to readers: "Professional Staff", "Faculty"..."""
+    return AUDIENCE_LABELS.get(audience, audience.title())
 
 
 def _slug(value: str) -> str:
@@ -26,12 +32,12 @@ def feed_relative_path(audience: str, discipline: str) -> str:
 def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
     root = ElementTree.Element("rss", {"version": "2.0"})
     channel = ElementTree.SubElement(root, "channel")
-    title = "{} jobs — {}".format(discipline, audience.title())
+    title = "{} jobs — {}".format(discipline, audience_label(audience))
     ElementTree.SubElement(channel, "title").text = "STEMEd Jobs: " + title
     ElementTree.SubElement(channel, "description").text = (
         "{} opportunities in {} across STEM education research and teaching. "
         "Listings are screened for STEM education research, STEM teaching, human dimensions, or cognitive science.".format(
-            audience.title(), discipline
+            audience_label(audience), discipline
         )
     )
     ElementTree.SubElement(channel, "link").text = CHANNEL_LINK
@@ -76,7 +82,7 @@ def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
         )
         ElementTree.SubElement(item, "description").text = (
             "There are no current {} postings in {} right now. This list updates daily; check back soon.".format(
-                audience, discipline
+                audience_label(audience).lower(), discipline
             )
         )
         ElementTree.SubElement(item, "pubDate").text = format_datetime(datetime.now(timezone.utc))
