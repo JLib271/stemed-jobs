@@ -2,6 +2,7 @@ import re
 from typing import Dict, Pattern
 
 from stemed_jobs.disciplines import BIOSCIENCE_TERMS, CHEMISTRY_TERMS, EARTH_TERMS, HEALTH_TERMS, PHYSICS_TERMS
+from stemed_jobs.disciplines import matching_disciplines
 from stemed_jobs.models import Job
 
 
@@ -52,6 +53,20 @@ _FACULTY_INCLUDE: Pattern[str] = re.compile(
     r"\bteaching\b|\bSoTL\b|\binstructor\b",
     re.IGNORECASE,
 )
+# Named research instructorships ("Bernoulli Instructor", "Courant Instructor",
+# "Hermann-Weyl Instructor") are postdoc-style research appointments that happen
+# to be called Instructor; they are not teaching-focused roles. The name is a
+# single capitalized word right before the rank, so generic ranks are excluded.
+_GENERIC_RANK_WORD = (
+    r"(?:Visiting|Assistant|Associate|Senior|Junior|Clinical|Adjunct|Teaching|Full-time|Part-time|Temporary"
+    r"|Lead|Principal|Research|Faculty|Graduate|Postdoctoral|Open|Tenure-track|Online|Hybrid|Remote|Lab|Laboratory"
+    r"|Summer|Fall|Spring|Winter|Interim|Substitute|Contingent|Continuing|Guest|Emeritus|Distinguished|Endowed|Named)"
+)
+_NAMED_INSTRUCTORSHIP: Pattern[str] = re.compile(
+    r"(?-i:\b(?!" + _GENERIC_RANK_WORD + r"\b)(?P<name>[A-Z][\w'’]+(?:-[A-Z][\w'’]+)?)\s+"
+    r"(?:Instructor|Lecturer|Assistant Professor)\b)"
+)
+_TEACHING_IN_TITLE: Pattern[str] = re.compile(r"\bteaching\b|\beducation\b|\bpedagog\w*|\bSoTL\b", re.IGNORECASE)
 _DBER: Pattern[str] = re.compile(r"\bDBER\b", re.IGNORECASE)
 _EDUCATION_DOCTORATE: Pattern[str] = re.compile(
     r"\b(?:Ph\.?\s?D\.?|Ed\.?\s?D\.?|doctorate|doctoral degree)"
@@ -70,6 +85,13 @@ _REQUIRED_BEFORE: Pattern[str] = re.compile(
 )
 _REQUIRED_AFTER: Pattern[str] = re.compile(r"\b(?:is\s+)?required\b|\bis a requirement\b", re.IGNORECASE)
 _PREFERRED: Pattern[str] = re.compile(r"\bpreferred\b|\bdesirable\b", re.IGNORECASE)
+
+
+def _is_named_research_instructorship(title: str) -> bool:
+    if _TEACHING_IN_TITLE.search(title):
+        return False
+    # A subject word ("Mathematics Instructor", "Physics Lecturer") is not a name.
+    return any(not matching_disciplines(match.group("name")) for match in _NAMED_INSTRUCTORSHIP.finditer(title))
 
 
 def is_dber_title(title: str) -> bool:
@@ -103,6 +125,8 @@ def is_stem_education_relevant(job: Job, discipline: str) -> bool:
         return discipline in job.disciplines
     if requires_education_doctorate(job):
         return discipline in job.disciplines
+    if _is_named_research_instructorship(title):
+        return False
     if "faculty" in job.categories and _FACULTY_INCLUDE.search(title):
         return discipline in job.disciplines
 

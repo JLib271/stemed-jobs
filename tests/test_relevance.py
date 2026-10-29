@@ -1,7 +1,7 @@
 import unittest
 
 from stemed_jobs.models import Job
-from stemed_jobs.relevance import is_stem_education_relevant
+from stemed_jobs.relevance import _is_named_research_instructorship, is_stem_education_relevant
 
 
 def _job(title, summary="", disciplines=("Learning Science",), categories=()):
@@ -72,6 +72,31 @@ class HealthEducationRelevanceTests(unittest.TestCase):
     def test_a_plain_clinical_research_title_is_not(self):
         job = _job("Postdoc in Oncology Nursing Research", disciplines=("Health Education",))
         self.assertFalse(is_stem_education_relevant(job, "Health Education"))
+
+
+class NamedInstructorshipTests(unittest.TestCase):
+    def relevant(self, title, discipline="Mathematics", categories=("faculty",)):
+        return is_stem_education_relevant(_job(title, disciplines=(discipline,), categories=categories), discipline)
+
+    def test_named_research_instructorships_are_not_teaching_roles(self):
+        for title in (
+            "Bernoulli Instructor in Probability and Stochastic Analysis", "Courant Instructor",
+            "Hermann-Weyl Instructor", "Chern Instructor", "Dickson Instructor",
+        ):
+            self.assertFalse(self.relevant(title), title)
+
+    def test_ordinary_instructor_and_lecturer_roles_stay(self):
+        for title in (
+            "Instructor of Mathematics", "Mathematics Instructor", "Visiting Instructor in Mathematics",
+            "Online Instructor, Mathematics", "Senior Teaching Lecturer in Mathematics", "Teaching Assistant Professor of Mathematics",
+            "Bernoulli Instructor in Mathematics Education",
+        ):
+            self.assertTrue(self.relevant(title), title)
+
+    def test_a_subject_word_is_not_mistaken_for_a_name(self):
+        self.assertTrue(self.relevant("Chemistry Instructor", "Chemistry"))
+        self.assertFalse(_is_named_research_instructorship("Physics Lecturer"))
+        self.assertFalse(_is_named_research_instructorship("Nursing Instructor"))
 
 
 if __name__ == "__main__":

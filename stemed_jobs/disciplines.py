@@ -43,7 +43,7 @@ HEALTH_TERMS = (
     r"|respiratory therapy|athletic training|physician assistants?|optometry|radiolog(?:y|ic|ical) (?:sciences?|technology)"
     r"|radiology|medical laboratory|clinical laboratory|diagnostic imaging|sonography|paramedics?|kinesiology"
     r"|exercise (?:science|physiology)|nutrition|dietetics|dietitians?|epidemiolog(?:y|ists?)|biostatistics"
-    r"|veterinary|osteopathic|physicians?|clinical (?:sciences?|medicine|education|faculty|instructors?)"
+    r"|veterinary|osteopathic|physicians?|clinical (?:sciences?|medicine|education)"
     r"|rehabilitation|gerontology|biomedical sciences?|biomedicine"
 )
 
@@ -124,7 +124,7 @@ _BROAD_UNIT = (
 )
 
 
-def _matching_disciplines(text: str) -> List[str]:
+def matching_disciplines(text: str) -> List[str]:
     return [name for name, pattern in DISCIPLINE_RULES if pattern.search(text)]
 
 
@@ -136,7 +136,7 @@ def _first_unit_disciplines(patterns: Iterable[re.Pattern], text: str) -> List[s
     """
     hits = sorted((match.start(), match.group("name")) for pattern in patterns for match in pattern.finditer(text))
     for _, name in hits:
-        found = _matching_disciplines(name)
+        found = matching_disciplines(name)
         if found:
             return found
     return []
@@ -175,10 +175,10 @@ def classify_disciplines(title: str, summary: str, default: Sequence[str] = ()) 
     no discipline and so appears in no discipline list.
     """
     if _DBER_TITLE.search(title):
-        return _ordered(set(_matching_disciplines("{} {}".format(title, summary))))
+        return _ordered(set(matching_disciplines("{} {}".format(title, summary))))
 
     text = "{}. {}".format(title, summary)
-    found = set(_matching_disciplines(title)) | set(_first_unit_disciplines(_NARROW_UNIT, text))
+    found = set(matching_disciplines(title)) | set(_first_unit_disciplines(_NARROW_UNIT, text))
     if not found:
         found = {name for name in default if name in DISCIPLINES}
     if not found:

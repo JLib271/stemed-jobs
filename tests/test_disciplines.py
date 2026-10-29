@@ -234,5 +234,14 @@ class HealthEducationTests(unittest.TestCase):
         self.assertEqual(found, ["Health Education"])
 
 
+class ClinicalFacultyTests(unittest.TestCase):
+    def test_clinical_faculty_in_a_biology_department_is_bioscience_not_health(self):
+        title = (
+            "University of Illinois at Chicago- Department of Biological Sciences: "
+            "Clinical Faculty- Greenhouse Management and Teaching"
+        )
+        self.assertEqual(classify_disciplines(title, ""), ["Bioscience"])
+
+
 if __name__ == "__main__":
     unittest.main()
