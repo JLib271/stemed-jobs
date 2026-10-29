@@ -170,5 +170,46 @@ class DberTests(unittest.TestCase):
         )
 
 
+class SubfieldTests(unittest.TestCase):
+    def check(self, title, expected):
+        self.assertEqual(classify_disciplines(title, ""), expected, title)
+
+    def test_earth_subfields_are_earth_science(self):
+        for title in (
+            "Assistant Professor of Geophysics", "Postdoc in Hydrology", "Lecturer in Atmospheric Science",
+            "Assistant Professor of Paleontology", "Instructor of Oceanography", "Seismology Postdoctoral Fellow",
+            "Assistant Professor of Planetary Science", "Lecturer in Soil Science", "Geology Instructor",
+        ):
+            self.assertIn("Earth Science", classify_disciplines(title, ""), title)
+
+    def test_chemistry_subfields_are_chemistry(self):
+        for title in (
+            "Assistant Professor of Biochemistry", "Lecturer in Organic Chemistry", "Postdoc in Chemical Biology",
+            "Instructor, Analytical Chemistry", "Assistant Professor of Geochemistry",
+        ):
+            self.assertIn("Chemistry", classify_disciplines(title, ""), title)
+
+    def test_biology_subfields_are_bioscience(self):
+        for title in (
+            "Assistant Professor of Animal Science", "Lecturer in Entomology", "Postdoc in Genetics",
+            "Assistant Professor of Zoology", "Instructor of Botany", "Assistant Professor of Neuroscience",
+            "Postdoc in Plant Sciences", "Assistant Professor of Genomics", "Lecturer in Immunology",
+        ):
+            self.assertIn("Bioscience", classify_disciplines(title, ""), title)
+
+    def test_biochemistry_is_listed_under_chemistry_and_bioscience(self):
+        self.check("Assistant Professor of Biochemistry", ["Bioscience", "Chemistry"])
+
+    def test_physics_includes_astronomy_and_space_science(self):
+        for title in (
+            "Assistant Professor of Astronomy", "Lecturer in Astrophysics", "Postdoc in Space Science",
+            "Instructor of Planetary Sciences", "Assistant Professor of Cosmology", "Heliophysics Postdoc",
+        ):
+            self.assertIn("Physics", classify_disciplines(title, ""), title)
+
+    def test_biomedical_engineering_is_still_not_bioscience(self):
+        self.check("Assistant Professor of Biomedical Engineering", ["Engineering"])
+
+
 if __name__ == "__main__":
     unittest.main()

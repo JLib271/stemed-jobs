@@ -2,36 +2,48 @@ import re
 from typing import Iterable, List, Sequence, Set, Tuple
 
 
+# Field and subfield names, as regex alternations without word boundaries. They
+# are shared with relevance.py, which looks for "<name> education" in titles.
+EARTH_TERMS = (
+    r"earth sciences?|geosciences?|geolog(?:y|ical|ists?)|geophysic(?:s|al)|geochemistry|geobiology"
+    r"|geomorpholog(?:y|ical)|hydrolog(?:y|ic|ical)|hydrogeology|atmospheric (?:sciences?|chemistry|physics)"
+    r"|meteorolog(?:y|ical)|climate|climatology|oceanograph(?:y|ic|ers?)|ocean sciences?|marine sciences?"
+    r"|paleontolog(?:y|ists?)|paleoclimat\w*|seismolog(?:y|ists?)|volcanolog(?:y|ists?)|glaciolog(?:y|ists?)"
+    r"|mineralog(?:y|ists?)|petrolog(?:y|ists?)|sedimentolog(?:y|ists?)|tectonics|geochronolog(?:y|ists?)"
+    r"|planetary sciences?|soil sciences?|environmental sciences?|environmental education|limnolog(?:y|ists?)"
+    r"|earth systems?|natural hazards"
+)
+CHEMISTRY_TERMS = (
+    r"chemistr(?:y|ies)|chemical sciences?|chemical education|biochem(?:istry|ical)?|chemical biology"
+    r"|geochemistry|atmospheric chemistry|polymer (?:science|chemistry)|molecular sciences?"
+)
+BIOSCIENCE_TERMS = (
+    r"bio(?:logy|logical|science|sciences|engineering)?|life sciences?|molecular biology|genetics|genomics?"
+    r"|ecology|microbiology|anatomy|physiology|biochem(?:istry|ical)?|zoolog(?:y|ical|ists?)"
+    r"|botan(?:y|ical|ists?)|entomolog(?:y|ical|ists?)|animal sciences?|plant sciences?|neuroscienc(?:e|es|ists?)"
+    r"|immunolog(?:y|ists?)|virolog(?:y|ists?)|bacteriolog(?:y|ists?)|biotechnology|bioinformatics"
+    r"|biophysics|pharmacolog(?:y|ists?)|toxicolog(?:y|ists?)|ornitholog(?:y|ists?)|mycolog(?:y|ists?)"
+    r"|parasitolog(?:y|ists?)|wildlife (?:sciences?|ecology)|chemical biology"
+)
+PHYSICS_TERMS = (
+    r"physics|physicists?|physical sciences?|quantum|astrophysic(?:s|al)|astronom(?:y|ical|ers?)|cosmology"
+    r"|space sciences?|space physics|space weather|heliophysics|planetary sciences?|biophysics"
+    r"|condensed matter|optics|photonics"
+)
+
+
+def _terms(alternation: str) -> str:
+    return r"\b(?:" + alternation + r")\b"
+
+
 # Acronyms such as PER, CER, GER and BER are wrapped in (?-i:...) so they only
 # match when written in capitals; otherwise "per year" or "per hour" in a
 # description would tag a job as Physics.
 DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
     ("Agriculture", re.compile(r"\bagricultur(?:e|al|a)?\b|\bagri[- ]?science\b|\bag ed\b", re.IGNORECASE)),
-    (
-        "Bioscience",
-        re.compile(
-            r"\bbio(?:logy|logical|science|engineering)?\b"
-            r"|\blife sciences?\b|\bmolecular biology\b|\bgenetics\b|\becology\b"
-            r"|\bmicrobiology\b|\banatomy\b|\bphysiology\b|\b(?-i:BER)\b",
-            re.IGNORECASE,
-        ),
-    ),
-    (
-        "Chemistry",
-        re.compile(
-            r"\bchemistr(?:y|ies)\b|\bchemical sciences?\b|\bchemical education\b|\b(?-i:CER)\b",
-            re.IGNORECASE,
-        ),
-    ),
-    (
-        "Earth Science",
-        re.compile(
-            r"\bearth sciences?\b|\bgeosciences?\b|\bgeology\b|\bclimate\b"
-            r"|\benvironmental sciences?\b|\benvironmental education\b|\bmeteorology\b"
-            r"|\boceanography\b|\b(?-i:GER)\b",
-            re.IGNORECASE,
-        ),
-    ),
+    ("Bioscience", re.compile(_terms(BIOSCIENCE_TERMS) + r"|\b(?-i:BER)\b", re.IGNORECASE)),
+    ("Chemistry", re.compile(_terms(CHEMISTRY_TERMS) + r"|\b(?-i:CER)\b", re.IGNORECASE)),
+    ("Earth Science", re.compile(_terms(EARTH_TERMS) + r"|\b(?-i:GER)\b", re.IGNORECASE)),
     ("Engineering", re.compile(r"\bengineering\b|\bengineer(?:s|ing)?\b", re.IGNORECASE)),
     (
         "Learning Science",
@@ -48,14 +60,7 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
             re.IGNORECASE,
         ),
     ),
-    (
-        "Physics",
-        re.compile(
-            r"\bphysics\b|\bphysicist\b|\bphysics education\b|\bphysical sciences?\b|\b(?-i:PER)\b"
-            r"|\bquantum\b|\bastrophysics\b|\bastronomy\b",
-            re.IGNORECASE,
-        ),
-    ),
+    ("Physics", re.compile(_terms(PHYSICS_TERMS) + r"|\b(?-i:PER)\b", re.IGNORECASE)),
     (
         "Science Education",
         re.compile(

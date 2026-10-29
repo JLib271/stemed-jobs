@@ -114,7 +114,15 @@ description.
 
 Jobs also have a `disciplines` array using nine labels: Agriculture,
 Bioscience, Chemistry, Earth Science, Engineering, Learning Science,
-Mathematics, Physics, and Science Education. Disciplines are assigned from the
+Mathematics, Physics, and Science Education. Each label covers its subfields: Earth Science includes geology, geophysics,
+hydrology, atmospheric science, oceanography, paleontology, planetary and soil
+science and similar; Chemistry includes biochemistry, chemical biology and
+geochemistry; Bioscience includes genetics, genomics, animal and plant science,
+zoology, botany, entomology, neuroscience, immunology and biochemistry; Physics
+includes astronomy, astrophysics, cosmology and space science. The lists are
+`EARTH_TERMS`, `CHEMISTRY_TERMS`, `BIOSCIENCE_TERMS` and `PHYSICS_TERMS` in
+`stemed_jobs/disciplines.py`, and the same names followed by "education" make a
+title relevant. Disciplines are assigned from the
 strongest evidence available, and the first step that finds one decides:
 
 1. A discipline named in the title, plus the first hiring department or program

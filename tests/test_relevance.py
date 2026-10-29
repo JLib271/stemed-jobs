@@ -37,5 +37,24 @@ class LearningScienceRelevanceTests(unittest.TestCase):
         self.assertFalse(is_stem_education_relevant(job, "Learning Science"))
 
 
+class SubfieldEducationTests(unittest.TestCase):
+    def test_subfield_education_titles_are_relevant_to_their_discipline(self):
+        for title, discipline in (
+            ("Postdoc in Geology Education Research", "Earth Science"),
+            ("Hydrology Education Postdoctoral Fellow", "Earth Science"),
+            ("Biochemistry Education Research Postdoc", "Chemistry"),
+            ("Entomology Education Postdoc", "Bioscience"),
+            ("Animal Science Education Postdoc", "Bioscience"),
+            ("Astronomy Education Research Postdoc", "Physics"),
+            ("Space Science Education Postdoc", "Physics"),
+            ("Environmental Education Postdoc", "Earth Science"),
+            ("Chemical Education Postdoc", "Chemistry"),
+        ):
+            self.assertTrue(is_stem_education_relevant(_job(title, disciplines=(discipline,)), discipline), title)
+
+    def test_a_plain_subfield_title_without_education_is_not_enough(self):
+        self.assertFalse(is_stem_education_relevant(_job("Postdoc in Geophysics", disciplines=("Earth Science",)), "Earth Science"))
+
+
 if __name__ == "__main__":
     unittest.main()

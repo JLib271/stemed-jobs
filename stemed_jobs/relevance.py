@@ -1,6 +1,7 @@
 import re
 from typing import Dict, Pattern
 
+from stemed_jobs.disciplines import BIOSCIENCE_TERMS, CHEMISTRY_TERMS, EARTH_TERMS, PHYSICS_TERMS
 from stemed_jobs.models import Job
 
 
@@ -14,25 +15,21 @@ _STEM_DISCIPLINES = {
     "Physics",
 }
 
+
+def _education_in(terms: str) -> str:
+    """A subfield name followed by "education", e.g. "geology education"."""
+    return r"\b(?:" + terms + r")\s+education\b"
+
+
 _DISCIPLINE_SIGNALS: Dict[str, Pattern[str]] = {
-    "Physics": re.compile(
-        r"\bphysics education\b|\b(?-i:PER)\b"
-        r"|\b(?:quantum|astronomy|astrophysics|particle|nuclear|optics|mechanics|"
-        r"thermodynamics|electromagnetism|acoustics) education\b",
-        re.IGNORECASE,
+    "Physics": re.compile(_education_in(PHYSICS_TERMS) + r"|\b(?-i:PER)\b", re.IGNORECASE),
+    "Chemistry": re.compile(
+        _education_in(CHEMISTRY_TERMS) + r"|\bchemical education\b|\b(?-i:CER)\b", re.IGNORECASE
     ),
-    "Chemistry": re.compile(r"\bchemistry education\b|\b(?-i:CER)\b", re.IGNORECASE),
     "Earth Science": re.compile(
-        r"\b(?-i:GER)\b|\bearth science education\b|\bgeoscience education\b"
-        r"|\benvironmental education\b|\benvironmental science education\b",
-        re.IGNORECASE,
+        _education_in(EARTH_TERMS) + r"|\benvironmental education\b|\b(?-i:GER)\b", re.IGNORECASE
     ),
-    "Bioscience": re.compile(
-        r"\b(?-i:BER)\b|\bbioscience education\b|\bbiology education\b"
-        r"|\b(?:genetics|ecology|evolution|microbiology|molecular biology|"
-        r"cell biology|anatomy|physiology) education\b",
-        re.IGNORECASE,
-    ),
+    "Bioscience": re.compile(_education_in(BIOSCIENCE_TERMS) + r"|\b(?-i:BER)\b", re.IGNORECASE),
     "Engineering": re.compile(r"\bengineering education\b|\b(?-i:EER)\b", re.IGNORECASE),
     "Mathematics": re.compile(r"\bmathematics education\b|\bmath education\b", re.IGNORECASE),
     "Agriculture": re.compile(r"\bagricultural education\b|\bagriculture education\b", re.IGNORECASE),
