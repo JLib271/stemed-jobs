@@ -105,7 +105,7 @@ the first feed listed in `config/feeds.json` wins. The normalized JSON fields ar
 `id`, `title`, `company`, `location`, `url`, `published`, `summary`, `source`,
 and `source_url`; feeds that do not provide a field leave it empty.
 Each job also has `categories` and `functions` arrays. Categories are
-`undergraduates`, `graduates`, `postdocs`, and `faculty`; functions are
+`undergraduates`, `graduates`, `postdocs`, `faculty`, and `staff`; functions are
 `research` and `teaching`. These are evidence-based tags, not exclusions:
 unclassified jobs stay in the output with an empty `categories` array, and a
 job may have both research and teaching functions. Audience categories are
@@ -160,7 +160,7 @@ HTML job listings use the same relevance and discipline rules as the RSS
 feeds. Titles containing `DBER` are included only in the inferred audience
 category and the disciplines identified from the title and description.
 
-The run generates 27 filtered RSS 2.0 feeds (three audiences across 9
+The run generates 40 filtered RSS 2.0 feeds (four audiences across 10
 disciplines) under `output/feeds/{audience}/{discipline}.xml`; for example,
 `output/feeds/graduates/chemistry.xml`. A feed with no jobs holds one placeholder item titled "No current postings", so feed readers and WordPress RSS widgets show that instead of an error; it disappears as soon as a job matches. The HTML links default to `/feeds/...`.
 RSS research inclusion uses job titles only; descriptions are never used to
@@ -244,3 +244,14 @@ For now, the only importer is RSS and the only persistence format is JSON.
 ## Contributing
 
 Help is welcome: see [CONTRIBUTING.md](CONTRIBUTING.md). The one rule is to read existing RSS feeds or APIs only, never to scrape.
+
+### Professional Staff
+
+Educational design and development roles (instructional designer, learning or
+educational designer, curriculum developer, educational developer or faculty
+developer, educational or instructional technologist, academic technologist)
+form a fourth audience, `staff`, shown as "Professional Staff" with feeds under
+`output/feeds/staff/`. They are sorted by discipline like other jobs: design and
+development terms place a job in Learning Science, and a department named in
+the title (for example "Department of Nursing") adds its own discipline. A
+title that names a professor, lecturer or instructor stays a faculty post.

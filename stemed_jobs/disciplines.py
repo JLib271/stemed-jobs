@@ -66,7 +66,11 @@ DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = (
         "Learning Science",
         re.compile(
             r"\blearning sciences?\b|\bcognitive sciences?\b|\bcognition\b"
-            r"|\beducational psychology\b|\blearning analytics\b",
+            r"|\beducational psychology\b|\blearning analytics\b"
+            r"|\binstructional design(?:ers?)?\b|\b(?:learning|educational|education|course) design(?:ers?)?\b"
+            r"|\bcurriculum (?:design|development|developers?)\b|\b(?:educational|education|instructional|learning) technolog\w*"
+            r"|\b(?:educational|academic|faculty) developers?\b|\bacademic technologists?\b|\bfaculty development\b|\blearning experience design\w*"
+            r"|\bteaching and learning cent(?:er|re)s?\b",
             re.IGNORECASE,
         ),
     ),

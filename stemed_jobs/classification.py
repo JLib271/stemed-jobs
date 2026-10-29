@@ -36,7 +36,22 @@ _CATEGORY_RULES = (
             re.IGNORECASE,
         ),
     ),
+    (
+        "staff",
+        re.compile(
+            r"\b(?:instructional|learning|educational|education|curriculum|academic|faculty|course|e-?learning"
+            r"|online learning|learning experience|digital learning|teaching and learning)\s+"
+            r"(?:designers?|developers?|technologists?|design(?:\s+(?:specialist|consultant|manager|lead|coordinator))?"
+            r"|development(?:\s+(?:specialist|consultant|manager|coordinator))?|specialists?|consultants?)\b"
+            r"|\b(?:educational|education|instructional|learning|academic)\s+technology\s+(?:specialist|consultant|manager|coordinator|designer|support)\b|\bacademic\s+technologists?\b|\binstructional\s+(?:design|technolog\w*)\b|\blearning\s+technolog\w*\s+(?:specialist|consultant|manager)\b",
+            re.IGNORECASE,
+        ),
+    ),
 )
+
+# Titles that name a professor, lecturer or instructor are faculty even when they
+# also name design or development work.
+_FACULTY_RANK = re.compile(r"\bprofessors?(?:ships?)?\b|\blecturer\b|\binstructor\b|\btenure[ -]?track\b|\btenured\b", re.IGNORECASE)
 
 _FUNCTION_RULES = (
     ("research", re.compile(r"\bresearch\b|\bscholarship\b|\binvestigat(?:e|ion|ing)\b", re.IGNORECASE)),
@@ -47,6 +62,13 @@ _FUNCTION_RULES = (
 def classify_job(title: str, summary: str) -> Tuple[List[str], List[str]]:
     """Return evidenced audience categories and work functions for a posting."""
     categories = [category for category, pattern in _CATEGORY_RULES if pattern.search(title)]
+    if "staff" in categories:
+        if _FACULTY_RANK.search(title):
+            # "Assistant Professor of Instructional Design" is a faculty post.
+            categories.remove("staff")
+        elif "faculty" in categories:
+            # "Faculty Developer" is a staff role in a teaching center, not a faculty post.
+            categories.remove("faculty")
     searchable_text = "{} {}".format(title, summary)
     functions = [function for function, pattern in _FUNCTION_RULES if pattern.search(searchable_text)]
     return categories, functions

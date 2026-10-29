@@ -99,5 +99,12 @@ class NamedInstructorshipTests(unittest.TestCase):
         self.assertFalse(_is_named_research_instructorship("Nursing Instructor"))
 
 
+class StaffRelevanceTests(unittest.TestCase):
+    def test_a_design_role_is_relevant_to_the_disciplines_it_was_sorted_into(self):
+        job = _job("Instructional Designer", disciplines=("Learning Science",), categories=("staff",))
+        self.assertTrue(is_stem_education_relevant(job, "Learning Science"))
+        self.assertFalse(is_stem_education_relevant(job, "Physics"))
+
+
 if __name__ == "__main__":
     unittest.main()

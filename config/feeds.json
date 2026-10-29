@@ -149,6 +149,26 @@
       "retain_days": 90
     },
     {
+      "name": "jobRxiv - instructional designer",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=instructional%20designer",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - educational designer",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=educational%20designer",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - learning designer",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=learning%20designer",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - educational developer",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=educational%20developer",
+      "retain_days": 90
+    },
+    {
       "name": "CIRTL Job Board",
       "url": "https://cirtl.net/category/job/feed/",
       "retain_days": 90

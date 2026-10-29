@@ -127,6 +127,9 @@ def is_stem_education_relevant(job: Job, discipline: str) -> bool:
         return discipline in job.disciplines
     if _is_named_research_instructorship(title):
         return False
+    if "staff" in job.categories:
+        # Instructional and educational design roles are education work by nature.
+        return discipline in job.disciplines
     if "faculty" in job.categories and _FACULTY_INCLUDE.search(title):
         return discipline in job.disciplines
 
