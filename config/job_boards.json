@@ -8,7 +8,7 @@
     {
       "name": "AERA Career Center",
       "url": "https://careers.aera.net/",
-      "disciplines": ["Learning Science", "Science Education"]
+      "disciplines": ["Health Education", "Learning Science", "Science Education"]
     },
     {
       "name": "NSTA Career Center",
@@ -89,6 +89,31 @@
       "name": "Physics Today Jobs",
       "url": "https://jobs.physicstoday.org/",
       "disciplines": ["Physics"]
+    },
+    {
+      "name": "AAMC Career Connect",
+      "url": "https://careerconnect.aamc.org/",
+      "disciplines": ["Health Education"]
+    },
+    {
+      "name": "AHME Job Search",
+      "url": "https://www.ahme.org/",
+      "disciplines": ["Health Education"]
+    },
+    {
+      "name": "IAMSE Job Board",
+      "url": "https://www.iamse.org/",
+      "disciplines": ["Health Education"]
+    },
+    {
+      "name": "ACGME Careers",
+      "url": "https://www.acgme.org/careers",
+      "disciplines": ["Health Education"]
+    },
+    {
+      "name": "NIH Office of Intramural Training & Education",
+      "url": "https://www.training.nih.gov/",
+      "disciplines": ["Health Education"]
     }
   ]
 }
