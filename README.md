@@ -78,8 +78,10 @@ application deadline (read from phrases like "application deadline is January 8,
 full text; "review of applications begins..." is not a deadline), it stays until
 30 days after that deadline, whenever it was posted (`--deadline-grace-days`
 changes the 30). The date is saved as `deadline` in `jobs.json`. A posting that
-states no deadline falls back to its posting date: it is kept if posted on or
-after the most recent May 1 (the academic hiring year start; override with
+states no deadline but says when review of applications begins ("review of
+applications will begin December 1") is kept until three months after that date
+(`--review-months`; saved as `review_date`). A posting with neither falls back to
+its posting date: it is kept if posted on or after the most recent May 1 (the academic hiring year start; override with
 `--since YYYY-MM-DD`). A posting with neither date is kept. The run log says how
 many advertisements were left out and how many of those kept state a deadline.
 Deadlines are only found when the feed's text includes them, and many boards

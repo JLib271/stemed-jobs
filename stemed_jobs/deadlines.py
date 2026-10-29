@@ -93,3 +93,48 @@ def parse_day(value: str) -> Optional[date]:
         return datetime.strptime((value or "")[:10], "%Y-%m-%d").date()
     except ValueError:
         return None
+
+
+_REVIEW_TRIGGER = (
+    r"review(?:ing)?\s+(?:of\s+)?(?:applications?\s+)?(?:will\s+)?(?:begins?|start(?:s|ed)?|commences?)"
+    r"|(?:will\s+)?begin(?:s)?\s+(?:to\s+)?review(?:ing)?(?:\s+(?:of\s+)?applications?)?"
+    r"|applications?\s+(?:will\s+be\s+)?review(?:ed)?\s+(?:beginning|starting|begin(?:s|ning)?)"
+    r"|consideration\s+(?:of\s+applications?\s+)?(?:will\s+)?(?:begins?|start(?:s)?)"
+    r"|(?:will\s+)?begin(?:s)?\s+(?:the\s+)?(?:review|consideration)(?:\s+of\s+applications?)?"
+)
+_REVIEW_PATTERNS = [
+    re.compile(r"(?:{})\W{{0,40}}?(?:on\s+|in\s+|around\s+)?(?:(?:mon|tues?|wednes|thurs?|fri|satur|sun)day,?\s+)?{}".format(_REVIEW_TRIGGER, form), re.IGNORECASE)
+    for form in _DATE_FORMS
+]
+_REVIEW_NUMERIC = re.compile(r"(?:{})\W{{0,40}}?(?:on\s+)?{}".format(_REVIEW_TRIGGER, _NUMERIC.pattern), re.IGNORECASE)
+
+
+def extract_review_start(text: str, posted: Optional[date] = None) -> Optional[date]:
+    """The date review of applications is said to begin, or None.
+
+    Several such dates (for example a priority round and a later one) give the
+    latest, so an ad is not dropped early. Years are inferred as for deadlines.
+    """
+    found = []
+    for pattern in _REVIEW_PATTERNS:
+        for match in pattern.finditer(text or ""):
+            month = _MONTHS[match.group("month").lower()]
+            day = int(match.group("day"))
+            if match.group("year"):
+                result = _build(int(match.group("year")), month, day)
+            elif posted:
+                result = _build(posted.year, month, day)
+                if result and (posted - result).days > 7:
+                    result = _build(posted.year + 1, month, day)
+            else:
+                result = None
+            if result:
+                found.append(result)
+    for match in _REVIEW_NUMERIC.finditer(text or ""):
+        if match.group("y"):
+            result = _build(int(match.group("y")), int(match.group("m")), int(match.group("d")))
+        else:
+            result = _build(int(match.group("y2")), int(match.group("m2")), int(match.group("d2")))
+        if result:
+            found.append(result)
+    return max(found) if found else None

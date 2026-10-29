@@ -2,7 +2,7 @@ import json
 import unittest
 from datetime import date
 
-from stemed_jobs.academic_year import academic_year_start, filter_current, is_current
+from stemed_jobs.academic_year import academic_year_start, add_months, filter_current, is_current
 from stemed_jobs.models import Job
 from test_feed_failures import BROKEN, GOOD, FeedResult, _CliHarness, _job
 
@@ -23,8 +23,8 @@ TODAY = date(2026, 10, 28)
 SINCE = date(2026, 5, 1)
 
 
-def _with(identifier, published="", deadline=""):
-    return Job(**{**_job(identifier).__dict__, "published": published, "deadline": deadline})
+def _with(identifier, published="", deadline="", review=""):
+    return Job(**{**_job(identifier).__dict__, "published": published, "deadline": deadline, "review_date": review})
 
 
 class IsCurrentTests(unittest.TestCase):
@@ -40,6 +40,20 @@ class IsCurrentTests(unittest.TestCase):
     def test_without_a_deadline_the_posting_date_and_cutoff_decide(self):
         self.assertFalse(is_current(_with("old", "2026-04-30T23:59:00Z"), TODAY, SINCE))
         self.assertTrue(is_current(_with("first", "2026-05-01T00:00:00Z"), TODAY, SINCE))
+
+    def test_a_review_start_date_keeps_the_ad_for_three_months(self):
+        self.assertTrue(is_current(_with("a", "2026-01-01T00:00:00Z", review="2026-07-28"), TODAY, SINCE))   # exactly 3 months
+        self.assertFalse(is_current(_with("b", "2026-09-01T00:00:00Z", review="2026-07-27"), TODAY, SINCE))
+        self.assertTrue(is_current(_with("c", "2026-02-01T00:00:00Z", review="2026-12-01"), TODAY, SINCE))  # not yet begun
+        self.assertTrue(is_current(_with("d", review="2026-06-01"), TODAY, SINCE, review_months=6))
+
+    def test_a_stated_deadline_wins_over_a_review_start_date(self):
+        self.assertTrue(is_current(_with("a", deadline="2026-12-01", review="2026-01-01"), TODAY, SINCE))
+        self.assertFalse(is_current(_with("b", deadline="2026-09-01", review="2026-10-01"), TODAY, SINCE))
+
+    def test_add_months_clamps_to_the_end_of_a_shorter_month(self):
+        self.assertEqual(add_months(date(2026, 11, 30), 3), date(2027, 2, 28))
+        self.assertEqual(add_months(date(2026, 10, 28), 3), date(2027, 1, 28))
 
     def test_with_neither_date_the_job_is_kept(self):
         self.assertTrue(is_current(_with("undated"), TODAY, SINCE))

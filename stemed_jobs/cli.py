@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import sys
 
-from stemed_jobs.academic_year import DEFAULT_GRACE_DAYS, academic_year_start, filter_current, parse_day
+from stemed_jobs.academic_year import DEFAULT_GRACE_DAYS, DEFAULT_REVIEW_MONTHS, academic_year_start, filter_current, parse_day
 from stemed_jobs.carryover import (
     DEFAULT_MAX_STALE_DAYS,
     STATUS_FILE,
@@ -79,6 +79,13 @@ def main() -> int:
         help="Keep an advertisement with a stated application deadline until this many days "
         "after it (default: {}).".format(DEFAULT_GRACE_DAYS),
     )
+    parser.add_argument(
+        "--review-months",
+        type=int,
+        default=DEFAULT_REVIEW_MONTHS,
+        help="For advertisements with no deadline that say when review of applications "
+        "begins, keep them until this many months after that date (default: {}).".format(DEFAULT_REVIEW_MONTHS),
+    )
     args = parser.parse_args()
 
     notes = []
@@ -110,12 +117,13 @@ def main() -> int:
         now = datetime.now(timezone.utc)
         since = parse_day(args.since) if args.since else academic_year_start(now.date())
         all_jobs = dedupe_jobs([job for result in carried.results for job in result.jobs])
-        jobs = filter_current(all_jobs, now.date(), since, args.deadline_grace_days)
+        jobs = filter_current(all_jobs, now.date(), since, args.deadline_grace_days, args.review_months)
         with_deadline = sum(1 for job in jobs if job.deadline)
         notes.append(
-            "Left out {} advertisement(s): more than {} days past their application deadline, or "
-            "(with no stated deadline) posted before {}. {} of the {} kept state a deadline.".format(
-                len(all_jobs) - len(jobs), args.deadline_grace_days, since, with_deadline, len(jobs)
+            "Left out {} advertisement(s): more than {} days past their application deadline, "
+            "more than {} months after their stated review start, or (with neither) posted before {}. "
+            "{} of the {} kept state a deadline.".format(
+                len(all_jobs) - len(jobs), args.deadline_grace_days, args.review_months, since, with_deadline, len(jobs)
             )
         )
         write_jobs(jobs, args.output)

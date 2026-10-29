@@ -8,7 +8,7 @@ import feedparser
 
 from stemed_jobs.classification import classify_job
 from stemed_jobs.dedup import dedupe_jobs
-from stemed_jobs.deadlines import extract_deadline, parse_day
+from stemed_jobs.deadlines import extract_deadline, extract_review_start, parse_day
 from stemed_jobs.disciplines import classify_disciplines
 from stemed_jobs.models import Feed, FeedResult, Job
 
@@ -54,7 +54,9 @@ def parse_feed(content: bytes, feed: Feed) -> List[Job]:
         # The full text (content:encoded) often has the deadline the short summary cuts off.
         full_text = " ".join(_plain_text(part.get("value", "")) for part in entry.get("content", []) or [])
         published = _published(entry)
-        deadline = extract_deadline(title + ". " + summary + " " + full_text, parse_day(published))
+        searchable = title + ". " + summary + " " + full_text
+        deadline = extract_deadline(searchable, parse_day(published))
+        review_start = extract_review_start(searchable, parse_day(published))
         disciplines = classify_disciplines(title, summary, feed.disciplines)
         jobs.append(
             Job(
@@ -73,6 +75,7 @@ def parse_feed(content: bytes, feed: Feed) -> List[Job]:
                 functions=functions,
                 disciplines=disciplines,
                 deadline=deadline.isoformat() if deadline else "",
+                review_date=review_start.isoformat() if review_start else "",
             )
         )
     return jobs

@@ -38,6 +38,8 @@ class Job:
     disciplines: List[str]
     # Application deadline (YYYY-MM-DD) when the posting states one, else "".
     deadline: str = ""
+    # Date review of applications is said to begin (YYYY-MM-DD), else "".
+    review_date: str = ""
 
     def to_dict(self) -> dict:
         return asdict(self)

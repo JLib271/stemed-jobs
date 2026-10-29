@@ -82,6 +82,7 @@ def _job_from_dict(item: object) -> Optional[Job]:
         functions=[],
         disciplines=[],
         deadline=_text(item, "deadline"),
+        review_date=_text(item, "review_date"),
     )
 
 
