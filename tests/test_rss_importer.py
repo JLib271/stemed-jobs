@@ -504,7 +504,7 @@ class RssImporterTests(unittest.TestCase):
 
     def test_loads_disciplined_job_board_registry(self):
         boards = load_job_boards(Path("config/job_boards.json"))
-        self.assertEqual(len(boards), 18)
+        self.assertEqual(len(boards), 23)
         self.assertIn("Physics", next(board for board in boards if board.name == "AAPT Career Center").disciplines)
 
 
