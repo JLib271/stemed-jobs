@@ -72,6 +72,12 @@ older ones; the same summary is printed in the run log. If the previous output
 cannot be read (for example on the very first deployment) the failed feed simply
 has no fallback.
 
+Only the current academic hiring year is kept: advertisements posted on or
+after the most recent May 1 (so 2026-05-01 until 2027-05-01 is replaced by
+2027-05-01 on that date). Override it with `--since YYYY-MM-DD`. A posting with no
+posting date cannot be placed in a year, so it is kept. The run log says how many
+older advertisements were left out.
+
 Many job boards (AAPT, AGU, Chronicle, Science Careers, Physics Today) only list
 their newest 20-25 postings, so older but still-open positions fall out of the
 feed. To build up a longer history, give a feed `"retain_days": 90` in

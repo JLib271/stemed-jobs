@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import sys
 
+from stemed_jobs.academic_year import academic_year_start, filter_since, parse_day
 from stemed_jobs.carryover import (
     DEFAULT_MAX_STALE_DAYS,
     STATUS_FILE,
@@ -64,6 +65,13 @@ def main() -> int:
         help="Keep a failing feed's previous jobs for at most this many days after its "
         "last successful fetch (default: {}).".format(DEFAULT_MAX_STALE_DAYS),
     )
+    parser.add_argument(
+        "--since",
+        metavar="YYYY-MM-DD",
+        help="Only keep advertisements posted on or after this date. Default: the start "
+        "of the current academic hiring year (the most recent May 1). Jobs with no "
+        "posting date are kept.",
+    )
     args = parser.parse_args()
 
     notes = []
@@ -92,7 +100,11 @@ def main() -> int:
         carried = apply_carryover(results, previous, datetime.now(timezone.utc), args.max_stale_days)
         notes.extend(carried.notes)
 
-        jobs = dedupe_jobs([job for result in carried.results for job in result.jobs])
+        now = datetime.now(timezone.utc)
+        since = parse_day(args.since) if args.since else academic_year_start(now.date())
+        all_jobs = dedupe_jobs([job for result in carried.results for job in result.jobs])
+        jobs = filter_since(all_jobs, since)
+        notes.append("Kept advertisements posted since {}; left out {} older one(s).".format(since, len(all_jobs) - len(jobs)))
         write_jobs(jobs, args.output)
         write_status(carried.status, args.html_output / STATUS_FILE)
         feed_count = write_rss_feeds(jobs, args.feed_output)
