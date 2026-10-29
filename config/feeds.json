@@ -112,6 +112,16 @@
       "name": "jobRxiv - STEM education",
       "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=STEM%20education",
       "retain_days": 90
+    },
+    {
+      "name": "CIRTL Job Board",
+      "url": "https://cirtl.net/category/job/feed/",
+      "retain_days": 90
+    },
+    {
+      "name": "APS Employment Network",
+      "url": "https://jobs.psychologicalscience.org/rss",
+      "retain_days": 90
     }
   ]
 }
