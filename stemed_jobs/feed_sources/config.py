@@ -33,8 +33,17 @@ def load_feeds(path: Path) -> List[Feed]:
         retain_days = item.get("retain_days", 0)
         if isinstance(retain_days, bool) or not isinstance(retain_days, int) or retain_days < 0:
             raise ValueError("Feed '{}' retain_days must be a whole number of days, 0 or more.".format(name))
+        curated = item.get("curated", False)
+        if not isinstance(curated, bool):
+            raise ValueError("Feed '{}' curated must be true or false.".format(name))
         feeds.append(
-            Feed(name=name.strip(), url=url.strip(), disciplines=tuple(disciplines), retain_days=retain_days)
+            Feed(
+                name=name.strip(),
+                url=url.strip(),
+                disciplines=tuple(disciplines),
+                retain_days=retain_days,
+                curated=curated,
+            )
         )
 
     return feeds

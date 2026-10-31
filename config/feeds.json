@@ -1,6 +1,11 @@
 {
   "feeds": [
     {
+      "name": "The Seekers' Hub (submitted positions)",
+      "url": "https://theseekershub.stemedplus.org/category/positions/feed/",
+      "curated": true
+    },
+    {
       "name": "PER Jobs",
       "url": "https://perjobs.blogspot.com/feeds/posts/default?alt=rss&max-results=100",
       "disciplines": ["Physics"]

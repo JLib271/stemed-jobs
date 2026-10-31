@@ -62,6 +62,11 @@ def _text(item: dict, key: str) -> str:
     return value if isinstance(value, str) else ""
 
 
+def _text_list(item: dict, key: str) -> List[str]:
+    value = item.get(key)
+    return [entry for entry in value if isinstance(entry, str)] if isinstance(value, list) else []
+
+
 def _job_from_dict(item: object) -> Optional[Job]:
     if not isinstance(item, dict):
         return None
@@ -78,11 +83,14 @@ def _job_from_dict(item: object) -> Optional[Job]:
         summary=_text(item, "summary"),
         source=_text(item, "source"),
         source_url=source_url,
-        categories=[],
-        functions=[],
-        disciplines=[],
+        # Re-sorted by _reclassify, except for a curated feed, whose stored
+        # categories were chosen by an editor and are kept as they were.
+        categories=_text_list(item, "categories"),
+        functions=_text_list(item, "functions"),
+        disciplines=_text_list(item, "disciplines"),
         deadline=_text(item, "deadline"),
         review_date=_text(item, "review_date"),
+        curated=item.get("curated") is True,
     )
 
 
@@ -124,6 +132,8 @@ def _parse_time(value: object) -> Optional[datetime]:
 
 def _reclassify(job: Job, feed: Feed) -> Job:
     """Re-sort a stored job with the current rules, which may have changed."""
+    if feed.curated:
+        return replace(job, curated=True)  # the editor's categories stand; they are not keyword-derived
     categories, functions = classify_job(job.title, job.summary)
     disciplines = classify_disciplines(job.title, job.summary, feed.disciplines)
     return replace(job, categories=categories, functions=functions, disciplines=disciplines)
