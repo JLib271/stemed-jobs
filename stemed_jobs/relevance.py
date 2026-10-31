@@ -120,6 +120,9 @@ def requires_education_doctorate(job: Job) -> bool:
 
 def is_stem_education_relevant(job: Job, discipline: str) -> bool:
     """Include education-research title signals or explicitly requested faculty teaching roles."""
+    if job.curated:
+        # An editor approved this post and chose its disciplines, so the keyword screening does not apply.
+        return discipline in job.disciplines
     title = job.title
     if is_dber_title(title):
         return discipline in job.disciplines

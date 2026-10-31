@@ -99,6 +99,24 @@ dropped cannot be recovered); postings with no posting date are not kept; a
 closed posting can linger until its window ends; and the run log shows
 `plus N kept from earlier runs` per feed. The PER Jobs (Blogger) feed instead
 asks for up to 100 entries with `max-results=100`.
+**Submitted positions (a curated feed).** The Seekers' Hub collects positions
+through a form; an editor reviews each one and publishes it as a WordPress post in
+the Positions category. That category's feed is listed first in
+`config/feeds.json` with `"curated": true`, which changes how its posts are read:
+the post's own categories decide where it goes (an audience: Graduate Student,
+Postdoc, Faculty or Professional Staff, plus one or more of the disciplines, with
+the names spelled as in this project), and the keyword relevance screening is
+skipped because an editor already approved the post. The post body is read as
+labeled lines (`Institution:`, `Location:`, `Application deadline:`, `Review of
+applications begins:`, `Link to the official posting:`) followed by the
+description. A deadline of "rolling" means no deadline. Anything after a line
+containing "For the reviewer" or "do not publish" is ignored, the poster's name is
+never used, and a post with no audience or discipline category falls back to the
+usual keyword sorting. The feed must include full post text (WordPress, Settings,
+Reading, "For each post in a feed, include: Full text"), and "Syndication feeds
+show the most recent" should be large enough (for example 100) that open positions
+do not drop off the end.
+
 Jobs are deduplicated when their posting URLs match (ignoring tracking
 parameters and trailing slashes) or when their title and employer both match;
 the first feed listed in `config/feeds.json` wins. The normalized JSON fields are
