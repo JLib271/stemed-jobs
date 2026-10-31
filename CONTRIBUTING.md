@@ -51,6 +51,12 @@ Please do not push to `main` directly.
 - **Current ads**: an ad stays until 30 days after a stated application deadline, or 3 months after
   a stated review start date, or (with neither) if posted since the most recent May 1.
 
+## AI assistance
+
+You are welcome to use AI tools. If an AI tool wrote a substantial part of your change, say so in the
+pull request description, and review and test everything it produced before you submit it. You remain
+responsible for the change, including that any new source is an RSS feed or API and not scraped.
+
 ## Running it locally
 
 ```

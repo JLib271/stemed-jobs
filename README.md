@@ -259,6 +259,10 @@ the next steps straightforward without coupling them to ingestion:
 - API importers can later produce the same job records as the RSS importer.
 
 For now, the only importer is RSS and the only persistence format is JSON.
+## AI assistance
+
+This project was developed with the help of Claude (Anthropic's AI assistant), used through Claude Code to write and revise code, tests and documentation. The project's design decisions, data sources and sorting rules were directed and reviewed by the maintainer. Contributors are welcome to use AI tools too; please review anything an AI tool writes before you submit it.
+
 ## Contributing
 
 Help is welcome: see [CONTRIBUTING.md](CONTRIBUTING.md). The one rule is to read existing RSS feeds or APIs only, never to scrape.
