@@ -9,6 +9,20 @@ from stemed_jobs.relevance import is_stem_education_relevant
 from stemed_jobs.storage.rss_store import AUDIENCES, audience_label, feed_relative_path
 
 
+COMMONS_URL = "https://stemedplus.hcommons.org/"
+# The other STEMEd+ Commons sites, linked from the bottom of the index page.
+RELATED_SITES = (
+    ("STEMEd+ Digest", "https://jlib271.github.io/STEMEd-Digest/", "new journal articles, preprints, and dissertations"),
+    ("STEMEd+ Funding", "https://jlib271.github.io/stemed-funding/", "open calls and deadlines for STEM+ education"),
+    ("STEM+ Education Research Graduate Programs", "https://jlib271.github.io/stem-ed-research-programs/",
+     "where to study STEM+ education research"),
+)
+
+
+def _external_link(url: str, text: str) -> str:
+    return '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format(escape(url, quote=True), escape(text))
+
+
 def render_index_html() -> str:
     lines = [
         "<!doctype html>",
@@ -53,6 +67,9 @@ def render_index_html() -> str:
                 escape(audience_label(audience)),
             )
         )
+    lines.extend(["</ul>", "<h2>{}</h2>".format(_external_link(COMMONS_URL, "More from STEMEd+ Commons")), "<ul>"])
+    for name, url, about in RELATED_SITES:
+        lines.append("<li>{}: {}</li>".format(_external_link(url, name), escape(about)))
     lines.extend(["</ul>", "</main>", "</body>", "</html>", ""])
     return "\n".join(lines)
 
