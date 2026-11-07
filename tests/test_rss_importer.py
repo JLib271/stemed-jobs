@@ -177,6 +177,12 @@ class RssImporterTests(unittest.TestCase):
         self.assertIn('<a href="postdocs-jobs.html">Postdocs</a>', html)
         self.assertIn('<a href="graduates-jobs.html">Graduates</a>', html)
         self.assertIn('<a href="feeds/faculty/physics.xml">Physics, Faculty</a>', html)
+        self.assertIn('href="https://stemedplus.hcommons.org/" target="_blank" rel="noopener noreferrer">More from STEMEd+ Commons</a>', html)
+        self.assertEqual(html.count("STEMEd+ Jobs is part of STEMEd+ Commons."), 2)  # top and bottom
+        self.assertLess(html.index("join-top"), html.index("Browse jobs"))
+        self.assertIn("works.hcommons.org/collections/humetainstrumentlibrary/", html)
+        for site in ("STEMEd-Digest", "stemed-funding", "stem-ed-research-programs"):
+            self.assertIn("https://jlib271.github.io/{}/".format(site), html)
         self.assertTrue(html.startswith("<!doctype html>"))
 
         with tempfile.TemporaryDirectory() as temporary_directory:

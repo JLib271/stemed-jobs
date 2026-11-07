@@ -9,6 +9,41 @@ from stemed_jobs.relevance import is_stem_education_relevant
 from stemed_jobs.storage.rss_store import AUDIENCES, audience_label, feed_relative_path
 
 
+COMMONS_URL = "https://stemedplus.hcommons.org/"
+# The other STEMEd+ Commons sites, linked from the bottom of the index page.
+RELATED_SITES = (
+    ("STEMEd+ Digest", "https://jlib271.github.io/STEMEd-Digest/", "new journal articles, preprints, and dissertations"),
+    ("STEMEd+ Funding", "https://jlib271.github.io/stemed-funding/", "open calls and deadlines for STEM+ education"),
+    ("STEM+ Education Research Graduate Programs", "https://jlib271.github.io/stem-ed-research-programs/",
+     "where to study STEM+ education research"),
+)
+
+
+def _external_link(url: str, text: str) -> str:
+    return '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format(escape(url, quote=True), escape(text))
+
+
+COLLECTION_URL = "https://works.hcommons.org/collections/humetainstrumentlibrary/"
+STEMEDPLUS_COLLECTION_URL = "https://works.hcommons.org/collections/stemedplus/"
+KC_JOIN_URL = "https://support.hcommons.org/profiles/login-and-registration/"
+
+
+def _join_box(where: str) -> str:
+    """The STEMEd+ Commons invitation shown at the top and bottom of the page."""
+    return (
+        '<div class="join join-{}" role="note"><p><strong>STEMEd+ Jobs is part of STEMEd+ Commons.</strong> '
+        "Join free to deposit instruments in the {}, share your work in the {}, follow new work, and connect with "
+        "STEM+ education researchers. You can sign in with GitHub, Google, ORCID, or your institution.</p>"
+        "<p>{} · {}</p></div>"
+    ).format(
+        where,
+        _external_link(COLLECTION_URL, "HuMeta Instrument Library collection"),
+        _external_link(STEMEDPLUS_COLLECTION_URL, "STEMEd+ collection"),
+        _external_link(COMMONS_URL, "Visit STEMEd+ Commons"),
+        _external_link(KC_JOIN_URL, "How to join"),
+    )
+
+
 def render_index_html() -> str:
     lines = [
         "<!doctype html>",
@@ -17,9 +52,12 @@ def render_index_html() -> str:
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         "<title>STEMEd Jobs</title>",
+        "<style>.join { background: #e6f0f7; border: 1px solid #c9dcea; border-radius: 8px; padding: 10px 14px; "
+        "margin: 14px 0; } .join p { margin: 4px 0; }</style>",
         "</head>",
         "<body>",
         "<main>",
+        _join_box("top"),
         "<h1>STEMEd Jobs</h1>",
         "<p>STEM education research and teaching opportunities, organized by audience and discipline.</p>",
         "<h2>Browse jobs</h2>",
@@ -53,6 +91,9 @@ def render_index_html() -> str:
                 escape(audience_label(audience)),
             )
         )
+    lines.extend(["</ul>", _join_box("bottom"), "<h2>{}</h2>".format(_external_link(COMMONS_URL, "More from STEMEd+ Commons")), "<ul>"])
+    for name, url, about in RELATED_SITES:
+        lines.append("<li>{}: {}</li>".format(_external_link(url, name), escape(about)))
     lines.extend(["</ul>", "</main>", "</body>", "</html>", ""])
     return "\n".join(lines)
 
