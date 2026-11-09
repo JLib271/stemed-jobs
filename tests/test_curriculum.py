@@ -39,6 +39,7 @@ class CurriculumRoleTests(unittest.TestCase):
         self.assertEqual(feeds("Curriculum Writer", "Write lessons for high school English."), set())
         self.assertEqual(feeds("Social Studies Curriculum Specialist"), set())
         self.assertEqual(feeds("Political Science Curriculum Writer"), set())
+        self.assertEqual(feeds("Harvard University, Faculty of Arts & Sciences: Lab Curriculum Coordinator I"), set())
 
     def test_curriculum_alone_is_not_learning_science(self):
         self.assertNotIn("Learning Science", classify_disciplines("Physics Curriculum Specialist", ""))
