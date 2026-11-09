@@ -50,14 +50,14 @@ _DISCIPLINE_SIGNALS: Dict[str, Pattern[str]] = {
     ),
 }
 
-# History & Philosophy of Science and Science & Health Communication include the
+# History & Philosophy of Science, Human Dimensions, and Science & Health Communication include the
 # fields themselves, not only education in them, so a job qualifies when its
-# title names the field. History-of-science field names are specific enough to
+# title names the field. History-of-science and human-dimensions field names are specific enough to
 # count anywhere in the posting; "science communication" is not, because many
 # research postings ask for "strong science communication skills".
 _FIELD_DISCIPLINES = shared.field_labels()  # scope "field" in the shared discipline list
 _FIELD_RULES: Dict[str, Pattern[str]] = {name: rule for name, rule in DISCIPLINE_RULES if name in _FIELD_DISCIPLINES}
-_FIELD_IN_SUMMARY = ("History & Philosophy of Science",)
+_FIELD_IN_SUMMARY = ("History & Philosophy of Science", "Human Dimensions")
 
 # These field names are specific enough that naming one anywhere in the posting
 # (title or description), not just the title, shows the job belongs to the field.

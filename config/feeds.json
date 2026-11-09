@@ -144,6 +144,46 @@
       "retain_days": 90
     },
     {
+      "name": "Chronicle Careers - search: human dimensions",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22human+dimensions%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: social-ecological",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22social-ecological%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: conservation social science",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22conservation+social+science%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: forestry",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22forestry%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: entomology",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22entomology%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: horticulture",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22horticulture%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: soil science",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22soil+science%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: cooperative extension",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22cooperative+extension%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
       "name": "AcademicJobsOnline",
       "url": "https://academicjobsonline.org/ajo?joblist-0-0-0-----rss--"
     },

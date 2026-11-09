@@ -1,4 +1,5 @@
 from html import escape
+import shutil
 from pathlib import Path
 from typing import Dict, Iterable, List, Sequence
 from urllib.parse import urlparse
@@ -44,6 +45,13 @@ def _join_box(where: str) -> str:
     )
 
 
+LOGO_FILE = Path(__file__).with_name("stemedplus-commons-logo.png")
+STEMEDPLUS_LOGO_LINK = (
+    '<a class="stemedplus" href="https://stemedplus.org" title="STEMEd+ Commons">'
+    '<img src="stemedplus-commons-logo.png" alt="STEMEd+ Commons" width="139" height="48"></a>'
+)
+
+
 def render_index_html() -> str:
     lines = [
         "<!doctype html>",
@@ -53,10 +61,12 @@ def render_index_html() -> str:
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         "<title>STEMEd Jobs</title>",
         "<style>.join { background: #e6f0f7; border: 1px solid #c9dcea; border-radius: 8px; padding: 10px 14px; "
-        "margin: 14px 0; } .join p { margin: 4px 0; }</style>",
+        "margin: 14px 0; } .join p { margin: 4px 0; } .stemedplus { display: inline-block; margin: 0 0 8px; } "
+        ".stemedplus img { display: block; height: 48px; width: auto; }</style>",
         "</head>",
         "<body>",
         "<main>",
+        STEMEDPLUS_LOGO_LINK,
         _join_box("top"),
         "<h1>STEMEd Jobs</h1>",
         "<p>STEM education research and teaching opportunities, organized by audience and discipline.</p>",
@@ -101,6 +111,7 @@ def render_index_html() -> str:
 def write_index_html(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_index_html(), encoding="utf-8")
+    shutil.copyfile(LOGO_FILE, path.parent / LOGO_FILE.name)
 
 
 def _anchor_id(discipline: str) -> str:
