@@ -1,7 +1,7 @@
 {
-  "version": 3,
+  "version": 4,
   "title": "STEMEd+ disciplines",
-  "description": "The disciplines used across STEMEd+ Commons: STEMEd+ Jobs, Funding, Digest, and STEM+ Education Research Graduate Programs. Each site builds from this file, so the disciplines have the same ids, labels, meanings, and matching words everywhere. Most disciplines mean education and education research in a field; History & Philosophy of Science and Science & Health Communication also include those fields themselves. Each site still decides how strictly to apply them (for example, Jobs lists a job under a discipline only when it is about education in that field).",
+  "description": "The disciplines used across STEMEd+ Commons: STEMEd+ Jobs, Funding, Digest, and STEM+ Education Research Graduate Programs. Each site builds from this file, so the disciplines have the same ids, labels, meanings, and matching words everywhere. Most disciplines mean education and education research in a field; History & Philosophy of Science, Human Dimensions, and Science & Health Communication also include those fields themselves. Each site still decides how strictly to apply them (for example, Jobs lists a job under a discipline only when it is about education in that field).",
   "how_to_match": "A discipline matches text when 'terms' (a regular-expression alternation) matches as whole words, ignoring case, or when one of 'acronyms' matches as a whole word in capitals only (so 'per year' is not PER). In Python: re.compile(r'\\b(?:' + terms + r')\\b' + ''.join(r'|\\b(?-i:' + a + r')\\b' for a in acronyms), re.IGNORECASE).",
   "humeta_note": "humeta_disciplines lists the HuMeta discipline terms (ANZSRC 2020 Fields of Research) each discipline corresponds to.",
   "scope_note": "scope 'education': the discipline means education and education research in the field. scope 'field': it also includes the field itself (research, teaching, and practice), not only education in it.",
@@ -9,14 +9,15 @@
     {
       "id": "agriculture",
       "label": "Agriculture",
-      "definition": "Teaching, learning, and education research in agriculture and the agricultural sciences, including agricultural (ag) education and agriscience.",
+      "definition": "Teaching, learning, and education research in agriculture and the agricultural, food, forestry, and fisheries sciences, including agricultural (ag) education, agronomy, horticulture, soil science, entomology, plant and animal sciences, and Cooperative Extension.",
       "scope": "education",
       "humeta_disciplines": [
         "anzsrc_30"
       ],
       "match": {
-        "terms": "agricultur(?:e|al|a)?|agri[- ]?science|ag ed",
-        "acronyms": []
+        "terms": "agricultur(?:e|al|a)?|agri[- ]?science|ag ed|agronom(?:y|ic|ists?)|horticultur(?:e|al|ists?)|crop sciences?|crop and soil sciences?|weed sciences?|turf ?grass(?: sciences?)?|range(?:land)? (?:sciences?|management|ecology)|agroecolog(?:y|ical)|aquaculture|soil sciences?|soil scientists?|entomolog(?:y|ical|ists?)|plant sciences?|plant patholog(?:y|ists?)|plant breed(?:ing|ers?)|animal sciences?|dairy sciences?|poultry sciences?|forestry|forest (?:resources|sciences?|ecology|management)|silvicultur(?:e|al)|fisheries|food sciences?|food scientists?|cooperative extension",
+        "acronyms": [],
+        "note": "Soil science is also Earth Science; entomology, plant and animal sciences are also Bioscience. 'Natural resources', 'extension', and '4-H' alone are not matched because they are too broad (for example, 'tenure extension')."
       }
     },
     {
@@ -28,7 +29,7 @@
         "anzsrc_31"
       ],
       "match": {
-        "terms": "bio(?:logy|logical|science|sciences|engineering)?|life sciences?|molecular biology|genetics|genomics?|ecology|microbiology|anatomy|physiology|biochem(?:istry|ical)?|zoolog(?:y|ical|ists?)|botan(?:y|ical|ists?)|entomolog(?:y|ical|ists?)|animal sciences?|plant sciences?|neuroscienc(?:e|es|ists?)|immunolog(?:y|ists?)|virolog(?:y|ists?)|bacteriolog(?:y|ists?)|biotechnology|bioinformatics|biophysics|pharmacolog(?:y|ists?)|toxicolog(?:y|ists?)|ornitholog(?:y|ists?)|mycolog(?:y|ists?)|parasitolog(?:y|ists?)|wildlife (?:sciences?|ecology)|chemical biology",
+        "terms": "bio(?:logy|logical|science|sciences|engineering)?|life sciences?|molecular biology|genetics|genomics?|ecology|microbiology|anatomy|physiology|biochem(?:istry|ical)?|zoolog(?:y|ical|ists?)|botan(?:y|ical|ists?)|entomolog(?:y|ical|ists?)|animal sciences?|plant sciences?|neuroscienc(?:e|es|ists?)|immunolog(?:y|ists?)|virolog(?:y|ists?)|bacteriolog(?:y|ists?)|biotechnology|bioinformatics|biophysics|pharmacolog(?:y|ists?)|toxicolog(?:y|ists?)|ornitholog(?:y|ists?)|mycolog(?:y|ists?)|parasitolog(?:y|ists?)|wildlife (?:sciences?|ecology)|chemical biology|plant patholog(?:y|ists?)|plant breed(?:ing|ers?)|dairy sciences?|poultry sciences?",
         "acronyms": [
           "BER"
         ]
@@ -58,7 +59,7 @@
         "anzsrc_37"
       ],
       "match": {
-        "terms": "earth sciences?|geosciences?|geolog(?:y|ical|ists?)|geophysic(?:s|al)|geochemistry|geobiology|geomorpholog(?:y|ical)|hydrolog(?:y|ic|ical)|hydrogeology|atmospheric (?:sciences?|chemistry|physics)|meteorolog(?:y|ical)|climate|climatology|oceanograph(?:y|ic|ers?)|ocean sciences?|marine sciences?|paleontolog(?:y|ists?)|paleoclimat\\w*|seismolog(?:y|ists?)|volcanolog(?:y|ists?)|glaciolog(?:y|ists?)|mineralog(?:y|ists?)|petrolog(?:y|ists?)|sedimentolog(?:y|ists?)|tectonics|geochronolog(?:y|ists?)|planetary sciences?|soil sciences?|environmental sciences?|environmental education|limnolog(?:y|ists?)|earth systems?|natural hazards",
+        "terms": "earth sciences?|geosciences?|geolog(?:y|ical|ists?)|geophysic(?:s|al)|geochemistry|geobiology|geomorpholog(?:y|ical)|hydrolog(?:y|ic|ical)|hydrogeology|atmospheric (?:sciences?|chemistry|physics)|meteorolog(?:y|ical)|climate|climatology|oceanograph(?:y|ic|ers?)|ocean sciences?|marine sciences?|paleontolog(?:y|ists?)|paleoclimat\\w*|seismolog(?:y|ists?)|volcanolog(?:y|ists?)|glaciolog(?:y|ists?)|mineralog(?:y|ists?)|petrolog(?:y|ists?)|sedimentolog(?:y|ists?)|tectonics|geochronolog(?:y|ists?)|planetary sciences?|soil sciences?|soil scientists?|environmental sciences?|environmental education|limnolog(?:y|ists?)|earth systems?|natural hazards",
         "acronyms": [
           "GER"
         ]
@@ -106,6 +107,21 @@
         "terms": "history,? (?:and|&) philosophy of (?:science|medicine|biology|physics)|history,? (?:and|&) sociology of science|(?:history|philosophy|sociology|historiography) of (?:the )?(?:science|sciences|scientific knowledge|medicine|technology|biology|chemistry|physics|mathematics|astronomy|geology|earth sciences?|life sciences?|physical sciences?|natural sciences?|ecology|evolution|psychiatry|psychology|public health|nursing|pharmacy|engineering|statistics)|historians? of (?:science|medicine|technology)|philosophers? of (?:science|biology|physics|medicine)|science,? (?:and|&) technology studies|science,? technology,? (?:and|&) society|science studies|social studies of science|(?:science|technoscience) (?:and|&) society studies|nature of science|epistemology of science|scientific epistemology",
         "acronyms": [],
         "note": "Acronyms such as HPS and STS are not matched because they have other common meanings (Health Physics Society, Society of Thoracic Surgeons). 'History of science' and similar phrases may also tag the science named (for example Physics); each site decides how to treat that."
+      }
+    },
+    {
+      "id": "human_dimensions",
+      "label": "Human Dimensions",
+      "definition": "The social science of people and the environment, as a field in its own right and in teaching: human dimensions of natural resources, forestry, wildlife, fisheries, conservation, and climate and environmental change, social-ecological systems, and environmental social science.",
+      "scope": "field",
+      "humeta_disciplines": [
+        "anzsrc_4104",
+        "anzsrc_4406"
+      ],
+      "match": {
+        "terms": "human dimensions|social[- ]ecological(?! models?)|socio[- ]ecological(?! models?)|socio[- ]environmental|coupled (?:human and natural|natural and human|human[- ]natural) systems|conservation social sciences?|environmental social sciences?|natural resources? social sciences?|human[- ]wildlife (?:conflicts?|interactions?|coexistence|relationships?)|environmental sociolog(?:y|ists?)|human[- ]environment(?:al)? (?:interactions?|systems|relationships?)",
+        "acronyms": [],
+        "note": "'Social-ecological model' and 'socio-ecological model' (a public health framework) are not matched."
       }
     },
     {
@@ -175,9 +191,9 @@
         "anzsrc_3901"
       ],
       "match": {
-        "terms": "(?<!computer )(?:science education|science teaching|science teacher education|science teachers?)|stem education|stem teaching|stem teachers?|discipline[- ]based education research|dber",
+        "terms": "(?<!computer )(?:science education|science teaching(?! (?:professors?|faculty|positions?|track|stream|fellows?|assistant|associate|lecturers?|instructors?))|science teacher education|science teachers?)|stem education|stem teaching|stem teachers?|discipline[- ]based education research|dber",
         "acronyms": [],
-        "note": "'Computer science education' and 'computer science teachers' are Engineering (computing), not Science Education."
+        "note": "'Computer science education' and 'computer science teachers' are Engineering (computing), not Science Education. '[Field] Science Teaching Professor' is a teaching-track title in that field, not Science Education."
       }
     }
   ]

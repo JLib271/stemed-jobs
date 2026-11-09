@@ -43,8 +43,9 @@ History 55, Philosophy 57, and Journalism 62 (each category page links its own
 Positions, so the Education feed alone misses it. Chronicle also has phrase-search
 feeds, `jobsrss/?keywords=%22health+communication%22&countrycode=US`, used here for
 history and philosophy of science, science and technology studies, history of
-medicine, science, health and risk communication, and curriculum specialist, writer
-and coordinator jobs. (jobRxiv searches are not used for these: jobRxiv matches any
+medicine, science, health and risk communication, human dimensions, social-ecological
+systems, conservation social science, forestry, entomology, horticulture, soil science,
+Cooperative Extension, and curriculum specialist, writer and coordinator jobs. (jobRxiv searches are not used for these: jobRxiv matches any
 of the words, not the phrase, and lists almost no jobs in these fields.)
 
 Then run:
@@ -136,9 +137,9 @@ job may have both research and teaching functions. Audience categories are
 inferred from the title, while functions are inferred from the title and
 description.
 
-Jobs also have a `disciplines` array using twelve labels: Agriculture,
+Jobs also have a `disciplines` array using thirteen labels: Agriculture,
 Bioscience, Chemistry, Earth Science, Engineering, Health Education, History &
-Philosophy of Science, Learning Science, Mathematics, Physics, Science & Health
+Philosophy of Science, Human Dimensions, Learning Science, Mathematics, Physics, Science & Health
 Communication, and Science Education. The labels, their definitions and the
 words that match them come from the STEMEd+ discipline list shared across
 STEMEd+ Commons (HuMeta `standard/humeta/stemedplus_disciplines.json`, stored
@@ -148,7 +149,11 @@ Philosophy of Science covers HPS, history of medicine and technology, science
 and technology studies, and the nature of science; Science & Health
 Communication covers science, health, risk, climate and environmental
 communication, public engagement with science, and science and health
-journalism. Health Education covers
+journalism. Human Dimensions covers the social science of people and the
+environment (human dimensions of natural resources, forestry, wildlife,
+fisheries, and climate change; social-ecological systems). Agriculture includes
+agronomy, horticulture, crop, soil, plant, and animal sciences, entomology,
+forestry, fisheries, food science, and Cooperative Extension. Health Education covers
 medicine, nursing, pharmacy, dentistry, public health, allied health (physical
 and occupational therapy, kinesiology, nutrition and similar), epidemiology and
 veterinary medicine (`HEALTH_TERMS`); benefits boilerplate such as "medical,
@@ -194,7 +199,7 @@ HTML job listings use the same relevance and discipline rules as the RSS
 feeds. Titles containing `DBER` are included only in the inferred audience
 category and the disciplines identified from the title and description.
 
-The run generates 48 filtered RSS 2.0 feeds (four audiences across 12
+The run generates 52 filtered RSS 2.0 feeds (four audiences across 13
 disciplines) under `output/feeds/{audience}/{discipline}.xml`; for example,
 `output/feeds/graduates/chemistry.xml` (an "&" in a label is spelled "and", as
 in `faculty/history-and-philosophy-of-science.xml`). A feed with no jobs holds one placeholder item titled "No current postings", so feed readers and WordPress RSS widgets show that instead of an error; it disappears as soon as a job matches. The HTML links default to `/feeds/...`.
@@ -205,10 +210,10 @@ Education/CER, Earth Science or Geoscience Education/GER/Environmental
 Education, and Bioscience or Biology Education/BER (or a biology field paired
 with Education). Engineering, Mathematics, Agriculture, Science Education,
 and Learning Science have corresponding education-research title signals.
-History & Philosophy of Science and Science & Health Communication include
-the fields themselves, not only education in them: a job qualifies when its
+History & Philosophy of Science, Human Dimensions, and Science & Health
+Communication include the fields themselves, not only education in them: a job qualifies when its
 title names the field ("Assistant Professor, History of Science", "Health
-Communication Specialist"). History-of-science field names also count in the
+Communication Specialist"). History-of-science and human-dimensions field names also count in the
 description; "science communication" does not, because many research postings
 ask for science communication skills.
 Curriculum specialist, writer, coordinator, developer, and designer jobs (in K-12 or

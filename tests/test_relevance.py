@@ -64,6 +64,13 @@ class FieldDisciplineTests(unittest.TestCase):
         job = _job("Research Scientist", "Strong science communication skills required.", disciplines=(self.SHC,))
         self.assertFalse(is_stem_education_relevant(job, self.SHC))
 
+    def test_human_dimensions_jobs_count_by_title_or_description(self):
+        hd = "Human Dimensions"
+        job = _job("Assistant Professor, Human Dimensions of Forestry", disciplines=(hd, "Agriculture"))
+        self.assertTrue(is_stem_education_relevant(job, hd))
+        job = _job("Assistant Professor", "Research on social-ecological systems and conservation social science.", disciplines=(hd,))
+        self.assertTrue(is_stem_education_relevant(job, hd))
+
     def test_the_field_must_be_the_jobs_discipline(self):
         job = _job("Assistant Professor, History of Science", disciplines=("Physics",))
         self.assertFalse(is_stem_education_relevant(job, self.HPS))
