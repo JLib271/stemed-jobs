@@ -37,9 +37,15 @@ Chronicle Careers has one RSS feed per category, and a job appears only in the
 categories it is tagged with: `jobsrss/?PositionType=<id>&countrycode=US`. The
 IDs in use are Faculty Positions 1, Education 24, Science & Mathematics 71,
 Agriculture & Animal Sciences 72, Biology & Life Sciences 73, Chemistry 75,
-Engineering 77, Mathematics 79, and Physics & Space Sciences 81 (each category
-page links its own "Subscribe to RSS" URL). A STEM education faculty ad is often
-tagged only Faculty Positions, so the Education feed alone misses it.
+Engineering 77, Mathematics 79, Physics & Space Sciences 81, Communications 16,
+History 55, Philosophy 57, and Journalism 62 (each category page links its own
+"Subscribe to RSS" URL). A STEM education faculty ad is often tagged only Faculty
+Positions, so the Education feed alone misses it. Chronicle also has phrase-search
+feeds, `jobsrss/?keywords=%22health+communication%22&countrycode=US`, used here for
+history and philosophy of science, science and technology studies, history of
+medicine, science, health and risk communication, and curriculum specialist, writer
+and coordinator jobs. (jobRxiv searches are not used for these: jobRxiv matches any
+of the words, not the phrase, and lists almost no jobs in these fields.)
 
 Then run:
 

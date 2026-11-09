@@ -100,7 +100,8 @@ _CURRICULUM_SUBJECTS = (
 )
 _GENERAL_SCIENCE = re.compile(r"\bsciences?\b", re.IGNORECASE)
 _NOT_SCIENCE = re.compile(
-    r"\b(?:social|political|library|information|behaviou?ral|family and consumer|consumer|exercise|sport|data)\s+sciences?\b",
+    r"\b(?:social|political|library|information|behaviou?ral|family and consumer|consumer|exercise|sport|data)\s+sciences?\b"
+    r"|\barts,?\s+(?:and|&)\s+sciences?\b",
     re.IGNORECASE,
 )
 

@@ -74,6 +74,76 @@
       "retain_days": 90
     },
     {
+      "name": "Chronicle Careers - History",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=55&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - Philosophy",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=57&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - Communications",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=16&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - Journalism",
+      "url": "https://jobs.chronicle.com/jobsrss/?PositionType=62&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: history of science",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22history+of+science%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: philosophy of science",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22philosophy+of+science%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: science and technology studies",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22science+and+technology+studies%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: history of medicine",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22history+of+medicine%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: science communication",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22science+communication%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: health communication",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22health+communication%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: risk communication",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22risk+communication%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: curriculum specialist",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22curriculum+specialist%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: curriculum writer",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22curriculum+writer%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
+      "name": "Chronicle Careers - search: curriculum coordinator",
+      "url": "https://jobs.chronicle.com/jobsrss/?keywords=%22curriculum+coordinator%22&countrycode=US",
+      "retain_days": 90
+    },
+    {
       "name": "AcademicJobsOnline",
       "url": "https://academicjobsonline.org/ajo?joblist-0-0-0-----rss--"
     },
@@ -171,51 +241,6 @@
     {
       "name": "jobRxiv - educational developer",
       "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=educational%20developer",
-      "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - history of science",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=history%20of%20science",
-      "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - philosophy of science",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=philosophy%20of%20science",
-      "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - science and technology studies",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=science%20and%20technology%20studies",
-      "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - science communication",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=science%20communication",
-      "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - health communication",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=health%20communication",
-      "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - risk communication",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=risk%20communication",
-      "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - curriculum specialist",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=curriculum%20specialist",
-      "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - curriculum writer",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=curriculum%20writer",
-      "retain_days": 90
-    },
-    {
-      "name": "jobRxiv - curriculum coordinator",
-      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=curriculum%20coordinator",
       "retain_days": 90
     },
     {
