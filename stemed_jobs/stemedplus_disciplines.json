@@ -1,0 +1,142 @@
+{
+  "version": 1,
+  "title": "STEMEd+ disciplines",
+  "description": "The disciplines used across STEMEd+ Commons: STEMEd+ Jobs, Funding, Digest, and STEM+ Education Research Graduate Programs. Each site builds from this file, so the disciplines have the same ids, labels, meanings, and matching words everywhere. Each site still decides how strictly to apply them (for example, Jobs lists a job under a discipline only when it is about education in that field).",
+  "how_to_match": "A discipline matches text when 'terms' (a regular-expression alternation) matches as whole words, ignoring case, or when one of 'acronyms' matches as a whole word in capitals only (so 'per year' is not PER). In Python: re.compile(r'\\b(?:' + terms + r')\\b' + ''.join(r'|\\b(?-i:' + a + r')\\b' for a in acronyms), re.IGNORECASE).",
+  "humeta_note": "humeta_disciplines lists the HuMeta discipline terms (ANZSRC 2020 Fields of Research) each discipline corresponds to.",
+  "disciplines": [
+    {
+      "id": "agriculture",
+      "label": "Agriculture",
+      "definition": "Teaching, learning, and education research in agriculture and the agricultural sciences, including agricultural (ag) education and agriscience.",
+      "humeta_disciplines": [
+        "anzsrc_30"
+      ],
+      "match": {
+        "terms": "agricultur(?:e|al|a)?|agri[- ]?science|ag ed",
+        "acronyms": []
+      }
+    },
+    {
+      "id": "bioscience",
+      "label": "Bioscience",
+      "definition": "Teaching, learning, and education research in the biological and life sciences, from molecular biology to ecology, including biology education research (BER).",
+      "humeta_disciplines": [
+        "anzsrc_31"
+      ],
+      "match": {
+        "terms": "bio(?:logy|logical|science|sciences|engineering)?|life sciences?|molecular biology|genetics|genomics?|ecology|microbiology|anatomy|physiology|biochem(?:istry|ical)?|zoolog(?:y|ical|ists?)|botan(?:y|ical|ists?)|entomolog(?:y|ical|ists?)|animal sciences?|plant sciences?|neuroscienc(?:e|es|ists?)|immunolog(?:y|ists?)|virolog(?:y|ists?)|bacteriolog(?:y|ists?)|biotechnology|bioinformatics|biophysics|pharmacolog(?:y|ists?)|toxicolog(?:y|ists?)|ornitholog(?:y|ists?)|mycolog(?:y|ists?)|parasitolog(?:y|ists?)|wildlife (?:sciences?|ecology)|chemical biology",
+        "acronyms": [
+          "BER"
+        ]
+      }
+    },
+    {
+      "id": "chemistry",
+      "label": "Chemistry",
+      "definition": "Teaching, learning, and education research in chemistry and the chemical sciences, including biochemistry and chemistry education research (CER).",
+      "humeta_disciplines": [
+        "anzsrc_34"
+      ],
+      "match": {
+        "terms": "chemistr(?:y|ies)|chemical sciences?|chemical education|biochem(?:istry|ical)?|chemical biology|geochemistry|atmospheric chemistry|polymer (?:science|chemistry)|molecular sciences?",
+        "acronyms": [
+          "CER"
+        ]
+      }
+    },
+    {
+      "id": "earth_science",
+      "label": "Earth Science",
+      "definition": "Teaching, learning, and education research in the geosciences: geology, atmospheric, ocean, climate, planetary, soil, and environmental sciences, including geoscience education research (GER).",
+      "humeta_disciplines": [
+        "anzsrc_37"
+      ],
+      "match": {
+        "terms": "earth sciences?|geosciences?|geolog(?:y|ical|ists?)|geophysic(?:s|al)|geochemistry|geobiology|geomorpholog(?:y|ical)|hydrolog(?:y|ic|ical)|hydrogeology|atmospheric (?:sciences?|chemistry|physics)|meteorolog(?:y|ical)|climate|climatology|oceanograph(?:y|ic|ers?)|ocean sciences?|marine sciences?|paleontolog(?:y|ists?)|paleoclimat\\w*|seismolog(?:y|ists?)|volcanolog(?:y|ists?)|glaciolog(?:y|ists?)|mineralog(?:y|ists?)|petrolog(?:y|ists?)|sedimentolog(?:y|ists?)|tectonics|geochronolog(?:y|ists?)|planetary sciences?|soil sciences?|environmental sciences?|environmental education|limnolog(?:y|ists?)|earth systems?|natural hazards",
+        "acronyms": [
+          "GER"
+        ]
+      }
+    },
+    {
+      "id": "engineering",
+      "label": "Engineering",
+      "definition": "Teaching, learning, and education research in engineering. STEMEd+ Funding also counts computing and computer science here.",
+      "humeta_disciplines": [
+        "anzsrc_40",
+        "anzsrc_46"
+      ],
+      "match": {
+        "terms": "engineering|engineer(?:s|ing)?",
+        "acronyms": []
+      }
+    },
+    {
+      "id": "health_education",
+      "label": "Health Education",
+      "definition": "Education and education research in the health professions: medicine, nursing, public health, pharmacy, dentistry, allied health, and related fields (health professions education).",
+      "humeta_disciplines": [
+        "anzsrc_42",
+        "anzsrc_32"
+      ],
+      "match": {
+        "terms": "medical(?!,?\\s*(?:and\\s+)?(?:dental|vision|insurance|benefits?|coverage|leave|plans?|history))|medicine|nurs(?:e|es|ing)|midwifery|pharmacy|pharmacists?|pharmaceutical sciences?|pharmaceutics|pharmacotherapy|pharmacology|dentistry|dental (?:school|hygiene|medicine|education)|dentists?|orthodontics|public health|global health|community health|population health|environmental health|occupational health|health sciences?|health professions?|health ?care (?:education|professions?|sciences?|administration)|allied health|health education|health informatics|health policy|health services|physical therapy|physiotherapy|occupational therapy|speech[- ]language pathology|audiology|respiratory therapy|athletic training|physician assistants?|optometry|radiolog(?:y|ic|ical) (?:sciences?|technology)|radiology|medical laboratory|clinical laboratory|diagnostic imaging|sonography|paramedics?|kinesiology|exercise (?:science|physiology)|nutrition|dietetics|dietitians?|epidemiolog(?:y|ists?)|biostatistics|veterinary|osteopathic|physicians?|clinical (?:sciences?|medicine|education)|rehabilitation|gerontology|biomedical sciences?|biomedicine",
+        "acronyms": [],
+        "note": "'medical' is not matched when followed by benefits words (dental, vision, insurance, benefits, coverage, leave, plans, history), so 'medical, dental and vision coverage' in a job ad is not Health Education."
+      }
+    },
+    {
+      "id": "learning_science",
+      "label": "Learning Science",
+      "definition": "How people learn and how learning is designed and supported across fields: the learning sciences, cognitive science, educational psychology, instructional and learning design, educational technology, and faculty development.",
+      "humeta_disciplines": [
+        "anzsrc_3904",
+        "anzsrc_5204"
+      ],
+      "match": {
+        "terms": "learning sciences?|cognitive sciences?|cognition|educational psychology|learning analytics|instructional design(?:ers?)?|(?:learning|educational|education|course) design(?:ers?)?|curriculum (?:design|development|developers?)|(?:educational|education|instructional|learning) technolog\\w*|(?:educational|academic|faculty) developers?|academic technologists?|faculty development|learning experience design\\w*|teaching and learning cent(?:er|re)s?",
+        "acronyms": []
+      }
+    },
+    {
+      "id": "mathematics",
+      "label": "Mathematics",
+      "definition": "Teaching, learning, and education research in mathematics and statistics, including mathematics education research.",
+      "humeta_disciplines": [
+        "anzsrc_49"
+      ],
+      "match": {
+        "terms": "mathematics|math(?:ematics)? education|mathematical sciences?|statistics",
+        "acronyms": []
+      }
+    },
+    {
+      "id": "physics",
+      "label": "Physics",
+      "definition": "Teaching, learning, and education research in physics, astronomy, and the physical and space sciences, including physics education research (PER).",
+      "humeta_disciplines": [
+        "anzsrc_51"
+      ],
+      "match": {
+        "terms": "physics|physicists?|physical sciences?|quantum|astrophysic(?:s|al)|astronom(?:y|ical|ers?)|cosmology|space sciences?|space physics|space weather|heliophysics|planetary sciences?|biophysics|condensed matter|optics|photonics",
+        "acronyms": [
+          "PER"
+        ],
+        "note": "The acronym PER matches only in capitals, so 'per year' is not Physics. The same applies to BER, CER, and GER."
+      }
+    },
+    {
+      "id": "science_education",
+      "label": "Science Education",
+      "definition": "Science and STEM education across fields: science teaching and teacher education, STEM education, and discipline-based education research (DBER) as a whole.",
+      "humeta_disciplines": [
+        "anzsrc_3901"
+      ],
+      "match": {
+        "terms": "science education|science teaching|science teacher education|science teachers?|stem education|stem teaching|stem teachers?|discipline[- ]based education research|dber",
+        "acronyms": []
+      }
+    }
+  ]
+}
