@@ -130,9 +130,19 @@ job may have both research and teaching functions. Audience categories are
 inferred from the title, while functions are inferred from the title and
 description.
 
-Jobs also have a `disciplines` array using ten labels: Agriculture,
-Bioscience, Chemistry, Earth Science, Engineering, Health Education, Learning
-Science, Mathematics, Physics, and Science Education. Health Education covers
+Jobs also have a `disciplines` array using twelve labels: Agriculture,
+Bioscience, Chemistry, Earth Science, Engineering, Health Education, History &
+Philosophy of Science, Learning Science, Mathematics, Physics, Science & Health
+Communication, and Science Education. The labels, their definitions and the
+words that match them come from the STEMEd+ discipline list shared across
+STEMEd+ Commons (HuMeta `standard/humeta/stemedplus_disciplines.json`, stored
+here as `stemed_jobs/stemedplus_disciplines.json`); each run refreshes the
+stored copy from HuMeta and keeps it if the download fails. History &
+Philosophy of Science covers HPS, history of medicine and technology, science
+and technology studies, and the nature of science; Science & Health
+Communication covers science, health, risk, climate and environmental
+communication, public engagement with science, and science and health
+journalism. Health Education covers
 medicine, nursing, pharmacy, dentistry, public health, allied health (physical
 and occupational therapy, kinesiology, nutrition and similar), epidemiology and
 veterinary medicine (`HEALTH_TERMS`); benefits boilerplate such as "medical,
@@ -143,7 +153,7 @@ geochemistry; Bioscience includes genetics, genomics, animal and plant science,
 zoology, botany, entomology, neuroscience, immunology and biochemistry; Physics
 includes astronomy, astrophysics, cosmology and space science. The lists are
 `EARTH_TERMS`, `CHEMISTRY_TERMS`, `BIOSCIENCE_TERMS` and `PHYSICS_TERMS` in
-`stemed_jobs/disciplines.py`, and the same names followed by "education" make a
+`stemed_jobs/disciplines.py` (read from the shared list), and the same names followed by "education" make a
 title relevant. Disciplines are assigned from the
 strongest evidence available, and the first step that finds one decides:
 
@@ -178,9 +188,10 @@ HTML job listings use the same relevance and discipline rules as the RSS
 feeds. Titles containing `DBER` are included only in the inferred audience
 category and the disciplines identified from the title and description.
 
-The run generates 40 filtered RSS 2.0 feeds (four audiences across 10
+The run generates 48 filtered RSS 2.0 feeds (four audiences across 12
 disciplines) under `output/feeds/{audience}/{discipline}.xml`; for example,
-`output/feeds/graduates/chemistry.xml`. A feed with no jobs holds one placeholder item titled "No current postings", so feed readers and WordPress RSS widgets show that instead of an error; it disappears as soon as a job matches. The HTML links default to `/feeds/...`.
+`output/feeds/graduates/chemistry.xml` (an "&" in a label is spelled "and", as
+in `faculty/history-and-philosophy-of-science.xml`). A feed with no jobs holds one placeholder item titled "No current postings", so feed readers and WordPress RSS widgets show that instead of an error; it disappears as soon as a job matches. The HTML links default to `/feeds/...`.
 RSS research inclusion uses job titles only; descriptions are never used to
 qualify a research listing. The discipline-specific title signals include
 Physics Education/PER (or a physics topic paired with Education), Chemistry
@@ -188,6 +199,12 @@ Education/CER, Earth Science or Geoscience Education/GER/Environmental
 Education, and Bioscience or Biology Education/BER (or a biology field paired
 with Education). Engineering, Mathematics, Agriculture, Science Education,
 and Learning Science have corresponding education-research title signals.
+History & Philosophy of Science and Science & Health Communication include
+the fields themselves, not only education in them: a job qualifies when its
+title names the field ("Assistant Professor, History of Science", "Health
+Communication Specialist"). History-of-science field names also count in the
+description; "science communication" does not, because many research postings
+ask for science communication skills.
 Faculty jobs additionally qualify when their title contains Teaching, SoTL,
 or Instructor. This intentionally excludes conventional STEM research roles
 even when their descriptions mention education or teaching.

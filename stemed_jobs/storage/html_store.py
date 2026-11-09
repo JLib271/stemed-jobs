@@ -104,7 +104,7 @@ def write_index_html(path: Path) -> None:
 
 
 def _anchor_id(discipline: str) -> str:
-    return "discipline-" + "-".join(discipline.lower().split())
+    return "discipline-" + "-".join(discipline.lower().replace("&", " and ").split())
 
 
 def _job_link(job: Job) -> str:

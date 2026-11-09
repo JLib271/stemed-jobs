@@ -2,7 +2,8 @@ import re
 from typing import Dict, Pattern
 
 from stemed_jobs.disciplines import BIOSCIENCE_TERMS, CHEMISTRY_TERMS, EARTH_TERMS, HEALTH_TERMS, PHYSICS_TERMS
-from stemed_jobs.disciplines import matching_disciplines
+from stemed_jobs import stemedplus_disciplines as shared
+from stemed_jobs.disciplines import DISCIPLINE_RULES, matching_disciplines
 from stemed_jobs.models import Job
 
 
@@ -44,6 +45,15 @@ _DISCIPLINE_SIGNALS: Dict[str, Pattern[str]] = {
         r"\bcognitive sciences?\b|\blearning sciences?\b|\beducational psychology\b", re.IGNORECASE
     ),
 }
+
+# History & Philosophy of Science and Science & Health Communication include the
+# fields themselves, not only education in them, so a job qualifies when its
+# title names the field. History-of-science field names are specific enough to
+# count anywhere in the posting; "science communication" is not, because many
+# research postings ask for "strong science communication skills".
+_FIELD_DISCIPLINES = shared.field_labels()  # scope "field" in the shared discipline list
+_FIELD_RULES: Dict[str, Pattern[str]] = {name: rule for name, rule in DISCIPLINE_RULES if name in _FIELD_DISCIPLINES}
+_FIELD_IN_SUMMARY = ("History & Philosophy of Science",)
 
 # These field names are specific enough that naming one anywhere in the posting
 # (title or description), not just the title, shows the job belongs to the field.
@@ -135,6 +145,10 @@ def is_stem_education_relevant(job: Job, discipline: str) -> bool:
         return discipline in job.disciplines
     if "faculty" in job.categories and _FACULTY_INCLUDE.search(title):
         return discipline in job.disciplines
+
+    if discipline in _FIELD_RULES and discipline in job.disciplines:
+        rule = _FIELD_RULES[discipline]
+        return bool(rule.search(title) or (discipline in _FIELD_IN_SUMMARY and rule.search(job.summary)))
 
     if discipline == "Learning Science" and discipline in job.disciplines:
         return bool(_LEARNING_SCIENCE_TERMS.search(title) or _LEARNING_SCIENCE_TERMS.search(job.summary))

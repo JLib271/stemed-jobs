@@ -15,7 +15,7 @@ from stemed_jobs.models import Job
 from stemed_jobs.relevance import is_stem_education_relevant, requires_education_doctorate
 from stemed_jobs.storage.html_store import render_audience_html, render_index_html, write_index_html
 from stemed_jobs.storage.json_store import write_jobs
-from stemed_jobs.storage.rss_store import NO_POSTINGS_TITLE, render_rss, write_rss_feeds
+from stemed_jobs.storage.rss_store import NO_POSTINGS_TITLE, feed_relative_path, render_rss, write_rss_feeds
 
 
 RSS_ONE = b"""<?xml version="1.0"?>
@@ -408,7 +408,7 @@ class RssImporterTests(unittest.TestCase):
             faculty_feed = ElementTree.parse(feed_directory / "faculty" / "chemistry.xml")
             postdoc_feed = ElementTree.parse(feed_directory / "postdocs" / "physics.xml")
 
-        self.assertEqual(count, 40)
+        self.assertEqual(count, 48)
         self.assertEqual(len(graduate_feed.findall("./channel/item")), 1)
         self.assertEqual(_job_titles(faculty_feed), [])
         self.assertEqual(_job_titles(postdoc_feed), [])
@@ -453,9 +453,11 @@ class RssImporterTests(unittest.TestCase):
                 "Earth Science",
                 "Engineering",
                 "Health Education",
+                "History & Philosophy of Science",
                 "Learning Science",
                 "Mathematics",
                 "Physics",
+                "Science & Health Communication",
                 "Science Education",
             ),
         )
@@ -524,8 +526,17 @@ class RssImporterTests(unittest.TestCase):
 
     def test_loads_disciplined_job_board_registry(self):
         boards = load_job_boards(Path("config/job_boards.json"))
-        self.assertEqual(len(boards), 23)
+        self.assertEqual(len(boards), 29)
         self.assertIn("Physics", next(board for board in boards if board.name == "AAPT Career Center").disciplines)
+
+
+class FeedPathTests(unittest.TestCase):
+    def test_ampersands_are_spelled_out_in_feed_paths(self):
+        self.assertEqual(
+            feed_relative_path("faculty", "History & Philosophy of Science"),
+            "faculty/history-and-philosophy-of-science.xml",
+        )
+        self.assertEqual(feed_relative_path("graduates", "Earth Science"), "graduates/earth-science.xml")
 
 
 class EmptyFeedTests(unittest.TestCase):
