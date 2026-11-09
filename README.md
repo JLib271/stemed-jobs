@@ -205,8 +205,8 @@ title names the field ("Assistant Professor, History of Science", "Health
 Communication Specialist"). History-of-science field names also count in the
 description; "science communication" does not, because many research postings
 ask for science communication skills.
-Curriculum specialist, curriculum writer, and curriculum coordinator jobs (in K-12 or
-higher education) are listed when they are STEM or in a followed discipline: under the
+Curriculum specialist, writer, coordinator, developer, and designer jobs (in K-12 or
+higher education; the word "curriculum" alone does not make a job Learning Science) are listed when they are STEM or in a followed discipline: under the
 discipline the title names ("Biology Curriculum Specialist"; "math" counts as Mathematics,
 "computer science" as Engineering, and a bare "science" as Science Education), under every
 discipline when the title says STEM in general ("STEM Curriculum Writer"), and otherwise

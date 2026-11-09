@@ -42,6 +42,9 @@ class CurriculumRoleTests(unittest.TestCase):
 
     def test_curriculum_alone_is_not_learning_science(self):
         self.assertNotIn("Learning Science", classify_disciplines("Physics Curriculum Specialist", ""))
+        self.assertEqual(feeds("Biology Curriculum Developer"), {("staff", "Bioscience")})
+        self.assertEqual(feeds("Curriculum Development Manager", "Lead curriculum development."), set())
+        self.assertEqual(feeds("Instructional Designer"), {("staff", "Learning Science")})
 
     def test_staff_unless_the_title_says_graduate_postdoc_or_faculty(self):
         self.assertEqual(classify_job("Undergraduate Curriculum Coordinator", "")[0], ["staff"])
