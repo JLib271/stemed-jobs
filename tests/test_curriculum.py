@@ -47,6 +47,13 @@ class CurriculumRoleTests(unittest.TestCase):
         self.assertEqual(feeds("Curriculum Development Manager", "Lead curriculum development."), set())
         self.assertEqual(feeds("Instructional Designer"), {("staff", "Learning Science")})
 
+    def test_curriculum_development_in_a_description_is_not_learning_science(self):
+        summary = (
+            "Teach business and management communication. The candidate will contribute to curriculum "
+            "development, show contributions to curriculum development, and share curriculum development materials."
+        )
+        self.assertEqual(classify_disciplines("Assistant or Associate Teaching Professor", summary), [])
+
     def test_staff_unless_the_title_says_graduate_postdoc_or_faculty(self):
         self.assertEqual(classify_job("Undergraduate Curriculum Coordinator", "")[0], ["staff"])
         self.assertEqual(classify_job("Postdoctoral Fellow, Physics Curriculum Specialist", "")[0], ["postdocs"])

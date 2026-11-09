@@ -126,7 +126,10 @@ def _curriculum_disciplines(title: str, summary: str, default: Sequence[str]) ->
 def classify_disciplines(title: str, summary: str, default: Sequence[str] = ()) -> List[str]:
     if is_curriculum_role(title):
         return _curriculum_disciplines(title, summary, default)
-    return _classify(title, summary, default)
+    # "Curriculum development" and the like never count as Learning Science on
+    # their own, in the title or the description ("contribute to curriculum
+    # development" appears in many teaching ads in every field).
+    return _classify(_CURRICULUM_PHRASE.sub(" ", title), _CURRICULUM_PHRASE.sub(" ", summary), default)
 
 
 def _classify(title: str, summary: str, default: Sequence[str] = ()) -> List[str]:
