@@ -43,6 +43,7 @@ _CATEGORY_RULES = (
             r"|online learning|learning experience|digital learning|teaching and learning)\s+"
             r"(?:designers?|developers?|technologists?|design(?:\s+(?:specialist|consultant|manager|lead|coordinator))?"
             r"|development(?:\s+(?:specialist|consultant|manager|coordinator))?|specialists?|consultants?)\b"
+            r"|\bcurriculum\s+(?:writers?|coordinators?)\b"
             r"|\b(?:educational|education|instructional|learning|academic)\s+technology\s+(?:specialist|consultant|manager|coordinator|designer|support)\b|\bacademic\s+technologists?\b|\binstructional\s+(?:design|technolog\w*)\b|\blearning\s+technolog\w*\s+(?:specialist|consultant|manager)\b",
             re.IGNORECASE,
         ),
@@ -59,9 +60,19 @@ _FUNCTION_RULES = (
 )
 
 
+# Curriculum specialist, writer, coordinator, developer and designer roles are staff jobs unless the
+# title makes them a graduate, postdoctoral or faculty position.
+_CURRICULUM_ROLE = re.compile(r"\bcurriculum\s+(?:specialists?|writers?|coordinators?|developers?|designers?|development|design)\b", re.IGNORECASE)
+
+
 def classify_job(title: str, summary: str) -> Tuple[List[str], List[str]]:
     """Return evidenced audience categories and work functions for a posting."""
     categories = [category for category, pattern in _CATEGORY_RULES if pattern.search(title)]
+    if _CURRICULUM_ROLE.search(title):
+        academic = [c for c in categories if c in ("graduates", "postdocs")]
+        if _FACULTY_RANK.search(title):
+            academic.append("faculty")
+        categories = academic or ["staff"]
     if "staff" in categories:
         if _FACULTY_RANK.search(title):
             # "Assistant Professor of Instructional Design" is a faculty post.

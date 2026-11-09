@@ -247,10 +247,14 @@ class DesignerRolesTests(unittest.TestCase):
     def test_design_and_development_roles_are_learning_science(self):
         for title in (
             "Instructional Designer", "Educational Designer", "Learning Experience Designer",
-            "Curriculum Developer", "Educational Developer", "Senior Instructional Technologist",
+            "Educational Developer", "Senior Instructional Technologist",
             "Academic Technologist", "Faculty Development Specialist",
         ):
             self.assertIn("Learning Science", classify_disciplines(title, ""), title)
+
+    def test_curriculum_roles_follow_the_curriculum_rule_not_learning_science(self):
+        self.assertEqual(classify_disciplines("Curriculum Developer", ""), [])
+        self.assertEqual(classify_disciplines("Chemistry Curriculum Developer", ""), ["Chemistry"])
 
     def test_a_named_department_adds_its_discipline(self):
         found = classify_disciplines("Instructional Designer, Department of Nursing", "")
