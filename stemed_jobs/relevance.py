@@ -37,7 +37,11 @@ _DISCIPLINE_SIGNALS: Dict[str, Pattern[str]] = {
         r"|\bnursing education\b|\bhealth professions education\b",
         re.IGNORECASE,
     ),
-    "Engineering": re.compile(r"\bengineering education\b|\b(?-i:EER)\b", re.IGNORECASE),
+    "Engineering": re.compile(
+        r"\bengineering education\b|\b(?-i:EER)\b|\b(?:computer science|computing|CS) education\b"
+        r"|\bcomputing education research\b|\b(?-i:CER) in computing\b",
+        re.IGNORECASE,
+    ),
     "Mathematics": re.compile(r"\bmathematics education\b|\bmath education\b", re.IGNORECASE),
     "Agriculture": re.compile(r"\bagricultural education\b|\bagriculture education\b", re.IGNORECASE),
     "Science Education": re.compile(r"\bSTEM education\b|\bscience education\b|\bDBER\b", re.IGNORECASE),
