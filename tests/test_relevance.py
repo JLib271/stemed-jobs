@@ -37,6 +37,38 @@ class LearningScienceRelevanceTests(unittest.TestCase):
         self.assertFalse(is_stem_education_relevant(job, "Learning Science"))
 
 
+class FieldDisciplineTests(unittest.TestCase):
+    """History & Philosophy of Science and Science & Health Communication include
+    the fields themselves, not only education in them."""
+
+    HPS = "History & Philosophy of Science"
+    SHC = "Science & Health Communication"
+
+    def test_field_jobs_count_when_the_title_names_the_field(self):
+        for title, discipline in (
+            ("Assistant Professor, History of Science", self.HPS),
+            ("Postdoctoral Fellow in Science and Technology Studies", self.HPS),
+            ("Lecturer in Philosophy of Biology", self.HPS),
+            ("Assistant Professor of Health Communication", self.SHC),
+            ("Science Communication Specialist", self.SHC),
+            ("Postdoc, Climate Change Communication", self.SHC),
+        ):
+            job = _job(title, disciplines=(discipline,))
+            self.assertTrue(is_stem_education_relevant(job, discipline), title)
+
+    def test_history_of_science_in_the_description_counts(self):
+        job = _job("Assistant Professor (Tenure-track)", "AOS: history and philosophy of science.", disciplines=(self.HPS,))
+        self.assertTrue(is_stem_education_relevant(job, self.HPS))
+
+    def test_science_communication_skills_in_the_description_do_not_count(self):
+        job = _job("Research Scientist", "Strong science communication skills required.", disciplines=(self.SHC,))
+        self.assertFalse(is_stem_education_relevant(job, self.SHC))
+
+    def test_the_field_must_be_the_jobs_discipline(self):
+        job = _job("Assistant Professor, History of Science", disciplines=("Physics",))
+        self.assertFalse(is_stem_education_relevant(job, self.HPS))
+
+
 class SubfieldEducationTests(unittest.TestCase):
     def test_subfield_education_titles_are_relevant_to_their_discipline(self):
         for title, discipline in (

@@ -58,27 +58,27 @@
     {
       "name": "HigherEdJobs",
       "url": "https://www.higheredjobs.com/search/",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "Learning Science", "Mathematics", "Physics", "Science Education"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "History & Philosophy of Science", "Learning Science", "Mathematics", "Physics", "Science & Health Communication", "Science Education"]
     },
     {
       "name": "HERC Jobs",
       "url": "https://main.hercjobs.org/",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "Learning Science", "Mathematics", "Physics", "Science Education"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "History & Philosophy of Science", "Learning Science", "Mathematics", "Physics", "Science & Health Communication", "Science Education"]
     },
     {
       "name": "Chronicle Careers",
       "url": "https://jobs.chronicle.com/",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "Learning Science", "Mathematics", "Physics", "Science Education"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "History & Philosophy of Science", "Learning Science", "Mathematics", "Physics", "Science & Health Communication", "Science Education"]
     },
     {
       "name": "AcademicJobsOnline",
       "url": "https://academicjobsonline.org/ajo/jobs",
-      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "Learning Science", "Mathematics", "Physics", "Science Education"]
+      "disciplines": ["Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering", "Health Education", "History & Philosophy of Science", "Learning Science", "Mathematics", "Physics", "Science & Health Communication", "Science Education"]
     },
     {
       "name": "Science Careers",
       "url": "https://jobs.sciencecareers.org/jobs/",
-      "disciplines": ["Bioscience", "Chemistry", "Earth Science", "Engineering", "Physics", "Science Education"]
+      "disciplines": ["Bioscience", "Chemistry", "Earth Science", "Engineering", "Physics", "Science & Health Communication", "Science Education"]
     },
     {
       "name": "MathJobs",
@@ -114,6 +114,36 @@
       "name": "NIH Office of Intramural Training & Education",
       "url": "https://www.training.nih.gov/",
       "disciplines": ["Health Education"]
+    },
+    {
+      "name": "PhilJobs: Jobs for Philosophers",
+      "url": "https://philjobs.org/",
+      "disciplines": ["History & Philosophy of Science"]
+    },
+    {
+      "name": "4S (Society for Social Studies of Science) Positions",
+      "url": "https://4sonline.org/positions.php",
+      "disciplines": ["History & Philosophy of Science"]
+    },
+    {
+      "name": "SHOT Jobs and Fellowships",
+      "url": "https://www.historyoftechnology.org/category/jobs-and-fellowships/",
+      "disciplines": ["History & Philosophy of Science"]
+    },
+    {
+      "name": "AHA Career Center",
+      "url": "https://careers.historians.org/",
+      "disciplines": ["History & Philosophy of Science"]
+    },
+    {
+      "name": "NCA Career Center",
+      "url": "https://natcom-jobs.careerwebsite.com/",
+      "disciplines": ["Science & Health Communication"]
+    },
+    {
+      "name": "NASW Job Bank (members)",
+      "url": "https://www.nasw.org/job",
+      "disciplines": ["Science & Health Communication"]
     }
   ]
 }

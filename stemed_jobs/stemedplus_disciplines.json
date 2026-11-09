@@ -1,14 +1,16 @@
 {
-  "version": 1,
+  "version": 2,
   "title": "STEMEd+ disciplines",
-  "description": "The disciplines used across STEMEd+ Commons: STEMEd+ Jobs, Funding, Digest, and STEM+ Education Research Graduate Programs. Each site builds from this file, so the disciplines have the same ids, labels, meanings, and matching words everywhere. Each site still decides how strictly to apply them (for example, Jobs lists a job under a discipline only when it is about education in that field).",
+  "description": "The disciplines used across STEMEd+ Commons: STEMEd+ Jobs, Funding, Digest, and STEM+ Education Research Graduate Programs. Each site builds from this file, so the disciplines have the same ids, labels, meanings, and matching words everywhere. Most disciplines mean education and education research in a field; History & Philosophy of Science and Science & Health Communication also include those fields themselves. Each site still decides how strictly to apply them (for example, Jobs lists a job under a discipline only when it is about education in that field).",
   "how_to_match": "A discipline matches text when 'terms' (a regular-expression alternation) matches as whole words, ignoring case, or when one of 'acronyms' matches as a whole word in capitals only (so 'per year' is not PER). In Python: re.compile(r'\\b(?:' + terms + r')\\b' + ''.join(r'|\\b(?-i:' + a + r')\\b' for a in acronyms), re.IGNORECASE).",
   "humeta_note": "humeta_disciplines lists the HuMeta discipline terms (ANZSRC 2020 Fields of Research) each discipline corresponds to.",
+  "scope_note": "scope 'education': the discipline means education and education research in the field. scope 'field': it also includes the field itself (research, teaching, and practice), not only education in it.",
   "disciplines": [
     {
       "id": "agriculture",
       "label": "Agriculture",
       "definition": "Teaching, learning, and education research in agriculture and the agricultural sciences, including agricultural (ag) education and agriscience.",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_30"
       ],
@@ -21,6 +23,7 @@
       "id": "bioscience",
       "label": "Bioscience",
       "definition": "Teaching, learning, and education research in the biological and life sciences, from molecular biology to ecology, including biology education research (BER).",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_31"
       ],
@@ -35,6 +38,7 @@
       "id": "chemistry",
       "label": "Chemistry",
       "definition": "Teaching, learning, and education research in chemistry and the chemical sciences, including biochemistry and chemistry education research (CER).",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_34"
       ],
@@ -49,6 +53,7 @@
       "id": "earth_science",
       "label": "Earth Science",
       "definition": "Teaching, learning, and education research in the geosciences: geology, atmospheric, ocean, climate, planetary, soil, and environmental sciences, including geoscience education research (GER).",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_37"
       ],
@@ -63,6 +68,7 @@
       "id": "engineering",
       "label": "Engineering",
       "definition": "Teaching, learning, and education research in engineering. STEMEd+ Funding also counts computing and computer science here.",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_40",
         "anzsrc_46"
@@ -76,6 +82,7 @@
       "id": "health_education",
       "label": "Health Education",
       "definition": "Education and education research in the health professions: medicine, nursing, public health, pharmacy, dentistry, allied health, and related fields (health professions education).",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_42",
         "anzsrc_32"
@@ -87,9 +94,25 @@
       }
     },
     {
+      "id": "history_philosophy_of_science",
+      "label": "History & Philosophy of Science",
+      "definition": "The history, philosophy, and social study of science, medicine, and technology, as fields in their own right and in teaching: history and philosophy of science (HPS), history of medicine, science and technology studies (STS), and the nature of science in science education.",
+      "scope": "field",
+      "humeta_disciplines": [
+        "anzsrc_5002",
+        "anzsrc_4410"
+      ],
+      "match": {
+        "terms": "history,? (?:and|&) philosophy of (?:science|medicine|biology|physics)|history,? (?:and|&) sociology of science|(?:history|philosophy|sociology|historiography) of (?:the )?(?:science|sciences|scientific knowledge|medicine|technology|biology|chemistry|physics|mathematics|astronomy|geology|earth sciences?|life sciences?|physical sciences?|natural sciences?|ecology|evolution|psychiatry|psychology|public health|nursing|pharmacy|engineering|statistics)|historians? of (?:science|medicine|technology)|philosophers? of (?:science|biology|physics|medicine)|science,? (?:and|&) technology studies|science,? technology,? (?:and|&) society|science studies|social studies of science|(?:science|technoscience) (?:and|&) society studies|nature of science|epistemology of science|scientific epistemology",
+        "acronyms": [],
+        "note": "Acronyms such as HPS and STS are not matched because they have other common meanings (Health Physics Society, Society of Thoracic Surgeons). 'History of science' and similar phrases may also tag the science named (for example Physics); each site decides how to treat that."
+      }
+    },
+    {
       "id": "learning_science",
       "label": "Learning Science",
       "definition": "How people learn and how learning is designed and supported across fields: the learning sciences, cognitive science, educational psychology, instructional and learning design, educational technology, and faculty development.",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_3904",
         "anzsrc_5204"
@@ -103,6 +126,7 @@
       "id": "mathematics",
       "label": "Mathematics",
       "definition": "Teaching, learning, and education research in mathematics and statistics, including mathematics education research.",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_49"
       ],
@@ -115,6 +139,7 @@
       "id": "physics",
       "label": "Physics",
       "definition": "Teaching, learning, and education research in physics, astronomy, and the physical and space sciences, including physics education research (PER).",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_51"
       ],
@@ -127,9 +152,25 @@
       }
     },
     {
+      "id": "science_health_communication",
+      "label": "Science & Health Communication",
+      "definition": "Communicating science, health, and medicine with the public, as a field in its own right and in teaching: science and health communication, risk and crisis communication, climate and environmental communication, public engagement with science, and science and health journalism.",
+      "scope": "field",
+      "humeta_disciplines": [
+        "anzsrc_4701",
+        "anzsrc_4206"
+      ],
+      "match": {
+        "terms": "(?:science|scientific|health|medical|risk|climate(?: change)?|environmental|health ?care|biomedical) communications?|science communicators?|health communicators?|communicating (?:science|research|health|risk|climate(?: change)?)|public (?:engagement|communication|understanding) (?:with|of|in) (?:science|research|technology|health)|science (?:and|&) society engagement|science engagement|science journalis(?:m|ts?)|health journalis(?:m|ts?)|medical journalis(?:m|ts?)|science writ(?:ing|ers?)|health literacy",
+        "acronyms": [],
+        "note": "Generic 'communication' or 'communications' alone is not matched; it must name science, health, risk, climate, or the like. 'Crisis communication' and 'research communications' are left out because they usually mean public relations or journal names (Biochemical and Biophysical Research Communications)."
+      }
+    },
+    {
       "id": "science_education",
       "label": "Science Education",
       "definition": "Science and STEM education across fields: science teaching and teacher education, STEM education, and discipline-based education research (DBER) as a whole.",
+      "scope": "education",
       "humeta_disciplines": [
         "anzsrc_3901"
       ],

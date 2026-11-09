@@ -39,6 +39,8 @@ def validate(doc: dict) -> List[dict]:
             raise ValueError(f"bad or repeated label {d['label']!r}")
         ids.add(d["id"])
         labels.add(d["label"])
+        if d.get("scope", "education") not in ("education", "field"):
+            raise ValueError(f"bad scope for {d['id']}")
         acronyms = d["match"].get("acronyms", [])
         if not d["match"].get("terms") or any(not _ACRONYM.match(a) for a in acronyms):
             raise ValueError(f"bad match for {d['id']}")
@@ -65,6 +67,11 @@ def rules(path: Path = VENDORED) -> Tuple[Tuple[str, re.Pattern], ...]:
 
 def labels_by_id(path: Path = VENDORED) -> Dict[str, str]:
     return {d["id"]: d["label"] for d in load(path)}
+
+
+def field_labels(path: Path = VENDORED) -> Tuple[str, ...]:
+    """Labels of disciplines that include the field itself, not only education in it."""
+    return tuple(d["label"] for d in load(path) if d.get("scope") == "field")
 
 
 def terms(discipline_id: str, path: Path = VENDORED) -> str:

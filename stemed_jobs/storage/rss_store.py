@@ -22,7 +22,8 @@ def audience_label(audience: str) -> str:
 
 
 def _slug(value: str) -> str:
-    return "-".join(value.lower().split())
+    """"History & Philosophy of Science" -> "history-and-philosophy-of-science"."""
+    return "-".join(value.lower().replace("&", " and ").split())
 
 
 def feed_relative_path(audience: str, discipline: str) -> str:

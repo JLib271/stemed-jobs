@@ -7,7 +7,8 @@ from stemed_jobs import stemedplus_disciplines as shared
 
 LABELS = [
     "Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering",
-    "Health Education", "Learning Science", "Mathematics", "Physics", "Science Education",
+    "Health Education", "History & Philosophy of Science", "Learning Science", "Mathematics", "Physics",
+    "Science & Health Communication", "Science Education",
 ]
 
 
@@ -47,6 +48,22 @@ class SharedDisciplineTests(unittest.TestCase):
             path.write_text(shared.VENDORED.read_text())
             self.assertIn("updated", shared.refresh(url=good.as_uri(), path=path))
             self.assertEqual(json.loads(path.read_text())["version"], 99)
+
+
+class IssueFormTests(unittest.TestCase):
+    def test_discipline_lists_in_issue_forms_offer_every_discipline(self):
+        try:
+            import yaml
+        except ImportError:
+            self.skipTest("PyYAML is not installed")
+        forms = Path(__file__).resolve().parents[1] / ".github" / "ISSUE_TEMPLATE"
+        for form in sorted(forms.glob("*.yml")):
+            for field in (yaml.safe_load(form.read_text()) or {}).get("body", []):
+                options = (field.get("attributes") or {}).get("options") or []
+                names = {str(o.get("label") if isinstance(o, dict) else o).split(" (")[0] for o in options}
+                if "Physics" in names:
+                    for label in LABELS:
+                        self.assertIn(label, names, f"{form.name} is missing {label}")
 
 
 if __name__ == "__main__":
