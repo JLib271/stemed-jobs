@@ -83,13 +83,25 @@ def terms(discipline_id: str, path: Path = VENDORED) -> str:
 
 
 def refresh(url: str = SOURCE_URL, path: Path = VENDORED, timeout: float = 30) -> str:
-    """Replace the copy with HuMeta's current file if it downloads and is valid."""
+    """Replace the copy with HuMeta's current file if it downloads, is valid, and
+    is not older than the copy (a site pushed before HuMeta is updated keeps
+    its newer list instead of going back to the old one)."""
     try:
         with urllib.request.urlopen(url, timeout=timeout) as response:
             raw = response.read().decode("utf-8")
-        validate(json.loads(raw))
+        remote = json.loads(raw)
+        validate(remote)
     except Exception as error:  # keep the copy on any failure
         return f"kept the stored disciplines ({type(error).__name__}: {error})"
+    try:
+        stored_version = json.loads(Path(path).read_text(encoding="utf-8")).get("version", 0)
+    except Exception:
+        stored_version = 0
+    if remote.get("version", 0) < stored_version:
+        return (
+            f"kept the stored disciplines (version {stored_version} is newer than HuMeta's "
+            f"version {remote.get('version', 0)})"
+        )
     if Path(path).exists() and Path(path).read_text(encoding="utf-8") == raw:
         return "stored disciplines are current"
     Path(path).write_text(raw, encoding="utf-8")

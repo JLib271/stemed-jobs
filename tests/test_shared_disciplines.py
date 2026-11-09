@@ -50,6 +50,19 @@ class SharedDisciplineTests(unittest.TestCase):
             self.assertEqual(json.loads(path.read_text())["version"], 99)
 
 
+class RefreshVersionTests(unittest.TestCase):
+    def test_refresh_keeps_a_newer_stored_copy(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            stored = json.loads(shared.VENDORED.read_text())
+            older = dict(stored, version=stored["version"] - 1)
+            remote = Path(tmp) / "remote.json"
+            remote.write_text(json.dumps(older))
+            path = Path(tmp) / "d.json"
+            path.write_text(shared.VENDORED.read_text())
+            self.assertIn("newer", shared.refresh(url=remote.as_uri(), path=path))
+            self.assertEqual(path.read_text(), shared.VENDORED.read_text())
+
+
 class IssueFormTests(unittest.TestCase):
     def test_discipline_lists_in_issue_forms_offer_every_discipline(self):
         try:

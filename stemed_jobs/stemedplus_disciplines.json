@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "title": "STEMEd+ disciplines",
   "description": "The disciplines used across STEMEd+ Commons: STEMEd+ Jobs, Funding, Digest, and STEM+ Education Research Graduate Programs. Each site builds from this file, so the disciplines have the same ids, labels, meanings, and matching words everywhere. Most disciplines mean education and education research in a field; History & Philosophy of Science, Human Dimensions, and Science & Health Communication also include those fields themselves. Each site still decides how strictly to apply them (for example, Jobs lists a job under a discipline only when it is about education in that field).",
   "how_to_match": "A discipline matches text when 'terms' (a regular-expression alternation) matches as whole words, ignoring case, or when one of 'acronyms' matches as a whole word in capitals only (so 'per year' is not PER). In Python: re.compile(r'\\b(?:' + terms + r')\\b' + ''.join(r'|\\b(?-i:' + a + r')\\b' for a in acronyms), re.IGNORECASE).",
@@ -119,9 +119,9 @@
         "anzsrc_4406"
       ],
       "match": {
-        "terms": "human dimensions|social[- ]ecological(?! models?)|socio[- ]ecological(?! models?)|socio[- ]environmental|coupled (?:human and natural|natural and human|human[- ]natural) systems|conservation social sciences?|environmental social sciences?|natural resources? social sciences?|human[- ]wildlife (?:conflicts?|interactions?|coexistence|relationships?)|environmental sociolog(?:y|ists?)|human[- ]environment(?:al)? (?:interactions?|systems|relationships?)",
+        "terms": "human dimensions(?! (?:of|in) (?:the )?(?:organi[sz]ations?|leadership|management|business|work(?:places?)?|technology|computing|AI|artificial intelligence|data|design|engineering|medicine|health ?care|sport))|social[- ]ecological(?! models?)|socio[- ]ecological(?! models?)|socio[- ]environmental|coupled (?:human and natural|natural and human|human[- ]natural) systems|conservation social sciences?|environmental social sciences?|natural resources? social sciences?|human[- ]wildlife (?:conflicts?|interactions?|coexistence|relationships?)|environmental sociolog(?:y|ists?)|human[- ]environment(?:al)? (?:interactions?|systems|relationships?)",
         "acronyms": [],
-        "note": "'Social-ecological model' and 'socio-ecological model' (a public health framework) are not matched."
+        "note": "'Social-ecological model' and 'socio-ecological model' (a public health framework) are not matched. 'Human dimensions of organizations' (and of leadership, management, business, work, technology, computing, AI, data, design, engineering, medicine, health care, or sport) is not matched: those are not about people and the environment."
       }
     },
     {
