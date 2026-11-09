@@ -58,7 +58,7 @@
         "anzsrc_37"
       ],
       "match": {
-        "terms": "earth sciences?|geosciences?|geolog(?:y|ical|ists?)|geophysic(?:s|al)|geochemistry|geobiology|geomorpholog(?:y|ical)|hydrolog(?:y|ic|ical)|hydrogeology|atmospheric (?:sciences?|chemistry|physics)|meteorolog(?:y|ical)|climate|climatology|oceanograph(?:y|ic|ers?)|ocean sciences?|marine sciences?|paleontolog(?:y|ists?)|paleoclimat\\w*|seismolog(?:y|ists?)|volcanolog(?:y|ists?)|glaciolog(?:y|ists?)|mineralog(?:y|ists?)|petrolog(?:y|ists?)|sedimentolog(?:y|ists?)|tectonics|geochronolog(?:y|ists?)|planetary sciences?|soil sciences?|environmental sciences?|environmental education|limnolog(?:y|ists?)|earth systems?|natural hazards",
+        "terms": "earth sciences?|earth,? (?:and|&) space sciences?|geosciences?|geolog(?:y|ical|ists?)|geophysic(?:s|al)|geochemistry|geobiology|geomorpholog(?:y|ical)|hydrolog(?:y|ic|ical)|hydrogeology|atmospheric (?:sciences?|chemistry|physics)|meteorolog(?:y|ical)|climate|climatology|oceanograph(?:y|ic|ers?)|ocean sciences?|marine sciences?|paleontolog(?:y|ists?)|paleoclimat\\w*|seismolog(?:y|ists?)|volcanolog(?:y|ists?)|glaciolog(?:y|ists?)|mineralog(?:y|ists?)|petrolog(?:y|ists?)|sedimentolog(?:y|ists?)|tectonics|geochronolog(?:y|ists?)|planetary sciences?|soil sciences?|environmental sciences?|environmental education|limnolog(?:y|ists?)|earth systems?|natural hazards",
         "acronyms": [
           "GER"
         ]
