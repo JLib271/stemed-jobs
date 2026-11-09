@@ -60,9 +60,9 @@ _FUNCTION_RULES = (
 )
 
 
-# Curriculum specialist, writer and coordinator roles are staff jobs unless the
+# Curriculum specialist, writer, coordinator, developer and designer roles are staff jobs unless the
 # title makes them a graduate, postdoctoral or faculty position.
-_CURRICULUM_ROLE = re.compile(r"\bcurriculum\s+(?:specialists?|writers?|coordinators?)\b", re.IGNORECASE)
+_CURRICULUM_ROLE = re.compile(r"\bcurriculum\s+(?:specialists?|writers?|coordinators?|developers?|designers?|development|design)\b", re.IGNORECASE)
 
 
 def classify_job(title: str, summary: str) -> Tuple[List[str], List[str]]:
