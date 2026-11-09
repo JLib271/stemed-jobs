@@ -204,6 +204,21 @@
       "retain_days": 90
     },
     {
+      "name": "jobRxiv - curriculum specialist",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=curriculum%20specialist",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - curriculum writer",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=curriculum%20writer",
+      "retain_days": 90
+    },
+    {
+      "name": "jobRxiv - curriculum coordinator",
+      "url": "https://jobrxiv.org/?feed=job_feed&posts_per_page=50&search_keywords=curriculum%20coordinator",
+      "retain_days": 90
+    },
+    {
       "name": "CIRTL Job Board",
       "url": "https://cirtl.net/category/job/feed/",
       "retain_days": 90

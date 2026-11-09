@@ -3,7 +3,7 @@ from typing import Dict, Pattern
 
 from stemed_jobs.disciplines import BIOSCIENCE_TERMS, CHEMISTRY_TERMS, EARTH_TERMS, HEALTH_TERMS, PHYSICS_TERMS
 from stemed_jobs import stemedplus_disciplines as shared
-from stemed_jobs.disciplines import DISCIPLINE_RULES, matching_disciplines
+from stemed_jobs.disciplines import DISCIPLINE_RULES, is_curriculum_role, matching_disciplines
 from stemed_jobs.models import Job
 
 
@@ -135,6 +135,9 @@ def is_stem_education_relevant(job: Job, discipline: str) -> bool:
         return discipline in job.disciplines
     title = job.title
     if is_dber_title(title):
+        return discipline in job.disciplines
+    if is_curriculum_role(title):
+        # Curriculum specialists, writers and coordinators are education work by nature.
         return discipline in job.disciplines
     if requires_education_doctorate(job):
         return discipline in job.disciplines

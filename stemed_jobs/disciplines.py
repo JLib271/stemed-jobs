@@ -83,7 +83,51 @@ def _ordered(found: Set[str]) -> List[str]:
     return [name for name, _ in DISCIPLINE_RULES if name in found]
 
 
+# Curriculum specialist, writer and coordinator roles (K-12 or higher education).
+# They are listed only when they are STEM or in a followed discipline: under the
+# discipline the title names ("Biology Curriculum Specialist"), under every
+# discipline when the title says STEM in general ("STEM Curriculum Writer"), and
+# otherwise under disciplines the posting itself gives evidence for. The phrase
+# "curriculum ..." alone never counts as Learning Science.
+CURRICULUM_ROLE = re.compile(r"\bcurriculum\s+(?:specialists?|writers?|coordinators?)\b", re.IGNORECASE)
+_CURRICULUM_PHRASE = re.compile(r"\bcurricul(?:um|a|ar)\b(?:\s+(?:and\s+)?(?:design|development|developers?|specialists?|writers?|coordinators?|writing))*", re.IGNORECASE)
+_GENERAL_STEM = re.compile(r"\b(?-i:STEM|STEAM|STEMM)\b", re.IGNORECASE)
+# Short subject words common in curriculum titles but not discipline terms themselves.
+_CURRICULUM_SUBJECTS = (
+    ("Mathematics", re.compile(r"\bmaths?\b", re.IGNORECASE)),
+    ("Engineering", re.compile(r"\bcomputer science\b|\bcomputing\b|\bcoding\b", re.IGNORECASE)),
+)
+_GENERAL_SCIENCE = re.compile(r"\bsciences?\b", re.IGNORECASE)
+_NOT_SCIENCE = re.compile(
+    r"\b(?:social|political|library|information|behaviou?ral|family and consumer|consumer|exercise|sport|data)\s+sciences?\b",
+    re.IGNORECASE,
+)
+
+
+def is_curriculum_role(title: str) -> bool:
+    return bool(CURRICULUM_ROLE.search(title))
+
+
+def _curriculum_disciplines(title: str, summary: str, default: Sequence[str]) -> List[str]:
+    plain_title = _CURRICULUM_PHRASE.sub(" ", title)
+    found = set(matching_disciplines(plain_title))
+    found |= {name for name, pattern in _CURRICULUM_SUBJECTS if pattern.search(plain_title)}
+    if found:
+        return _ordered(found)
+    if _GENERAL_STEM.search(title):
+        return list(DISCIPLINES)
+    if _GENERAL_SCIENCE.search(_NOT_SCIENCE.sub(" ", plain_title)):
+        return ["Science Education"]
+    return _classify(plain_title, _CURRICULUM_PHRASE.sub(" ", summary), default)
+
+
 def classify_disciplines(title: str, summary: str, default: Sequence[str] = ()) -> List[str]:
+    if is_curriculum_role(title):
+        return _curriculum_disciplines(title, summary, default)
+    return _classify(title, summary, default)
+
+
+def _classify(title: str, summary: str, default: Sequence[str] = ()) -> List[str]:
     """Assign disciplines from the strongest evidence available.
 
     The first of these that finds a discipline decides:
