@@ -28,19 +28,52 @@ h1, h2, h3, h4 { font-family: "Manrope", system-ui, sans-serif; letter-spacing: 
 h1 { font-weight: 800; }
 a { color: var(--sp-green); }
 
-/* The green band: logo on the left, STEMEd+ menu on the right. */
-.sp-bar { background: var(--sp-green); color: #fff; }
-.sp-bar .sp-in { max-width: 1100px; margin: 0 auto; padding: 14px 20px; display: flex; flex-wrap: wrap;
-                 align-items: center; justify-content: space-between; gap: 12px 24px; }
+/* The green band, matching the stemedplus.org header: logo on the left, the stemedplus.org menu
+   (with submenus) on the right, then "Log in". Built by sp_bar.py; needs no JavaScript. */
+.sp-bar { background: var(--sp-green); color: #fff; font-family: "Manrope", system-ui, sans-serif; }
+.sp-bar .sp-in { display: flex; align-items: center; justify-content: space-between; gap: 12px 28px;
+                 min-height: 160px; padding: 10px 10px; flex-wrap: nowrap; }
 .sp-logo { display: block; flex: none; }
-.sp-logo img { display: block; height: 56px; width: auto; }
-.sp-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; font-size: .92rem; font-weight: 600; }
-.sp-nav a { color: #fff; text-decoration: none; }
-.sp-nav a:hover, .sp-nav a:focus-visible { text-decoration: underline; text-underline-offset: 5px; }
-.sp-nav a[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
-.sp-nav a.sp-join { background: #fff; color: var(--sp-green); padding: 6px 16px; border-radius: 9999px; }
-.sp-nav a.sp-join:hover { background: var(--sp-green-soft); text-decoration: none; }
-.sp-bar a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.sp-logo img { display: block; height: 104px; width: auto; }
+.sp-bar a { color: #fff; }
+.sp-bar a:focus-visible, .sp-burger:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.sp-nav { margin-left: auto; }
+.sp-nav ul { list-style: none; margin: 0; padding: 0; }
+.sp-top { display: flex; margin: 0; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 6px 19.2px;
+          font-size: 18px; font-weight: 600; letter-spacing: -0.1px; line-height: 1.4; }
+.sp-top > li { position: relative; display: flex; align-items: center; gap: 4px; }
+.sp-top a { text-decoration: none; }
+.sp-top a:hover, .sp-top a:focus-visible, .sp-top a[aria-current="page"] { text-decoration: underline; }
+.sp-has.sp-here > a { text-decoration: underline; }
+.sp-chev { flex: none; transition: transform .15s; }
+.sp-sub { position: absolute; left: 0; top: 100%; z-index: 50; min-width: 220px; background: #fff; color: #111;
+          border: 1px solid rgba(0, 0, 0, .15); visibility: hidden; opacity: 0; transition: opacity .1s; }
+.sp-sub a { display: block; color: #111; padding: 9px 18px; white-space: nowrap; }
+.sp-sub a[aria-current="page"] { text-decoration: underline; }
+.sp-has:hover > .sp-sub, .sp-has:focus-within > .sp-sub { visibility: visible; opacity: 1; }
+.sp-has:hover > .sp-chev, .sp-has:focus-within > .sp-chev { transform: rotate(180deg); }
+.sp-login { flex: none; font-size: 18px; font-weight: 700; text-decoration: underline; }
+.sp-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.sp-burger { display: none; cursor: pointer; color: #fff; margin: 0; font-size: 16px; font-weight: 700; align-items: center; gap: 8px; margin-left: auto; }
+.sp-burger-icon, .sp-burger-icon::before, .sp-burger-icon::after { display: block; width: 22px; height: 2px; background: #fff; position: relative; }
+.sp-burger-icon::before, .sp-burger-icon::after { content: ""; position: absolute; left: 0; }
+.sp-burger-icon::before { top: -7px; } .sp-burger-icon::after { top: 7px; }
+.sp-toggle:focus-visible + .sp-burger { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* Narrow screens: a "Menu" button opens the whole menu as a list under the band. */
+@media (max-width: 1100px) {
+  .sp-bar .sp-in { flex-wrap: wrap; min-height: 0; padding: 12px 16px; gap: 10px 18px; }
+  .sp-logo img { height: 60px; }
+  .sp-burger { display: inline-flex; }
+  .sp-nav { display: none; order: 5; flex-basis: 100%; margin: 0; }
+  .sp-toggle:checked ~ .sp-nav { display: block; }
+  .sp-top { display: block; padding: 6px 0 10px; }
+  .sp-top > li { display: block; padding: 6px 0; }
+  .sp-chev { display: none; }
+  .sp-sub { position: static; visibility: visible; opacity: 1; background: none; border: 0; min-width: 0; padding: 2px 0 0 16px; }
+  .sp-sub a { color: #fff; padding: 4px 0; white-space: normal; font-weight: 500; }
+  .sp-login { font-size: 16px; }
+}
 
 /* Buttons and pills, as on stemedplus.org. */
 .btn, .navbtn { border-radius: 9999px !important; }
@@ -53,8 +86,4 @@ a { color: var(--sp-green); }
 
 input:focus, select:focus, textarea:focus { outline-color: var(--sp-green); }
 
-@media (max-width: 700px) {
-  .sp-logo img { height: 44px; }
-  .sp-nav { font-size: .88rem; gap: 6px 14px; }
-}
 .notice { border-color: var(--sp-green-line); }
