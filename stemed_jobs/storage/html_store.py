@@ -13,6 +13,8 @@ from stemed_jobs.storage.rss_store import AUDIENCES, audience_label, feed_relati
 COMMONS_URL = "https://stemedplus.hcommons.org/"
 # The other STEMEd+ Commons sites, linked from the bottom of the index page.
 RELATED_SITES = (
+    ("STEMEd+ Conferences", "https://jlib271.github.io/stemed-conferences/",
+     "meetings, proposal deadlines, and travel support for STEM+ education"),
     ("STEMEd+ Digest", "https://jlib271.github.io/STEMEd-Digest/", "new journal articles, preprints, and dissertations"),
     ("STEMEd+ Funding", "https://jlib271.github.io/stemed-funding/", "open calls and deadlines for STEM+ education"),
     ("STEM+ Education Research Graduate Programs", "https://jlib271.github.io/stem-ed-research-programs/",
