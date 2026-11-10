@@ -1,0 +1,60 @@
+/* STEMEd+ Commons shared look for the STEMEd+ sites on GitHub Pages
+   (Jobs, Funding, Conferences, Digest, Graduate Programs, HuMeta Library).
+   Matches stemedplus.org: green band with the white logo, Manrope, green accents, rounded buttons.
+   Canonical copy: HuMeta standard/stemedplus_theme/. Load it after a site's own styles. */
+
+@font-face {
+  font-family: "Manrope";
+  src: url("manrope.woff") format("woff");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --sp-green: #014704;
+  --sp-green-dark: #013303;
+  --sp-green-soft: #e9f2e9;
+  --sp-green-line: #c6dcc7;
+  --sp-rust: #993319;
+  --accent: var(--sp-green);
+  --soft: var(--sp-green-soft);
+  --softline: var(--sp-green-line);
+  --accent-soft: var(--sp-green-soft);
+}
+
+body { font-family: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+h1, h2, h3, h4 { font-family: "Manrope", system-ui, sans-serif; letter-spacing: -0.01em; }
+h1 { font-weight: 800; }
+a { color: var(--sp-green); }
+
+/* The green band: logo on the left, STEMEd+ menu on the right. */
+.sp-bar { background: var(--sp-green); color: #fff; }
+.sp-bar .sp-in { max-width: 1100px; margin: 0 auto; padding: 14px 20px; display: flex; flex-wrap: wrap;
+                 align-items: center; justify-content: space-between; gap: 12px 24px; }
+.sp-logo { display: block; flex: none; }
+.sp-logo img { display: block; height: 56px; width: auto; }
+.sp-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; font-size: .92rem; font-weight: 600; }
+.sp-nav a { color: #fff; text-decoration: none; }
+.sp-nav a:hover, .sp-nav a:focus-visible { text-decoration: underline; text-underline-offset: 5px; }
+.sp-nav a[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.sp-nav a.sp-join { background: #fff; color: var(--sp-green); padding: 6px 16px; border-radius: 9999px; }
+.sp-nav a.sp-join:hover { background: var(--sp-green-soft); text-decoration: none; }
+.sp-bar a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+/* Buttons and pills, as on stemedplus.org. */
+.btn, .navbtn { border-radius: 9999px !important; }
+.btn { background: var(--sp-green); color: #fff; }
+.btn.secondary { background: #fff; color: var(--sp-green); border: 1px solid var(--sp-green); }
+.btn:hover { filter: brightness(1.12); }
+
+/* The "part of STEMEd+ Commons" box. */
+.join { background: var(--sp-green-soft); border-color: var(--sp-green-line); }
+
+input:focus, select:focus, textarea:focus { outline-color: var(--sp-green); }
+
+@media (max-width: 700px) {
+  .sp-logo img { height: 44px; }
+  .sp-nav { font-size: .88rem; gap: 6px 14px; }
+}
+.notice { border-color: var(--sp-green-line); }

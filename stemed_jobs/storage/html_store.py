@@ -46,10 +46,9 @@ def _join_box(where: str) -> str:
 
 
 LOGO_FILE = Path(__file__).with_name("stemedplus-commons-logo.png")
-STEMEDPLUS_LOGO_LINK = (
-    '<a class="stemedplus" href="https://stemedplus.org" title="STEMEd+ Commons">'
-    '<img src="stemedplus-commons-logo.png" alt="STEMEd+ Commons" width="139" height="48"></a>'
-)
+THEME_FILES = ("stemedplus-commons-logo-white.png", "stemedplus-theme.css", "manrope.woff")
+# The green STEMEd+ Commons band shared by all STEMEd+ sites (HuMeta standard/stemedplus_theme/).
+STEMEDPLUS_BAR = '<div class="sp-bar"><div class="sp-in"><a class="sp-logo" href="https://stemedplus.org/"><img src="stemedplus-commons-logo-white.png" alt="STEMEd+ Commons home" width="162" height="56"></a><nav class="sp-nav" aria-label="STEMEd+ Commons"><a href="https://stemedplus.org/">Home</a><a href="https://jlib271.github.io/stemed-jobs/" aria-current="page">Jobs</a><a href="https://jlib271.github.io/stemed-funding/">Funding</a><a href="https://jlib271.github.io/stemed-conferences/">Conferences</a><a href="https://jlib271.github.io/STEMEd-Digest/">Digest</a><a href="https://jlib271.github.io/stem-ed-research-programs/">Graduate Programs</a><a href="https://jlib271.github.io/HuMeta/">Instrument Library</a><a class="sp-join" href="https://stemedplus.hcommons.org/">Join STEMEd+</a></nav></div></div>'
 
 
 def render_index_html() -> str:
@@ -60,13 +59,15 @@ def render_index_html() -> str:
         '<meta charset="utf-8">',
         '<meta name="viewport" content="width=device-width, initial-scale=1">',
         "<title>STEMEd Jobs</title>",
-        "<style>.join { background: #e6f0f7; border: 1px solid #c9dcea; border-radius: 8px; padding: 10px 14px; "
-        "margin: 14px 0; } .join p { margin: 4px 0; } .stemedplus { display: inline-block; margin: 0 0 8px; } "
-        ".stemedplus img { display: block; height: 48px; width: auto; }</style>",
+        "<style>body { margin: 0; font: 16px/1.55 system-ui, sans-serif; color: #1d2433; background: #f7f8fa; } "
+        "main { max-width: 1100px; margin: 0 auto; padding: 20px 20px 40px; } "
+        ".join { border: 1px solid; border-radius: 8px; padding: 10px 14px; margin: 14px 0; } .join p { margin: 4px 0; } "
+        "ul { padding-left: 20px; } li { margin: 4px 0; }</style>",
+        '<link rel="stylesheet" href="stemedplus-theme.css">',
         "</head>",
         "<body>",
+        STEMEDPLUS_BAR,
         "<main>",
-        STEMEDPLUS_LOGO_LINK,
         _join_box("top"),
         "<h1>STEMEd Jobs</h1>",
         "<p>STEM education research and teaching opportunities, organized by audience and discipline.</p>",
@@ -112,6 +113,8 @@ def write_index_html(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_index_html(), encoding="utf-8")
     shutil.copyfile(LOGO_FILE, path.parent / LOGO_FILE.name)
+    for name in THEME_FILES:
+        shutil.copyfile(LOGO_FILE.with_name(name), path.parent / name)
 
 
 def _anchor_id(discipline: str) -> str:
