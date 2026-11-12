@@ -139,12 +139,14 @@ class CuratedFieldTests(unittest.TestCase):
         job = self._parse(
             title="Assistant Teaching Faculty in Mathematics", body=_paragraphs("Teach calculus.")
         )
-        self.assertEqual(job.categories, ["faculty"])
+        # "Teaching Faculty" is also a teaching-focused title, so it gets that audience too.
+        self.assertEqual(job.categories, ["faculty", "teaching"])
         self.assertEqual(job.disciplines, ["Mathematics"])
 
     def test_a_chosen_audience_replaces_the_keyword_guess(self):
         job = self._parse(title="Assistant Teaching Faculty in Mathematics", categories=("Positions", "Postdoc"))
-        self.assertEqual(job.categories, ["postdocs"])
+        # The chosen audience replaces the "faculty" guess; teaching-focused is added on top of it.
+        self.assertEqual(job.categories, ["postdocs", "teaching"])
 
     def test_nothing_under_the_reviewer_heading_is_published(self):
         body = _paragraphs(
