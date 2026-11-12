@@ -106,7 +106,16 @@ dropped cannot be recovered); postings with no posting date are not kept; a
 closed posting can linger until its window ends; and the run log shows
 `plus N kept from earlier runs` per feed. The PER Jobs (Blogger) feed instead
 asks for up to 100 entries with `max-results=100`.
-**Submitted positions (a curated feed).** The Seekers' Hub collects positions
+**Submitted positions, without a blog post.** The Seekers' Hub job form emails each submission to the
+editor, who pastes the email into the GitHub issue template "Add a submitted position (editors)" and adds
+the **approved** label. [The add-position workflow](.github/workflows/add-position.yml) saves it as
+`submitted/<id>.json` and republishes the site; every run reads `submitted/` as one more feed, "STEMEd+
+submissions". The email is read by the form's field names, so the Seekers' Hub form must use the fields in
+[docs/seekers-hub-form.md](docs/seekers-hub-form.md) (`python -m stemed_jobs.submitted --write-spec`
+regenerates it). The poster's name and email are never kept. To change or take down a position, edit or
+delete its file in `submitted/`. Create the `approved` and `position: add` labels once.
+
+**Submitted positions as blog posts (the earlier way, still read).** The Seekers' Hub collects positions
 through a form; an editor reviews each one and publishes it as a WordPress post in
 the Positions category. That category's feed is listed first in
 `config/feeds.json` with `"curated": true`, which changes how its posts are read:
