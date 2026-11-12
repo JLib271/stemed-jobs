@@ -1,0 +1,62 @@
+name: Add a submitted position
+
+# An editor pastes a Seekers' Hub job-form email into the "Add a submitted position (editors)" issue
+# template and adds the "approved" label. This saves the position as submitted/<id>.json, replies on the
+# issue, closes it, and starts "Regenerate job feeds". Only people with triage access or more can add
+# labels, so only editors can trigger it.
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+concurrency:
+  group: add-position
+  cancel-in-progress: false
+
+jobs:
+  add:
+    if: >-
+      github.event.label.name == 'approved' &&
+      (contains(github.event.issue.labels.*.name, 'position: add') ||
+       contains(github.event.issue.body, 'The form email, pasted whole'))
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r requirements.txt
+      - name: Read the email
+        id: read
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: python -m stemed_jobs.submitted --issue --result "$RUNNER_TEMP/reply.md"
+      - name: Save the position
+        if: steps.read.outputs.changed == 'true'
+        env:
+          POSITION: ${{ steps.read.outputs.position }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add submitted
+          git commit -m "Submitted position ${POSITION} (from #${ISSUE})"
+          git push
+      - name: Reply on the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          CHANGED: ${{ steps.read.outputs.changed }}
+        run: |
+          gh issue comment "$ISSUE" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/reply.md"
+          if [ "$CHANGED" = "true" ]; then
+            gh issue close "$ISSUE" --repo "$GITHUB_REPOSITORY"
+            gh workflow run regenerate-feeds.yml --repo "$GITHUB_REPOSITORY" --ref main
+          else
+            gh issue edit "$ISSUE" --repo "$GITHUB_REPOSITORY" --remove-label approved || true
+          fi

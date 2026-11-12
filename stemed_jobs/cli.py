@@ -20,6 +20,7 @@ from stemed_jobs.importers.rss import fetch_all
 from stemed_jobs.storage.html_store import write_audience_html, write_index_html
 from stemed_jobs.storage.json_store import write_jobs
 from stemed_jobs.storage.rss_store import AUDIENCES, write_rss_feeds
+from stemed_jobs.submitted import load as load_submitted
 
 
 def _report_feed_error(message: str) -> None:
@@ -35,6 +36,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Import jobs from configured RSS feeds.")
     parser.add_argument("--feeds", type=Path, default=Path("config/feeds.json"))
     parser.add_argument("--boards", type=Path, default=Path("config/job_boards.json"))
+    parser.add_argument("--submitted", type=Path, default=Path("submitted"),
+                        help="Folder of approved Seekers' Hub submissions (default: submitted/).")
     parser.add_argument("--output", type=Path, default=Path("output/jobs.json"))
     parser.add_argument("--feed-output", type=Path, default=Path("output/feeds"))
     parser.add_argument("--html-output", type=Path, default=Path("output"))
@@ -103,6 +106,11 @@ def main() -> int:
                 _report_feed_error(error)
             print("Error: every feed failed; existing output was left untouched.", file=sys.stderr)
             return 1
+        # Positions submitted through the Seekers' Hub form and approved on GitHub (submitted/*.json).
+        submitted_result = load_submitted(args.submitted)
+        results.append(submitted_result)
+        if submitted_result.error:
+            errors.append(submitted_result.error)
 
         previous = Previous([], {})
         if args.previous:
