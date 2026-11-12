@@ -100,6 +100,7 @@ def render_index_html() -> str:
         ("postdocs", "bioscience"),
         ("faculty", "physics"),
         ("staff", "learning-science"),
+        ("teaching", "chemistry"),
     ):
         relative_url = "feeds/{}/{}.xml".format(audience, discipline)
         lines.append(

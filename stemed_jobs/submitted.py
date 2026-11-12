@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from stemed_jobs.classification import classify_job
+from stemed_jobs.classification import classify_job, with_teaching
 from stemed_jobs.deadlines import extract_deadline, extract_review_start
 from stemed_jobs.disciplines import DISCIPLINES, classify_disciplines
 from stemed_jobs.models import Feed, FeedResult, Job
@@ -140,7 +140,7 @@ def to_job(p: dict) -> Job:
     disciplines = list(p.get("disciplines") or []) or classify_disciplines(p["title"], summary, ())
     return Job(id="submitted:" + p["id"], title=p["title"], company=p["institution"], location=p["location"],
                url=p["url"], published=published, summary=summary, source=FEED.name, source_url=FEED.url,
-               categories=audiences or categories, functions=functions, disciplines=disciplines,
+               categories=with_teaching(audiences or categories, p["title"], p["institution"]), functions=functions, disciplines=disciplines,
                deadline=deadline.isoformat() if deadline else "", review_date=review.isoformat() if review else "",
                curated=True)
 

@@ -100,7 +100,7 @@ class ApplyCarryOverTests(unittest.TestCase):
         carried = apply_carryover([_failed(MATH)], Previous([stale], {}), NOW)
         kept = carried.results[0].jobs[0]
         self.assertEqual(kept.disciplines, ["Mathematics"])
-        self.assertEqual(kept.categories, ["faculty"])
+        self.assertEqual(kept.categories, ["faculty", "teaching"])
 
     def test_the_feed_default_discipline_applies_when_resorting(self):
         stale = _job("old", MATH, title="Chern Instructor", summary="A three-year position.")

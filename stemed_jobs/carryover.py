@@ -23,7 +23,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 from urllib.request import Request, urlopen
 
-from stemed_jobs.classification import classify_job
+from stemed_jobs.classification import classify_job, with_teaching
 from stemed_jobs.dedup import canonical_url
 from stemed_jobs.disciplines import classify_disciplines
 from stemed_jobs.models import Feed, FeedResult, Job
@@ -133,8 +133,10 @@ def _parse_time(value: object) -> Optional[datetime]:
 def _reclassify(job: Job, feed: Feed) -> Job:
     """Re-sort a stored job with the current rules, which may have changed."""
     if feed.curated:
-        return replace(job, curated=True)  # the editor's categories stand; they are not keyword-derived
+        # The editor's categories stand; they are not keyword-derived. "teaching" is added on top.
+        return replace(job, curated=True, categories=with_teaching(list(job.categories), job.title, job.company))
     categories, functions = classify_job(job.title, job.summary)
+    categories = with_teaching(categories, job.title, job.company)
     disciplines = classify_disciplines(job.title, job.summary, feed.disciplines)
     return replace(job, categories=categories, functions=functions, disciplines=disciplines)
 

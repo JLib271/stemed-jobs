@@ -12,8 +12,8 @@ from stemed_jobs.relevance import is_stem_education_relevant
 NO_POSTINGS_TITLE = "No current postings"
 CHANNEL_LINK = "https://theseekershub.stemedplus.org/"
 
-AUDIENCES = ("graduates", "postdocs", "faculty", "staff")
-AUDIENCE_LABELS = {"staff": "Professional Staff"}
+AUDIENCES = ("graduates", "postdocs", "faculty", "staff", "teaching")
+AUDIENCE_LABELS = {"staff": "Professional Staff", "teaching": "Teaching-Focused"}
 
 
 def audience_label(audience: str) -> str:

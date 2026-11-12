@@ -7,7 +7,7 @@ from urllib.request import Request, urlopen
 
 import feedparser
 
-from stemed_jobs.classification import classify_job
+from stemed_jobs.classification import classify_job, with_teaching
 from stemed_jobs.dedup import dedupe_jobs
 from stemed_jobs.deadlines import extract_deadline, extract_review_start, parse_day
 from stemed_jobs.disciplines import DISCIPLINES, classify_disciplines
@@ -155,6 +155,7 @@ def _curated_job(entry, feed: Feed, title: str, url: str, identifier: str, publi
     categories, functions = classify_job(title, summary)
     if audiences:
         categories = audiences
+    categories = with_teaching(categories, title, fields.get("institution", ""))
     if not disciplines:
         disciplines = classify_disciplines(title, summary, feed.disciplines)
 
@@ -195,6 +196,7 @@ def parse_feed(content: bytes, feed: Feed) -> List[Job]:
             continue
         summary = _plain_text(entry.get("summary", ""))
         categories, functions = classify_job(title, summary)
+        categories = with_teaching(categories, title, _plain_text(entry.get("job_listing_company") or entry.get("author", "")))
         # The full text (content:encoded) often has the deadline the short summary cuts off.
         full_text = " ".join(_plain_text(part.get("value", "")) for part in entry.get("content", []) or [])
         published = _published(entry)

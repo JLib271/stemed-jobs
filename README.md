@@ -208,7 +208,7 @@ HTML job listings use the same relevance and discipline rules as the RSS
 feeds. Titles containing `DBER` are included only in the inferred audience
 category and the disciplines identified from the title and description.
 
-The run generates 52 filtered RSS 2.0 feeds (four audiences across 13
+The run generates 65 filtered RSS 2.0 feeds (five audiences across 13
 disciplines) under `output/feeds/{audience}/{discipline}.xml`; for example,
 `output/feeds/graduates/chemistry.xml` (an "&" in a label is spelled "and", as
 in `faculty/history-and-philosophy-of-science.xml`). A feed with no jobs holds one placeholder item titled "No current postings", so feed readers and WordPress RSS widgets show that instead of an error; it disappears as soon as a job matches. The HTML links default to `/feeds/...`.
@@ -321,3 +321,13 @@ form a fourth audience, `staff`, shown as "Professional Staff" with feeds under
 development terms place a job in Learning Science, and a department named in
 the title (for example "Department of Nursing") adds its own discipline. A
 title that names a professor, lecturer or instructor stays a faculty post.
+
+**Teaching-focused jobs** form a fifth audience, `teaching`, shown as "Teaching-Focused", with an HTML section
+(`output/teaching-jobs.html`) and feeds under `output/feeds/teaching/`. It overlaps the others: a lecturer post is
+listed under both Faculty and Teaching-Focused. A graduate, postdoctoral, or faculty job joins it when its title
+names a teaching-focused role (teaching professor, professor of teaching or of practice, teaching track or stream,
+lecturer, instructor, postdoctoral teaching fellow, IRACDA, graduate teaching assistantship) or the employer is a
+community, technical, or two-year college. Research posts that only mention teaching duties are not included.
+Curated (Seekers' Hub) posts keep the audiences their editor chose and gain Teaching-Focused by the same rule.
+Teaching postdoc programs that are not job postings (such as NIH IRACDA) are listed on
+[STEMEd+ Faculty Development](https://jlib271.github.io/stemed-faculty-development/).
