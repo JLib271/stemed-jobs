@@ -32,9 +32,9 @@ a { color: var(--sp-green); }
    (with submenus) on the right, then "Log in". Built by sp_bar.py; needs no JavaScript. */
 .sp-bar { background: var(--sp-green); color: #fff; font-family: "Manrope", system-ui, sans-serif; }
 .sp-bar .sp-in { display: flex; align-items: center; justify-content: space-between; gap: 12px 28px;
-                 min-height: 160px; padding: 10px 10px; flex-wrap: nowrap; }
+                 min-height: 140px; padding: 10px 10px; flex-wrap: nowrap; }
 .sp-logo { display: block; flex: none; }
-.sp-logo img { display: block; height: 104px; width: auto; }
+.sp-logo img { display: block; height: 91px; width: auto; }
 .sp-bar a { color: #fff; }
 .sp-bar a:focus-visible, .sp-burger:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .sp-nav { margin-left: auto; }
