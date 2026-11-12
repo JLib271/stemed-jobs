@@ -83,3 +83,45 @@ def classify_job(title: str, summary: str) -> Tuple[List[str], List[str]]:
     searchable_text = "{} {}".format(title, summary)
     functions = [function for function, pattern in _FUNCTION_RULES if pattern.search(searchable_text)]
     return categories, functions
+
+
+# Teaching-focused positions: a fifth, overlapping audience ("teaching") for people who want a career
+# centered on teaching. A job can be both, for example "faculty" and "teaching". Evidence must be in the
+# title or the hiring institution's name, so research-focused posts that merely mention teaching duties
+# are not included.
+_TEACHING_TITLE = re.compile(
+    r"\bteaching[- ](?:professors?|faculty|track|stream|postdoc\w*|fellow\w*|scholars?|associates?|specialists?)\b"
+    r"|\bprofessors?\s+of\s+(?:the\s+)?(?:teaching|practice|instruction)\b"
+    r"|\b(?:professors?|faculty)\s*,?\s*\(?(?:teaching|instructional)[- ](?:track|stream|line)\)?"
+    r"|\b(?:senior\s+|principal\s+|associate\s+)?lecturers?\b"
+    r"|\b(?:clinical\s+)?instructors?\b"
+    r"|\bpost[ -]?doctoral\s+(?:teaching|education(?:al)?)\s+(?:fellows?|scholars?|associates?|fellowships?)\b"
+    r"|\bpostdoc\w*\s+in\s+(?:teaching|stem education|science education|biology education)\b"
+    r"|\bIRACDA\b"
+    r"|\bgraduate\s+teaching\s+(?:assistant|assistantship|fellow)s?\b|\bteaching\s+assistantships?\b",
+    re.IGNORECASE,
+)
+_TEACHING_INSTITUTION = re.compile(
+    r"\bcommunity\s+college\b|\btechnical\s+(?:and\s+community\s+)?college\b|\btwo[- ]year\s+college\b"
+    r"|\bjunior\s+college\b|\bstate\s+technical\b",
+    re.IGNORECASE,
+)
+_ACADEMIC = ("graduates", "postdocs", "faculty")
+
+
+def is_teaching_focused(title: str, company: str = "", categories=()) -> bool:
+    """True when the title names a teaching-focused role, or the employer is a two-year college,
+    for graduate, postdoctoral, or faculty positions."""
+    if categories and not any(c in _ACADEMIC for c in categories):
+        return False
+    if _TEACHING_TITLE.search(title or ""):
+        return True
+    return bool(_TEACHING_INSTITUTION.search("{} {}".format(title or "", company or "")))
+
+
+def with_teaching(categories: List[str], title: str, company: str = "") -> List[str]:
+    """Add the overlapping "teaching" audience when the job is teaching-focused."""
+    categories = [c for c in categories if c != "teaching"]
+    if is_teaching_focused(title, company, categories):
+        categories.append("teaching")
+    return categories
