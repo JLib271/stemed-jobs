@@ -1,11 +1,14 @@
 name: Tests
 
-# Runs on every pull request and push to main, so a change that breaks the
+# Runs on every pull request and push to main (and when started by hand or by add-position), so a change that breaks the
 # configuration or the sorting is caught before it is merged and published.
 on:
   pull_request:
   push:
     branches: [main]
+  # The add-position workflow starts this on its pull request's branch; pull requests opened by a
+  # workflow don't start the tests on their own.
+  workflow_dispatch:
 
 permissions:
   contents: read
