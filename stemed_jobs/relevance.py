@@ -3,7 +3,7 @@ from typing import Dict, Pattern
 
 from stemed_jobs.disciplines import BIOSCIENCE_TERMS, CHEMISTRY_TERMS, EARTH_TERMS, HEALTH_TERMS, PHYSICS_TERMS
 from stemed_jobs import stemedplus_disciplines as shared
-from stemed_jobs.disciplines import DISCIPLINE_RULES, is_curriculum_role, matching_disciplines
+from stemed_jobs.disciplines import DISCIPLINE_RULES, is_curriculum_role, matching_disciplines, without_non_science_education
 from stemed_jobs.models import Job
 
 
@@ -161,4 +161,6 @@ def is_stem_education_relevant(job: Job, discipline: str) -> bool:
         return bool(_LEARNING_SCIENCE_TERMS.search(title) or _LEARNING_SCIENCE_TERMS.search(job.summary))
 
     pattern = _DISCIPLINE_SIGNALS.get(discipline)
+    if discipline == "Science Education":
+        title = without_non_science_education(title)
     return bool(pattern and pattern.search(title))

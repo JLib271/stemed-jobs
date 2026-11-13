@@ -52,8 +52,23 @@ _BROAD_UNIT = (
 )
 
 
+# "Social science education", "political science education" and the like are not science
+# education: drop them before the Science Education rule looks for "science education".
+NOT_SCIENCE_EDUCATION = re.compile(
+    r"\b(?:social|political|library|information|behaviou?ral|family and consumer|consumer|exercise|sport)"
+    r"\s+sciences?\s+education\b",
+    re.IGNORECASE,
+)
+
+
+def without_non_science_education(text: str) -> str:
+    return NOT_SCIENCE_EDUCATION.sub(" ", text)
+
+
 def matching_disciplines(text: str) -> List[str]:
-    return [name for name, pattern in DISCIPLINE_RULES if pattern.search(text)]
+    plain = without_non_science_education(text)
+    return [name for name, pattern in DISCIPLINE_RULES
+            if pattern.search(plain if name == "Science Education" else text)]
 
 
 def _first_unit_disciplines(patterns: Iterable[re.Pattern], text: str) -> List[str]:

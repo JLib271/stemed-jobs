@@ -219,6 +219,8 @@ Education/CER, Earth Science or Geoscience Education/GER/Environmental
 Education, and Bioscience or Biology Education/BER (or a biology field paired
 with Education). Engineering, Mathematics, Agriculture, Science Education,
 and Learning Science have corresponding education-research title signals.
+"Social science education" (and political, library, information, behavioral, consumer, exercise, and
+sport science education) never counts as Science Education, so a "History/Social Science Education" post is left out.
 History & Philosophy of Science, Human Dimensions, and Science & Health
 Communication include the fields themselves, not only education in them: a job qualifies when its
 title names the field ("Assistant Professor, History of Science", "Health
