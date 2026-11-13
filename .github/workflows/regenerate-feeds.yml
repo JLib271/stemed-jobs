@@ -35,6 +35,11 @@ jobs:
 
       - name: Refresh shared disciplines from HuMeta
         run: python -m stemed_jobs.stemedplus_disciplines --refresh
+      - name: Refresh the shared STEMEd+ look
+        continue-on-error: true
+        run: |
+          git clone --depth 1 https://github.com/JLib271/stemedplus-theme.git "$RUNNER_TEMP/stemedplus-theme"
+          python "$RUNNER_TEMP/stemedplus-theme/apply.py" .
 
       - name: Run tests
         run: python -m unittest discover -s tests -v

@@ -1,0 +1,10 @@
+{
+  "asset_dirs": [
+    "stemed_jobs/storage"
+  ],
+  "bars": [
+    {
+      "file": "stemed_jobs/storage/html_store.py"
+    }
+  ]
+}
