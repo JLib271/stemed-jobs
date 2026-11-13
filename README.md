@@ -151,7 +151,7 @@ Bioscience, Chemistry, Earth Science, Engineering, Health Education, History &
 Philosophy of Science, Human Dimensions, Learning Science, Mathematics, Physics, Science & Health
 Communication, and Science Education. The labels, their definitions and the
 words that match them come from the STEMEd+ discipline list shared across
-STEMEd+ Commons (HuMeta `standard/humeta/stemedplus_disciplines.json`, stored
+STEMEd+ Commons (the [HuMeta profile](https://github.com/JLib271/humeta-profile)'s `stemedplus_disciplines.json`, stored
 here as `stemed_jobs/stemedplus_disciplines.json`); each run refreshes the
 stored copy from HuMeta and keeps it if the download fails. History &
 Philosophy of Science covers HPS, history of medicine and technology, science
