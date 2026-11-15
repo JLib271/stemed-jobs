@@ -61,6 +61,15 @@ a { color: var(--sp-green); }
 .sp-toggle:focus-visible + .sp-burger { outline: 2px solid #fff; outline-offset: 3px; }
 
 /* Narrow screens: a "Menu" button opens the whole menu as a list under the band. */
+/* STEMEd+ Commons footer, as on stemedplus.org */
+.sp-footer { background: var(--sp-green); color: #fff; font-family: "Manrope", system-ui, sans-serif;
+  font-size: 14px; line-height: 1.4; text-align: center; padding: 30px 50px; margin-top: 40px; }
+.sp-footer .sp-fin { max-width: 90%; margin: 0 auto; }
+.sp-footer p { margin: 0; }
+.sp-footer a { color: #fff; text-decoration: underline; }
+.sp-footer a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (max-width: 700px) { .sp-footer { padding: 24px 20px; } .sp-footer .sp-fin { max-width: none; } }
+
 @media (max-width: 1100px) {
   .sp-bar .sp-in { flex-wrap: wrap; min-height: 0; padding: 12px 16px; gap: 10px 18px; }
   .sp-logo img { height: 60px; }
