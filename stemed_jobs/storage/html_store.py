@@ -20,10 +20,8 @@ RELATED_SITES = (
     ("STEMEd+ Funding", "https://jlib271.github.io/stemed-funding/", "open calls and deadlines for STEM+ education"),
     ("STEM+ Education Research Graduate Programs", "https://jlib271.github.io/stem-ed-research-programs/",
      "where to study STEM+ education research"),
-    ("STEMEd+ Professional Learning", "https://jlib271.github.io/stemed-professional-learning/",
-     "national programs for K-12 teachers and informal educators"),
-    ("STEMEd+ Faculty Development", "https://jlib271.github.io/stemed-faculty-development/",
-     "teaching professional development for college faculty, instructors, graduate students, and postdocs"),
+    ("STEMEd+ Professional Development", "https://jlib271.github.io/stemed-professional-development/",
+     "national programs for K-12 teachers, informal educators, college faculty and instructors, and graduate students and postdocs"),
 )
 
 

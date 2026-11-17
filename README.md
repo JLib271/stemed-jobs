@@ -335,4 +335,4 @@ lecturer, instructor, postdoctoral teaching fellow, IRACDA, graduate teaching as
 community, technical, or two-year college. Research posts that only mention teaching duties are not included.
 Curated (Seekers' Hub) posts keep the audiences their editor chose and gain Teaching-Focused by the same rule.
 Teaching postdoc programs that are not job postings (such as NIH IRACDA) are listed on
-[STEMEd+ Faculty Development](https://jlib271.github.io/stemed-faculty-development/).
+[STEMEd+ Professional Development](https://jlib271.github.io/stemed-professional-development/#faculty).
