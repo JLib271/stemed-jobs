@@ -19,6 +19,9 @@ HEALTH_TERMS = shared.terms("health_education")
 DISCIPLINE_RULES: Tuple[Tuple[str, re.Pattern], ...] = shared.rules()
 
 DISCIPLINES = tuple(name for name, _ in DISCIPLINE_RULES)
+# Listed only when a posting names them, never for postings about STEM in general (STEAM: Arts+STEM).
+NAMED_ONLY = shared.named_only_labels()
+GENERAL_DISCIPLINES = tuple(name for name in DISCIPLINES if name not in NAMED_ONLY)
 
 _DBER_TITLE = re.compile(r"\bDBER\b", re.IGNORECASE)
 
@@ -132,7 +135,7 @@ def _curriculum_disciplines(title: str, summary: str, default: Sequence[str]) ->
     if found:
         return _ordered(found)
     if _GENERAL_STEM.search(title):
-        return list(DISCIPLINES)
+        return list(GENERAL_DISCIPLINES)
     if _GENERAL_SCIENCE.search(_NOT_SCIENCE.sub(" ", plain_title)):
         return ["Science Education"]
     return _classify(plain_title, _CURRICULUM_PHRASE.sub(" ", summary), default)

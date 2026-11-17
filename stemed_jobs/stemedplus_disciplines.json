@@ -5,6 +5,7 @@
   "how_to_match": "A discipline matches text when 'terms' (a regular-expression alternation) matches as whole words, ignoring case, or when one of 'acronyms' matches as a whole word in capitals only (so 'per year' is not PER). In Python: re.compile(r'\\b(?:' + terms + r')\\b' + ''.join(r'|\\b(?-i:' + a + r')\\b' for a in acronyms), re.IGNORECASE).",
   "humeta_note": "humeta_disciplines lists the HuMeta discipline terms (ANZSRC 2020 Fields of Research) each discipline corresponds to.",
   "scope_note": "scope 'education': the discipline means education and education research in the field. scope 'field': it also includes the field itself (research, teaching, and practice), not only education in it.",
+  "named_only_note": "named_only true: only listings that name this discipline are listed under it. Listings open to every STEM+ field (general STEM education) are not, because the discipline is defined by something general STEM listings lack (for STEAM, the arts).",
   "disciplines": [
     {
       "id": "agriculture",
@@ -211,7 +212,8 @@
           "STEAM"
         ],
         "note": "STEAM matches in capitals only, so steam engines and steam power are not matched; lowercase steam counts only before words such as education, learning, or curriculum. 'Arts and sciences' is left out because it usually names a college or degree (College of Arts and Sciences), and 'the art and science of' is left out because it usually means craft, not the arts."
-      }
+      },
+      "named_only": true
     }
   ]
 }

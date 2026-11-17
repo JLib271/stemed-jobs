@@ -74,6 +74,11 @@ def field_labels(path: Path = VENDORED) -> Tuple[str, ...]:
     return tuple(d["label"] for d in load(path) if d.get("scope") == "field")
 
 
+def named_only_labels(path: Path = VENDORED) -> Tuple[str, ...]:
+    """Disciplines listed only for listings that name them, never for listings open to every STEM+ field."""
+    return tuple(d["label"] for d in load(path) if d.get("named_only"))
+
+
 def terms(discipline_id: str, path: Path = VENDORED) -> str:
     """The regex alternation of one discipline's terms, without word boundaries."""
     for d in load(path):
