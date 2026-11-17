@@ -53,6 +53,7 @@ approved label; the position then appears on STEMEd+ Jobs. No blog post is neede
     - Physics
     - Science & Health Communication
     - Science Education
+    - STEAM: Arts+STEM
 
 ## 6. Link to the official posting
 

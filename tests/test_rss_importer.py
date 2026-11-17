@@ -408,7 +408,7 @@ class RssImporterTests(unittest.TestCase):
             faculty_feed = ElementTree.parse(feed_directory / "faculty" / "chemistry.xml")
             postdoc_feed = ElementTree.parse(feed_directory / "postdocs" / "physics.xml")
 
-        self.assertEqual(count, 65)
+        self.assertEqual(count, 70)  # 5 audiences x 14 disciplines
         self.assertEqual(len(graduate_feed.findall("./channel/item")), 1)
         self.assertEqual(_job_titles(faculty_feed), [])
         self.assertEqual(_job_titles(postdoc_feed), [])
@@ -460,6 +460,7 @@ class RssImporterTests(unittest.TestCase):
                 "Physics",
                 "Science & Health Communication",
                 "Science Education",
+                "STEAM: Arts+STEM",
             ),
         )
         for board in load_job_boards(Path("config/job_boards.json")):
