@@ -8,7 +8,7 @@ from stemed_jobs import stemedplus_disciplines as shared
 LABELS = [
     "Agriculture", "Bioscience", "Chemistry", "Earth Science", "Engineering",
     "Health Education", "History & Philosophy of Science", "Human Dimensions", "Learning Science", "Mathematics", "Physics",
-    "Science & Health Communication", "Science Education",
+    "Science & Health Communication", "Science Education", "STEAM: Arts+STEM",
 ]
 
 
