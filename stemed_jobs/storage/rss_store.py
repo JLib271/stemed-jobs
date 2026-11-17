@@ -1,3 +1,4 @@
+import re
 from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
@@ -22,8 +23,9 @@ def audience_label(audience: str) -> str:
 
 
 def _slug(value: str) -> str:
-    """"History & Philosophy of Science" -> "history-and-philosophy-of-science"."""
-    return "-".join(value.lower().replace("&", " and ").split())
+    """"History & Philosophy of Science" -> "history-and-philosophy-of-science";
+    "STEAM: Arts+STEM" -> "steam-arts-stem" (letters and digits only, as on the STEMEd+ Digest)."""
+    return re.sub(r"[^a-z0-9]+", "-", value.lower().replace("&", " and ")).strip("-")
 
 
 def feed_relative_path(audience: str, discipline: str) -> str:

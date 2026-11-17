@@ -2,7 +2,7 @@
 import unittest
 
 from stemed_jobs.classification import classify_job
-from stemed_jobs.disciplines import DISCIPLINES, classify_disciplines
+from stemed_jobs.disciplines import GENERAL_DISCIPLINES, classify_disciplines
 from stemed_jobs.models import Job
 from stemed_jobs.relevance import is_stem_education_relevant
 
@@ -25,8 +25,12 @@ class CurriculumRoleTests(unittest.TestCase):
         self.assertEqual(feeds("Computer Science Curriculum Coordinator"), {("staff", "Engineering")})
         self.assertEqual(feeds("Science Curriculum Writer, Grades 6-8"), {("staff", "Science Education")})
 
-    def test_general_stem_lists_the_job_under_every_discipline(self):
-        self.assertEqual(feeds("STEM Curriculum Specialist"), {("staff", d) for d in DISCIPLINES})
+    def test_general_stem_lists_the_job_under_every_discipline_but_steam(self):
+        self.assertEqual(feeds("STEM Curriculum Specialist"), {("staff", d) for d in GENERAL_DISCIPLINES})
+        self.assertNotIn("STEAM: Arts+STEM", GENERAL_DISCIPLINES)
+
+    def test_steam_is_listed_only_when_named(self):
+        self.assertIn(("staff", "STEAM: Arts+STEM"), feeds("STEAM Curriculum Specialist"))
 
     def test_the_posting_can_supply_the_discipline(self):
         self.assertEqual(
