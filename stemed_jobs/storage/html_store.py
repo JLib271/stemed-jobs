@@ -38,7 +38,7 @@ def _join_box(where: str) -> str:
     """The STEMEd+ Commons invitation shown at the top and bottom of the page."""
     return (
         '<div class="join join-{}" role="note"><p><strong>STEMEd+ Jobs is part of STEMEd+ Commons.</strong> '
-        "Join free to deposit instruments in the {}, share your work in the {}, follow new work, and connect with "
+        "Join to deposit instruments in the {}, share your work in the {}, follow new work, and connect with "
         "STEM+ education researchers. You can sign in with GitHub, Google, ORCID, or your institution.</p>"
         "<p>{} · {}</p></div>"
     ).format(
