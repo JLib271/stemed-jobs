@@ -17,6 +17,7 @@ from stemed_jobs.dedup import dedupe_jobs
 from stemed_jobs.feed_sources.config import load_feeds
 from stemed_jobs.feed_sources.boards import load_job_boards
 from stemed_jobs.importers.rss import fetch_all
+from stemed_jobs.storage.board_store import write_board
 from stemed_jobs.storage.html_store import write_audience_html, write_index_html
 from stemed_jobs.storage.json_store import write_jobs
 from stemed_jobs.storage.rss_store import AUDIENCES, write_rss_feeds
@@ -37,7 +38,7 @@ def main() -> int:
     parser.add_argument("--feeds", type=Path, default=Path("config/feeds.json"))
     parser.add_argument("--boards", type=Path, default=Path("config/job_boards.json"))
     parser.add_argument("--submitted", type=Path, default=Path("submitted"),
-                        help="Folder of approved Seekers' Hub submissions (default: submitted/).")
+                        help="Folder of approved positions posted to STEMEd+ (default: submitted/).")
     parser.add_argument("--output", type=Path, default=Path("output/jobs.json"))
     parser.add_argument("--feed-output", type=Path, default=Path("output/feeds"))
     parser.add_argument("--html-output", type=Path, default=Path("output"))
@@ -106,7 +107,7 @@ def main() -> int:
                 _report_feed_error(error)
             print("Error: every feed failed; existing output was left untouched.", file=sys.stderr)
             return 1
-        # Positions submitted through the Seekers' Hub form and approved on GitHub (submitted/*.json).
+        # Positions posted to STEMEd+ and approved on GitHub (submitted/*.json).
         submitted_result = load_submitted(args.submitted)
         results.append(submitted_result)
         if submitted_result.error:
@@ -138,6 +139,7 @@ def main() -> int:
         write_status(carried.status, args.html_output / STATUS_FILE)
         feed_count = write_rss_feeds(jobs, args.feed_output)
         write_index_html(args.html_output / "index.html")
+        listed = write_board(jobs, boards, args.html_output / "board.json")
         for audience in AUDIENCES:
             output_path = args.html_output / "{}-jobs.html".format(audience)
             write_audience_html(jobs, audience, boards, output_path, args.feed_base_url)
@@ -147,6 +149,7 @@ def main() -> int:
 
     print("Wrote {} jobs from {} feed(s) to {}.".format(len(jobs), len(feeds) - len(errors), args.output))
     print("Wrote {} audience/discipline RSS feeds to {}.".format(feed_count, args.feed_output))
+    print("Wrote the jobs page with {} listed job(s) (board.json).".format(listed))
     print("Wrote Pages index and audience HTML sections for {} to {}.".format(", ".join(AUDIENCES), args.html_output))
     for entry in carried.status.values():
         if "items" in entry:

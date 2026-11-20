@@ -13,7 +13,7 @@ class Feed:
     # an earlier run for this many days after it was posted, even when the board
     # no longer lists it. 0 (the default) keeps nothing extra.
     retain_days: int = 0
-    # For a feed of editor-reviewed posts (such as the Seekers' Hub submissions):
+    # For a feed of editor-reviewed posts (such as the former Seekers' Hub):
     # the post's own categories decide its audience and disciplines, the
     # "Institution:", "Location:" and deadline lines in its body fill in the
     # details, and the keyword relevance screening is skipped because an editor

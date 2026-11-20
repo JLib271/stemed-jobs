@@ -1,16 +1,17 @@
-"""Positions submitted through the Seekers' Hub form, without a blog post in between.
+"""Positions posted directly to STEMEd+ Jobs.
 
 How it works:
 
-1. Someone fills in the job form on the Seekers' Hub, which emails the submission to the editor.
-2. The editor pastes that email into the GitHub issue template "Add a submitted position (editors)"
-   and adds the "approved" label.
+1. Someone fills in the "Post a job" form on GitHub (.github/ISSUE_TEMPLATE/post-a-job.yml), or sends the
+   position through the stemedplus.org contact form and an editor enters it with that same GitHub form.
+2. An editor reviews the issue and adds the "approved" label.
 3. .github/workflows/add-position.yml runs `python -m stemed_jobs.submitted --issue`, which reads the
-   email by its field names and saves the position as `submitted/<id>.json`, then republishes the site.
+   issue by its field names and saves the position as `submitted/<id>.json`, then republishes the site.
+   (The older editors' template, which takes a pasted email written with the same field names, still works.)
 4. Every run of the site reads `submitted/` as one more feed ("STEMEd+ submissions"). Positions leave the
    site on the same rules as any other (a stated deadline, or the academic hiring year).
 
-    python -m stemed_jobs.submitted --write-spec     # rewrite docs/seekers-hub-form.md and the issue form
+    python -m stemed_jobs.submitted --write-spec     # rewrite docs/job-form.md and both issue forms
 """
 import argparse
 import datetime as dt
@@ -29,11 +30,12 @@ from stemed_jobs.models import Feed, FeedResult, Job
 
 ROOT = Path(__file__).resolve().parent.parent
 FOLDER = ROOT / "submitted"
-SPEC = ROOT / "docs" / "seekers-hub-form.md"
+SPEC = ROOT / "docs" / "job-form.md"
 TEMPLATE = ROOT / ".github" / "ISSUE_TEMPLATE" / "add-submitted-position.yml"
-FEED = Feed(name="STEMEd+ submissions", url="https://theseekershub.stemedplus.org/", curated=True)
+PUBLIC_TEMPLATE = ROOT / ".github" / "ISSUE_TEMPLATE" / "post-a-job.yml"
+FEED = Feed(name="STEMEd+ submissions", url="https://jlib271.github.io/stemed-jobs/", curated=True)
 
-# Field key -> the field's name on the Seekers' Hub form (the email shows these names).
+# Field key -> the field's name on the job form (the issue shows these names as headings).
 LABELS: Dict[str, str] = {
     "title": "Position title",
     "institution": "Institution or organization",
@@ -55,6 +57,7 @@ PASTE_LABEL = "The form email, pasted whole"
 
 def _norm(text: str) -> str:
     text = re.sub(r"\([^)]*\)", "", text or "")
+    text = re.sub(r"^\s*#+\s*", "", text)   # a GitHub issue form shows each field as a "### Field name" heading
     text = re.sub(r"[*:?]+\s*$", "", text.strip())
     return " ".join(text.lower().split())
 
@@ -70,9 +73,16 @@ def sections(text: str) -> Dict[str, str]:
     """The email's answers by field: a field starts at a line that is one of the form's field names,
     alone or followed by ":" and its answer."""
     out, key, buf = {}, None, []
-    for line in (text or "").replace("\r\n", "\n").split("\n"):
-        found, rest = _KEYS.get(_norm(line)), ""
-        if not found and ":" in line:
+    lines = (text or "").replace("\r\n", "\n").split("\n")
+    # A GitHub issue form starts each field with a "### Field name" heading. Then only headings start
+    # a field, so a line such as "Location: on campus" inside the description stays in the description.
+    headings = any(line.lstrip().startswith("#") and _KEYS.get(_norm(line)) for line in lines)
+    for line in lines:
+        if headings and not line.lstrip().startswith("#"):
+            found, rest = None, ""
+        else:
+            found, rest = _KEYS.get(_norm(line)), ""
+        if not found and not headings and ":" in line:
             left, right = line.split(":", 1)
             found, rest = _KEYS.get(_norm(left)), right
         if found:
@@ -105,6 +115,7 @@ def _slug(title: str, institution: str, url: str) -> str:
 def from_email(text: str, today: dt.date) -> Tuple[dict, List[str]]:
     """The position a pasted form email describes, and what is wrong with it (empty when fine)."""
     s = {k: v for k, v in sections(text).items() if k != "contact"}   # the poster's details are never kept
+    s = {k: ("" if v.strip() == "_No response_" else v) for k, v in s.items()}   # an issue form's empty answer
     get = lambda k: " ".join((s.get(k) or "").split())  # noqa: E731
     position = {
         "title": get("title"),
@@ -178,19 +189,18 @@ def handle_issue(body: str, today: dt.date, folder: Path = FOLDER) -> Tuple[bool
     path.write_text(json.dumps(position, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     where = ", ".join(position["audiences"]) or "matched by keywords"
     return True, position["id"], (f"{verb} **{position['title']}** at {position['institution']} (for: {where}). "
-                                  "It will appear on STEMEd+ Jobs and the Seekers' Hub after the site rebuilds, "
-                                  "within a few minutes.")
+                                  "It will appear on STEMEd+ Jobs after the site rebuilds, within a few minutes.")
 
 
 # ---------- the form spec and the GitHub issue form ----------
 
 def spec() -> str:
-    out = ["# The Seekers' Hub job form", "",
+    out = ["# The STEMEd+ job form", "",
            "Generated by `python -m stemed_jobs.submitted --write-spec`. Do not edit by hand.", "",
-           "Build these fields on the Seekers' Hub form, in this order, with **exactly** these field names and",
-           "choices, and have each submission emailed to the editor with every field and its name. The editor",
-           "pastes that email into the GitHub issue template \"Add a submitted position (editors)\" and adds the",
-           "approved label; the position then appears on STEMEd+ Jobs. No blog post is needed.", ""]
+           "The fields of the \"Post a job\" form on GitHub (.github/ISSUE_TEMPLATE/post-a-job.yml), in order.",
+           "The add-position workflow reads a position by these field names, so keep them exactly as they are.",
+           "A position sent through the stemedplus.org contact form is entered by an editor with the same form.",
+           "An editor adds the approved label; the position then appears on STEMEd+ Jobs.", ""]
     rows = [
         ("title", "single line of text", True, "", None),
         ("institution", "single line of text", True, "Its full name, not an abbreviation.", None),
@@ -203,8 +213,6 @@ def spec() -> str:
         ("review", "date", False, "Only if the ad says when review begins.", None),
         ("description", f"paragraph text, up to {DESCRIPTION_MAX} characters", True,
          "A short summary of the position.", None),
-        ("contact", "single line of text", True,
-         "Only the editor sees this; it is never published.", None),
     ]
     for n, (key, kind, required, note, options) in enumerate(rows, 1):
         out += [f"## {n}. {LABELS[key]}", "", f"- Type: {kind}", f"- Required: {'yes' if required else 'no'}"]
@@ -214,7 +222,6 @@ def spec() -> str:
             out.append("- Choices:")
             out += [f"    - {o}" for o in options]
         out.append("")
-    out += ["Put the contact field last, so nothing after it is read into the position.", ""]
     return "\n".join(out)
 
 
@@ -222,17 +229,17 @@ def issue_template() -> str:
     return "\n".join([
         "# Generated by: python -m stemed_jobs.submitted --write-spec",
         "name: Add a submitted position (editors)",
-        "description: Paste the email from the Seekers' Hub job form to add the position to STEMEd+ Jobs.",
+        "description: Paste a job submission written with the job form's field names to add it to STEMEd+ Jobs.",
         'title: "Position: "',
         "labels: [\"position: add\"]",
         "body:",
         "  - type: markdown",
         "    attributes:",
         "      value: >-",
-        "        For editors. Paste the whole notification email from the Seekers' Hub job form below, add the",
-        "        position title to the issue title, and submit. Then add the **approved** label. The email is",
-        "        read by the form's field names (docs/seekers-hub-form.md); the poster's name and email are",
-        "        never kept.",
+        "        For editors. Paste a submission written with the job form's field names (docs/job-form.md),",
+        "        add the position title to the issue title, and submit. Then add the **approved** label. For a",
+        "        position sent through the contact form, the \"Post a job\" form is usually easier. The",
+        "        poster's name and email are never kept.",
         "  - type: textarea",
         "    id: paste",
         "    attributes:",
@@ -242,6 +249,53 @@ def issue_template() -> str:
         "      required: true",
         "",
     ])
+
+
+def _yaml(text: str) -> str:
+    return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"'
+
+
+def public_template() -> str:
+    """The "Post a job" GitHub issue form. Its headings are the job form's field names, so the
+    add-position workflow reads an approved issue the same way it reads a pasted submission."""
+    lines = [
+        "# Generated by: python -m stemed_jobs.submitted --write-spec",
+        "name: Post a job",
+        "description: Post a position in STEM+ education research or teaching to STEMEd+ Jobs.",
+        'title: "Position: "',
+        "labels: [\"position: add\"]",
+        "body:",
+        "  - type: markdown",
+        "    attributes:",
+        "      value: >-",
+        "        Thank you for posting to STEMEd+ Jobs. An editor reviews each position before it appears.",
+        "        It stays listed until shortly after its application deadline, or for the academic hiring",
+        "        year if no deadline is given. Put the position title in the issue title too.",
+    ]
+
+    def field(kind, key, required, description="", options=None, multiple=False):
+        lines.extend([f"  - type: {kind}", f"    id: {key}", "    attributes:", f"      label: {_yaml(LABELS[key])}"])
+        if description:
+            lines.append(f"      description: {_yaml(description)}")
+        if options:
+            if multiple:
+                lines.append("      multiple: true")
+            lines.append("      options:")
+            lines.extend(f"        - {_yaml(o)}" for o in options)
+        lines.extend(["    validations:", f"      required: {'true' if required else 'false'}"])
+
+    field("input", "title", True)
+    field("input", "institution", True, "Its full name, not an abbreviation.")
+    field("input", "location", True, "City and state or country, or Remote.")
+    field("dropdown", "audiences", True, "Choose all that apply.", list(AUDIENCES), multiple=True)
+    field("dropdown", "disciplines", False, "Choose any. Leave blank if none fit; we will sort it by its text.",
+          list(DISCIPLINES), multiple=True)
+    field("input", "url", True, "Where applicants read the full ad and apply. Starts with https://")
+    field("input", "deadline", False, "For example January 15, 2027, or rolling.")
+    field("input", "review", False, "Only if the ad says when review begins.")
+    field("textarea", "description", True, f"A short summary of the position, up to {DESCRIPTION_MAX} characters.")
+    lines.append("")
+    return "\n".join(lines)
 
 
 def main(argv=None) -> int:
@@ -254,7 +308,8 @@ def main(argv=None) -> int:
         SPEC.parent.mkdir(parents=True, exist_ok=True)
         SPEC.write_text(spec(), encoding="utf-8")
         TEMPLATE.write_text(issue_template(), encoding="utf-8")
-        print(f"Wrote {SPEC} and {TEMPLATE}")
+        PUBLIC_TEMPLATE.write_text(public_template(), encoding="utf-8")
+        print(f"Wrote {SPEC}, {TEMPLATE}, and {PUBLIC_TEMPLATE}")
         return 0
     if args.issue:
         changed, pid, reply = handle_issue(os.environ.get("ISSUE_BODY", ""), dt.date.today())

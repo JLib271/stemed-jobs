@@ -91,6 +91,7 @@ class _CliHarness:
                 "--output", str(output / "jobs.json"),
                 "--feed-output", str(output / "feeds"),
                 "--html-output", str(output),
+                "--submitted", str(output / "no-submissions"),
                 *extra_args,
             ]
             if previous_files is not None:

@@ -10,10 +10,12 @@ from stemed_jobs.disciplines import DISCIPLINES
 from stemed_jobs.feed_sources.config import load_feeds
 from stemed_jobs.feed_sources.boards import load_job_boards
 from stemed_jobs.importers.rss import fetch_feed, ingest_feeds, parse_feed
-from stemed_jobs.models import Feed
+from datetime import datetime, timezone
+from stemed_jobs.models import Feed, JobBoard
 from stemed_jobs.models import Job
 from stemed_jobs.relevance import is_stem_education_relevant, requires_education_doctorate
-from stemed_jobs.storage.html_store import render_audience_html, render_index_html, write_index_html
+from stemed_jobs.storage.board_store import build_board
+from stemed_jobs.storage.html_store import STEMEDPLUS_BAR, render_audience_html, render_index_html, write_index_html
 from stemed_jobs.storage.json_store import write_jobs
 from stemed_jobs.storage.rss_store import NO_POSTINGS_TITLE, feed_relative_path, render_rss, write_rss_feeds
 
@@ -170,25 +172,50 @@ class RssImporterTests(unittest.TestCase):
                 )
                 self.assertEqual(requires_education_doctorate(job), expected)
 
-    def test_generates_pages_index_with_audience_and_feed_links(self):
+    def test_generates_jobs_page(self):
         html = render_index_html()
 
-        self.assertIn('<a href="faculty-jobs.html">Faculty</a>', html)
-        self.assertIn('<a href="postdocs-jobs.html">Postdocs</a>', html)
-        self.assertIn('<a href="graduates-jobs.html">Graduates</a>', html)
-        self.assertIn('<a href="feeds/faculty/physics.xml">Physics, Faculty</a>', html)
-        self.assertIn('href="https://stemedplus.hcommons.org/" target="_blank" rel="noopener noreferrer">More from STEMEd+ Commons</a>', html)
+        self.assertTrue(html.startswith("<!DOCTYPE html>"))
+        self.assertNotIn("%%", html)   # every slot in the template is filled
+        self.assertIn("<h1>STEMEd+ Jobs</h1>", html)
+        self.assertIn("fetch('board.json'", html)
+        self.assertIn('id="add"', html)
+        self.assertIn("post-a-job.yml", html)
+        self.assertIn("https://stemedplus.org/contact-us/", html)
+        self.assertEqual(html.count('<div class="sp-bar">'), 1)
+        self.assertEqual(html.count('<footer class="sp-footer">'), 1)
+        self.assertIn('href="https://stemedplus.hcommons.org/" target="_blank" rel="noopener noreferrer">More from STEMEd+ Commons', html)
         self.assertEqual(html.count("STEMEd+ Jobs is part of STEMEd+ Commons."), 2)  # top and bottom
-        self.assertLess(html.index("join-top"), html.index("Browse jobs"))
+        self.assertLess(html.index("join-top"), html.index('id="list"'))
         self.assertIn("works.hcommons.org/collections/humetainstrumentlibrary/", html)
         for site in ("STEMEd-Digest", "stemed-funding", "stem-ed-research-programs"):
             self.assertIn("https://jlib271.github.io/{}/".format(site), html)
-        self.assertTrue(html.startswith("<!doctype html>"))
+        self.assertNotIn("theseekershub", html.replace(STEMEDPLUS_BAR, ""))
 
         with tempfile.TemporaryDirectory() as temporary_directory:
             path = Path(temporary_directory) / "output" / "index.html"
             write_index_html(path)
             self.assertEqual(path.read_text(encoding="utf-8"), html)
+
+    def test_board_lists_only_screened_jobs(self):
+        def job(title, categories, disciplines, summary="", curated=False):
+            return Job(id=title, title=title, company="Example University", location="Ohio", url="https://example.edu/" + title,
+                       published="2026-11-01T00:00:00Z", summary=summary, source="Test", source_url="https://feeds.example/test",
+                       categories=categories, functions=[], disciplines=disciplines, curated=curated)
+
+        kept = job("Assistant Professor of Chemistry Education", ["faculty"], ["Chemistry"], "x" * 400)
+        dropped = job("Assistant Professor of Organic Chemistry", ["faculty"], ["Chemistry"])
+        no_audience = job("Chemistry Education Specialist", [], ["Chemistry"], curated=True)
+        board = build_board([kept, dropped, no_audience], [JobBoard("ACS", "https://acs.example", ["Chemistry"])],
+                            datetime(2026, 11, 20, tzinfo=timezone.utc))
+        self.assertEqual([i["t"] for i in board["items"]], [kept.title])
+        item = board["items"][0]
+        self.assertEqual((item["aud"], item["disc"], item["pub"]), (["faculty"], ["Chemistry"], "2026-11-01"))
+        self.assertLessEqual(len(item["sum"]), 261)
+        self.assertTrue(item["sum"].endswith("…"))
+        self.assertEqual(board["feeds"]["faculty"]["Chemistry"], "faculty/chemistry.xml")
+        self.assertEqual(board["today"], "2026-11-20")
+        self.assertEqual(board["boards"][0]["name"], "ACS")
 
     def test_ingests_multiple_feeds_and_writes_one_json_file(self):
         feeds = [Feed("Lab", "https://feeds.example/lab"), Feed("Schools", "https://feeds.example/schools")]
@@ -382,7 +409,7 @@ class RssImporterTests(unittest.TestCase):
         postdoc_root = ElementTree.fromstring(render_rss(jobs, "postdocs", "Bioscience"))
         faculty_root = ElementTree.fromstring(render_rss(jobs, "faculty", "Bioscience"))
 
-        self.assertEqual(postdoc_root.findtext("./channel/title"), "STEMEd Jobs: Bioscience jobs — Postdocs")
+        self.assertEqual(postdoc_root.findtext("./channel/title"), "STEMEd+ Jobs: Bioscience jobs — Postdocs")
         self.assertEqual(postdoc_root.findtext("./channel/item/title"), "Postdoctoral Fellow in Biology Education Research")
         self.assertIsNone(postdoc_root.find("./channel/item[2]"))
         self.assertEqual(
