@@ -217,6 +217,9 @@ class RssImporterTests(unittest.TestCase):
         self.assertEqual(board["today"], "2026-11-20")
         self.assertEqual(board["boards"][0]["name"], "ACS")
 
+        blogger = Job(**{**kept.__dict__, "id": "b", "company": "noreply@blogger.com (Florin Lung)"})
+        self.assertEqual(build_board([blogger], [])["items"][0]["org"], "")
+
     def test_ingests_multiple_feeds_and_writes_one_json_file(self):
         feeds = [Feed("Lab", "https://feeds.example/lab"), Feed("Schools", "https://feeds.example/schools")]
 
