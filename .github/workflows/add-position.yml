@@ -1,7 +1,7 @@
 name: Add a submitted position
 
-# An editor pastes a Seekers' Hub job-form email into the "Add a submitted position (editors)" issue
-# template and adds the "approved" label. This saves the position as submitted/<id>.json on a branch,
+# Someone posts a job with the "Post a job" issue form (or an editor enters one, or pastes a submission into
+# the "Add a submitted position (editors)" template), and an editor adds the "approved" label. This saves the position as submitted/<id>.json on a branch,
 # opens a pull request, runs the tests on it, and merges it when they pass (main is protected: changes
 # reach it only through a pull request whose "test" check passed). Then it replies on the issue, closes
 # it, and starts "Regenerate job feeds". If the tests fail, the pull request stays open for an editor.

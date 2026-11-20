@@ -4,7 +4,8 @@
   ],
   "bars": [
     {
-      "file": "stemed_jobs/storage/html_store.py"
+      "file": "stemed_jobs/storage/html_store.py",
+      "current": "https://jlib271.github.io/stemed-jobs/"
     }
   ]
 }

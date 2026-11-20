@@ -1,8 +1,8 @@
-# STEMEd Jobs
+# STEMEd+ Jobs
 
-A small, source-first job aggregator. The first milestone imports RSS feeds,
-normalizes their entries, and writes one JSON file. It does not scrape websites
-or implement a website, API, or database.
+The STEMEd+ Commons job board, at https://jlib271.github.io/stemed-jobs/. A small, source-first job aggregator:
+it imports public RSS feeds and positions posted directly to STEMEd+, screens and sorts them by audience and
+discipline, and publishes a searchable page, a JSON file, and RSS feeds. It does not scrape websites.
 
 ## Project layout
 
@@ -106,21 +106,22 @@ dropped cannot be recovered); postings with no posting date are not kept; a
 closed posting can linger until its window ends; and the run log shows
 `plus N kept from earlier runs` per feed. The PER Jobs (Blogger) feed instead
 asks for up to 100 entries with `max-results=100`.
-**Submitted positions, without a blog post.** The Seekers' Hub job form emails each submission to the
-editor, who pastes the email into the GitHub issue template "Add a submitted position (editors)" and adds
-the **approved** label. [The add-position workflow](.github/workflows/add-position.yml) saves it as
-`submitted/<id>.json` in a pull request, runs the tests, merges it when they pass, and republishes the site
-(main is protected, so changes reach it only through pull requests; if the tests fail, the pull request
-stays open and the workflow says so on the issue); every run reads `submitted/` as one more feed, "STEMEd+
-submissions". The email is read by the form's field names, so the Seekers' Hub form must use the fields in
-[docs/seekers-hub-form.md](docs/seekers-hub-form.md) (`python -m stemed_jobs.submitted --write-spec`
-regenerates it). The poster's name and email are never kept. To change or take down a position, edit or
-delete its file in `submitted/`. Create the `approved` and `position: add` labels once, and turn on "Allow GitHub Actions to create and
-approve pull requests" (Settings > Actions > General > Workflow permissions).
+**Positions posted to STEMEd+.** Employers post a job with the GitHub issue form "Post a job"
+(`.github/ISSUE_TEMPLATE/post-a-job.yml`, linked from the page's "Post a job" section), or send it through the
+stemedplus.org contact form, in which case an editor enters it with the same GitHub form. An editor reviews the
+issue and adds the **approved** label. [The add-position workflow](.github/workflows/add-position.yml) reads the
+issue by its field names, saves the position as `submitted/<id>.json` in a pull request, runs the tests, merges it
+when they pass, and republishes the site (main is protected, so changes reach it only through pull requests; if
+the tests fail, the pull request stays open and the workflow says so on the issue); every run reads `submitted/`
+as one more feed, "STEMEd+ submissions". The field names are listed in [docs/job-form.md](docs/job-form.md);
+`python -m stemed_jobs.submitted --write-spec` regenerates it and both issue forms. The older editors' template,
+"Add a submitted position (editors)", still takes a pasted submission written with the same field names. A
+poster's name and email are never kept. To change or take down a position, edit or delete its file in
+`submitted/`. Create the `approved` and `position: add` labels once, and turn on "Allow GitHub Actions to create
+and approve pull requests" (Settings > Actions > General > Workflow permissions).
 
-**Submitted positions as blog posts (the earlier way, still read).** The Seekers' Hub collects positions
-through a form; an editor reviews each one and publishes it as a WordPress post in
-the Positions category. That category's feed is listed first in
+**Editor-reviewed blog feeds (`"curated": true`).** The Seekers' Hub, a WordPress site that STEMEd+ Jobs has
+replaced, published approved positions as posts in a Positions category. Any feed like that can still be listed in
 `config/feeds.json` with `"curated": true`, which changes how its posts are read:
 the post's own categories decide where it goes (an audience: Graduate Student,
 Postdoc, Faculty or Professional Staff, plus one or more of the disciplines, with
@@ -199,8 +200,10 @@ the title or description. A posting may appear in multiple discipline groups. A
 posting with no discipline evidence gets an empty `disciplines` array and
 appears in no discipline list, rather than being guessed into one.
 
-The default run generates `output/index.html` as the Pages site homepage, plus
-WordPress-ready HTML snippets for graduates,
+The default run generates `output/index.html`, the STEMEd+ Jobs page (search, filters by audience, discipline,
+posting date, deadline and source, and a 30-day deadline strip), and `output/board.json`, the listings it shows:
+only jobs that pass the same screening as the RSS feeds, with shortened summaries. The page's design follows
+the other STEMEd+ boards (STEMEd+ Funding and the rest). The run also writes WordPress-ready HTML snippets for graduates,
 postdocs, and faculty in `output/graduates-jobs.html`,
 `output/postdocs-jobs.html`, and `output/faculty-jobs.html`. Each includes
 discipline buttons linking to section anchors, the filtered jobs, RSS links,
@@ -289,9 +292,8 @@ URL returned by GitHub.
 The workflow pins Ubuntu 24.04 to avoid automatic `ubuntu-latest` image
 migrations; update that runner version deliberately when you are ready.
 
-Publishing to GitHub Pages makes the generated outputs public, but does not
-edit the WordPress pages on Seekers Hub. Paste the generated audience HTML
-snippets into their corresponding WordPress category pages separately.
+Publishing to GitHub Pages makes the generated outputs public. The audience HTML snippets are no longer used
+by any WordPress page; they are kept for anyone who wants to embed a list elsewhere.
 
 ## Architecture direction
 
@@ -333,6 +335,6 @@ listed under both Faculty and Teaching-Focused. A graduate, postdoctoral, or fac
 names a teaching-focused role (teaching professor, professor of teaching or of practice, teaching track or stream,
 lecturer, instructor, postdoctoral teaching fellow, IRACDA, graduate teaching assistantship) or the employer is a
 community, technical, or two-year college. Research posts that only mention teaching duties are not included.
-Curated (Seekers' Hub) posts keep the audiences their editor chose and gain Teaching-Focused by the same rule.
+Positions posted to STEMEd+ (and curated feeds) keep the audiences their editor chose and gain Teaching-Focused by the same rule.
 Teaching postdoc programs that are not job postings (such as NIH IRACDA) are listed on
 [STEMEd+ Professional Development](https://jlib271.github.io/stemed-professional-development/#faculty).

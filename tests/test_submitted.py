@@ -11,7 +11,7 @@ from stemed_jobs.academic_year import filter_current
 
 TODAY = dt.date(2026, 11, 12)
 EMAIL = "\n".join([
-    "New submission: Seekers' Hub job form", "",
+    "New submission: STEMEd+ job form", "",
     "Position title: Assistant Professor of Chemistry Education",
     "Institution or organization: Example State University",
     "Location: Springfield, Illinois",
@@ -69,9 +69,33 @@ class SubmittedTest(unittest.TestCase):
             self.assertIn("Missing", reply)
             self.assertEqual(list(Path(tmp).iterdir()), [])
 
+    def test_reads_post_a_job_issue_form(self):
+        body = "\n\n".join([
+            "### Position title", "Funded PhD Position in Geoscience Education",
+            "### Institution or organization", "Example University",
+            "### Location", "Kingston, Rhode Island",
+            "### Who is this position for?", "Graduate Student, Postdoc",
+            "### Disciplines", "_No response_",
+            "### Link to the official posting", "https://jobs.example.edu/phd",
+            "### Application deadline", "December 15, 2026",
+            "### Review of applications begins", "_No response_",
+            "### Description", "Three years of support.\nLocation: on campus.",
+        ])
+        p, problems = submitted.from_email(body, TODAY)
+        self.assertEqual(problems, [])
+        self.assertEqual(p["location"], "Kingston, Rhode Island")   # not the "Location:" line in the description
+        self.assertEqual(p["audiences"], ["Graduate Student", "Postdoc"])
+        self.assertEqual((p["disciplines"], p["review"]), ([], ""))
+        self.assertEqual(p["description"], "Three years of support.\nLocation: on campus.")
+        with tempfile.TemporaryDirectory() as tmp:
+            changed, _, reply = submitted.handle_issue(body, TODAY, Path(tmp))
+            self.assertTrue(changed, reply)
+            self.assertEqual(submitted.load(Path(tmp)).jobs[0].deadline, "2026-12-15")
+
     def test_spec_and_template_up_to_date(self):
         self.assertEqual(submitted.SPEC.read_text(encoding="utf-8"), submitted.spec())
         self.assertEqual(submitted.TEMPLATE.read_text(encoding="utf-8"), submitted.issue_template())
+        self.assertEqual(submitted.PUBLIC_TEMPLATE.read_text(encoding="utf-8"), submitted.public_template())
 
 
 if __name__ == "__main__":

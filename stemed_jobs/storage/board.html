@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STEMEd+ Jobs</title>
+<meta name="description" content="Jobs in STEM+ education research and teaching: graduate positions, postdocs, faculty, professional staff, and teaching-focused roles, by discipline, updated every day.">
+<style>
+  :root { --ink:#1d2433; --muted:#5b6475; --line:#dde2ea; --bg:#f7f8fa; --card:#fff; --accent:#1f5f8b; --soft:#e6f0f7; --softline:#c9dcea;
+          --soon:#a3261b; --soonbg:#fdecea; --mid:#7a4f00; --midbg:#fdf3dc; --ok:#1f6b3a; --okbg:#e7f4ec; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  header { background: var(--card); border-bottom: 1px solid var(--line); }
+  header .wrap { padding-top: 26px; padding-bottom: 20px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--muted); max-width: 72ch; }
+  .links { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .btn { display: inline-block; padding: 8px 14px; border-radius: 6px; background: var(--accent); color: #fff; font-weight: 600; text-decoration: none; }
+  .btn.secondary { background: var(--card); color: var(--accent); border: 1px solid var(--accent); }
+  a { color: var(--accent); }
+  .soon { background: var(--soft); border-bottom: 1px solid var(--softline); }
+  .soon .wrap { padding-top: 18px; padding-bottom: 18px; }
+  .soon h2 { font-size: 1.05rem; margin: 0 0 10px; }
+  .strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .strip .c { background: var(--card); border: 1px solid var(--softline); border-radius: 8px; padding: 10px 12px; font-size: .92rem; }
+  .strip .c a { font-weight: 600; text-decoration: none; } .strip .c a:hover { text-decoration: underline; }
+  .strip .c .m { color: var(--muted); font-size: .82rem; margin-top: 3px; }
+  .controls { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0 8px; }
+  .controls .search { grid-column: span 2; }
+  label { display: block; font-size: .8rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+  input, select { width: 100%; padding: 9px 10px; font: inherit; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--ink); }
+  input:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin: 6px 0 12px; }
+  #count { color: var(--muted); font-size: .9rem; margin: 0; }
+  .bar .r { display: flex; gap: 10px; align-items: center; font-size: .9rem; }
+  .bar .r select { width: auto; padding: 5px 8px; }
+  button.link { font: inherit; font-size: .9rem; background: none; border: 0; color: var(--accent); cursor: pointer; padding: 0; text-decoration: underline; }
+  ol#list { list-style: none; margin: 0; padding: 0; }
+  ol#list li { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; }
+  .t { font-weight: 600; font-size: 1.04rem; text-decoration: none; } .t:hover { text-decoration: underline; }
+  .meta { color: var(--muted); font-size: .88rem; margin-top: 2px; }
+  .due { display: inline-block; margin-top: 8px; font-size: .88rem; font-weight: 600; padding: 3px 10px; border-radius: 6px; background: #eef0f3; }
+  .due.soon { background: var(--soonbg); color: var(--soon); } .due.mid { background: var(--midbg); color: var(--mid); } .due.ok { background: var(--okbg); color: var(--ok); }
+  .sum { margin: 8px 0 0; font-size: .94rem; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; align-items: center; }
+  .tag { font-size: .75rem; padding: 2px 8px; border-radius: 999px; background: #eef0f3; color: var(--ink); font-weight: 600; }
+  .tag.st { background: var(--soft); color: var(--accent); }
+  .tag.k { background: #fff; border: 1px solid var(--line); color: var(--muted); font-weight: 500; }
+  .acts { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: .88rem; }
+  .acts a { color: var(--accent); }
+  .more { text-align: center; margin: 14px 0 30px; }
+  .more button { font: inherit; padding: 8px 16px; border-radius: 6px; border: 1px solid var(--accent); background: var(--card); color: var(--accent); cursor: pointer; }
+  .empty { padding: 26px; text-align: center; color: var(--muted); }
+  .disclaimer { font-size: .85rem; color: var(--muted); margin: 0 0 10px; }
+  footer { background: var(--card); border-top: 1px solid var(--line); padding: 20px 0 30px; font-size: .9rem; color: var(--muted); }
+  footer h2 { font-size: 1rem; color: var(--ink); margin: 18px 0 6px; } footer h2:first-child { margin-top: 0; }
+  footer ul { margin: 6px 0 12px; padding-left: 18px; }
+  .feedpick { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; margin: 8px 0; }
+  .feedpick div { min-width: 200px; } .feedpick select { width: auto; }
+  code { background: #eef0f3; padding: 1px 5px; border-radius: 4px; font-size: .85em; word-break: break-all; }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (max-width: 860px) { .controls { grid-template-columns: 1fr 1fr; } .controls .search { grid-column: 1 / -1; } }
+  .join { background: #e6f0f7; border: 1px solid #c9dcea; border-radius: 8px; padding: 10px 14px; font-size: .93rem; color: #1d2433; }
+  .join p { margin: 4px 0; }
+  .join-top { margin: 14px 0 0; }
+  .join-bottom { margin: 0 0 16px; }
+</style>
+<link rel="stylesheet" href="stemedplus-theme.css">
+</head>
+<body>
+%%BAR%%
+%%NOTICE%%
+<header>
+  <div class="wrap">
+    <h1>STEMEd+ Jobs</h1>
+    <p>Jobs in STEM+ education research and teaching: graduate positions, postdocs, faculty, professional staff, and teaching-focused roles. Gathered every day from university and society job boards, plus positions posted directly to STEMEd+.</p>
+    <div class="links">
+      <a class="btn" href="#add">Post a job</a>
+      <a class="btn secondary" href="#rss">RSS feeds</a>
+      <a class="btn secondary" href="#boards">More job boards</a>
+    </div>
+  </div>
+</header>
+<div class="wrap">%%JOIN_TOP%%</div>
+<section class="soon" aria-labelledby="soon-h">
+  <div class="wrap">
+    <h2 id="soon-h">Applications due in the next 30 days</h2>
+    <div id="strip" class="strip"></div>
+  </div>
+</section>
+<main class="wrap">
+  <div class="controls" role="search">
+    <div class="search"><label for="q">Search</label><input id="q" type="search" placeholder="Title, institution, place, or topic" autocomplete="off"></div>
+    <div><label for="aud">Who it's for</label><select id="aud"><option value="">Everyone</option></select></div>
+    <div><label for="disc">Discipline</label><select id="disc"><option value="">All</option></select></div>
+    <div><label for="posted">Posted</label><select id="posted">
+      <option value="">Any time</option><option value="7">In the last week</option>
+      <option value="30">In the last 30 days</option><option value="90">In the last 3 months</option>
+    </select></div>
+    <div><label for="due">Application deadline</label><select id="due">
+      <option value="">Any</option><option value="dated">Has a stated deadline</option>
+      <option value="30">Within 30 days</option><option value="60">Within 60 days</option>
+    </select></div>
+    <div><label for="src">Where it was posted</label><select id="src"><option value="">All sources</option></select></div>
+  </div>
+  <div class="bar">
+    <p id="count" aria-live="polite"></p>
+    <div class="r">
+      <label for="sort" style="margin:0">Sort</label>
+      <select id="sort"><option value="new">Newest first</option><option value="deadline">Deadline, soonest first</option></select>
+      <button type="button" class="link" id="share">Copy link to this view</button>
+    </div>
+  </div>
+  <p class="disclaimer">Listings link to each employer's own posting. Always confirm details and deadlines there before you apply.</p>
+  <ol id="list"></ol>
+  <div class="more"><button id="more" type="button" hidden>Show more</button></div>
+</main>
+<footer>
+  <div class="wrap">
+    <h2 id="add">Post a job</h2>
+    <p>Hiring for a position in STEM+ education research or teaching? <a id="post" href="#">Post it with the GitHub form</a>, or use our <a href="https://stemedplus.org/contact-us/">contact form</a> and include the position title, institution, location, who it is for, a link to the official posting, the application deadline, and a short description. We review each position before it appears. It stays listed until shortly after its application deadline, or for the hiring year if no deadline is given.</p>
+    <h2 id="rss">RSS feeds</h2>
+    <p>Follow new jobs in a feed reader, one feed for each audience and discipline:</p>
+    <div class="feedpick">
+      <div><label for="faud">Who it's for</label><select id="faud"></select></div>
+      <div><label for="fdisc">Discipline</label><select id="fdisc"></select></div>
+    </div>
+    <p><code id="feedurl"></code> <button type="button" class="link" id="copyfeed">Copy</button> · <a id="openfeed" href="#">Open the feed</a></p>
+    <h2 id="boards">More job boards</h2>
+    <p>Society and field job boards worth checking directly, by discipline:</p>
+    <ul id="boardlist"></ul>
+    <h2>Where the listings come from</h2>
+    <p>Public RSS feeds from university, society, and field job boards, checked every day, plus positions posted directly to STEMEd+. We do not scrape websites. Each job is screened for STEM+ education research, teaching, human dimensions, or learning science, and sorted by audience and discipline automatically, so treat the sorting as a guide. <a id="wrong" href="#">Report a job in the wrong list</a> or <a id="suggestboard" href="#">suggest a job board</a>.</p>
+    <ul id="sources"></ul>
+    %%JOIN_BOTTOM%%
+    <h2><a href="https://stemedplus.hcommons.org/" target="_blank" rel="noopener noreferrer">More from STEMEd+ Commons<span class="vh"> (opens in a new tab)</span></a></h2>
+    <ul>%%RELATED%%</ul>
+    <p><a id="repo" href="https://github.com/JLib271/stemed-jobs">About this site</a> · <span id="updated"></span></p>
+  </div>
+</footer>
+<script>
+(function () {
+  'use strict';
+  var PAGE = 50, state = { d: null, shown: PAGE };
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  function el(id) { return document.getElementById(id); }
+  function node(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function ext(a) { a.target = '_blank'; a.rel = 'noopener noreferrer'; a.appendChild(node('span', 'vh', ' (opens in a new tab)')); return a; }
+  function link(href, text, cls) { var a = node('a', cls, text); a.href = href; return ext(a); }
+  function fill(sel, values, labels) { values.forEach(function (v, i) { var o = node('option', '', labels ? labels[i] : v); o.value = v; sel.appendChild(o); }); }
+  function pretty(iso) { if (!iso) return ''; var p = iso.split('-'); return p.length < 3 ? iso : MONTHS[+p[1] - 1] + ' ' + (+p[2]) + ', ' + p[0]; }
+  function days(iso) { return Math.round((new Date(iso + 'T00:00:00Z') - new Date(state.d.today + 'T00:00:00Z')) / 864e5); }
+  function audLabel(k) { for (var n = 0; n < state.d.audiences.length; n++) if (state.d.audiences[n].key === k) return state.d.audiences[n].label; return k; }
+  function source(i) { return i.cur ? 'Posted to STEMEd+' : i.src.replace(/ - (search: )?.*$/, ''); }
+
+  function badge(i) {
+    var b = node('span', 'due');
+    if (i.dl) {
+      var n = days(i.dl), when = n < 0 ? 'passed' : n === 0 ? 'today' : n === 1 ? 'tomorrow' : 'in ' + n + ' days';
+      b.textContent = 'Apply by ' + pretty(i.dl) + ' · ' + when;
+      b.className += n < 0 ? '' : n <= 14 ? ' soon' : n <= 45 ? ' mid' : ' ok';
+      return b;
+    }
+    if (i.rv) { b.textContent = 'Review of applications begins ' + pretty(i.rv); return b; }
+    return null;
+  }
+
+  function matches(i) {
+    var q = el('q').value.trim().toLowerCase(), a = el('aud').value, d = el('disc').value,
+        p = el('posted').value, du = el('due').value, s = el('src').value;
+    if (q && (i.t + ' ' + i.org + ' ' + i.loc + ' ' + i.sum).toLowerCase().indexOf(q) === -1) return false;
+    if (a && i.aud.indexOf(a) === -1) return false;
+    if (d && i.disc.indexOf(d) === -1) return false;
+    if (p && !(i.pub && days(i.pub) >= -p)) return false;
+    if (du === 'dated' && !i.dl) return false;
+    if (du && du !== 'dated' && !(i.dl && days(i.dl) >= 0 && days(i.dl) <= +du)) return false;
+    if (s && source(i) !== s) return false;
+    return true;
+  }
+
+  function card(i) {
+    var li = document.createElement('li');
+    li.appendChild(link(i.url, i.t, 't'));
+    li.appendChild(node('div', 'meta', [i.org, i.loc].filter(Boolean).join(' · ')));
+    var b = badge(i); if (b) li.appendChild(b);
+    if (i.sum) li.appendChild(node('p', 'sum', i.sum));
+    var tags = node('div', 'tags');
+    i.aud.forEach(function (x) { tags.appendChild(node('span', 'tag st', audLabel(x))); });
+    i.disc.forEach(function (x) { tags.appendChild(node('span', 'tag', x)); });
+    if (i.cur) tags.appendChild(node('span', 'tag k', 'Posted to STEMEd+'));
+    li.appendChild(tags);
+    var acts = node('div', 'acts');
+    acts.appendChild(link(i.url, 'Full posting'));
+    acts.appendChild(node('span', 'meta', (i.pub ? 'Posted ' + pretty(i.pub) + ' · ' : '') + 'via ' + source(i)));
+    acts.appendChild(link(issueUrl('wrong-list.yml', 'Sorting: ' + i.t), 'Wrong list?'));
+    li.appendChild(acts);
+    return li;
+  }
+
+  function sorted(items) {
+    if (el('sort').value !== 'deadline') return items;   // already newest first
+    return items.slice().sort(function (a, b) {
+      var x = a.dl && days(a.dl) >= 0 ? a.dl : '9999', y = b.dl && days(b.dl) >= 0 ? b.dl : '9999';
+      return x < y ? -1 : x > y ? 1 : 0;
+    });
+  }
+
+  function render() {
+    var items = sorted(state.d.items.filter(matches)), list = el('list');
+    list.innerHTML = '';
+    el('count').textContent = items.length + (items.length === 1 ? ' job' : ' jobs');
+    if (!items.length) { list.appendChild(node('li', 'empty', 'Nothing matches. Try clearing a filter.')); el('more').hidden = true; return; }
+    items.slice(0, state.shown).forEach(function (i) { list.appendChild(card(i)); });
+    el('more').hidden = items.length <= state.shown;
+  }
+
+  var IDS = ['q', 'aud', 'disc', 'posted', 'due', 'src', 'sort'];
+  function defaultValue(e) { return e.tagName === 'SELECT' ? e.options[0].value : ''; }
+  function viewHash() {
+    return IDS.map(function (id) { var e = el(id); return e.value !== defaultValue(e) ? id + '=' + encodeURIComponent(e.value) : null; }).filter(Boolean).join('&');
+  }
+  function readHash() {
+    location.hash.replace(/^#/, '').split('&').forEach(function (p) {
+      var kv = p.split('='); if (IDS.indexOf(kv[0]) !== -1 && kv.length === 2) el(kv[0]).value = decodeURIComponent(kv[1]);
+    });
+  }
+  function changed() { state.shown = PAGE; var h = viewHash(); history.replaceState(null, '', h ? '#' + h : location.pathname + location.search); render(); }
+
+  function strip() {
+    var box = el('strip'), soon = state.d.items.filter(function (i) { return i.dl && days(i.dl) >= 0 && days(i.dl) <= 30; })
+      .sort(function (a, b) { return a.dl < b.dl ? -1 : a.dl > b.dl ? 1 : 0; }).slice(0, 8);
+    if (!soon.length) { box.appendChild(node('p', '', 'No stated deadlines in the next 30 days.')); return; }
+    soon.forEach(function (i) {
+      var c = node('div', 'c'); c.appendChild(link(i.url, i.t));
+      c.appendChild(node('div', 'm', i.org + ' · due ' + pretty(i.dl)));
+      box.appendChild(c);
+    });
+  }
+
+  function issueUrl(template, title) { return state.d.repo_url + '/issues/new?template=' + template + (title ? '&title=' + encodeURIComponent(title) : ''); }
+
+  function feedPicker() {
+    var d = state.d;
+    fill(el('faud'), d.audiences.map(function (a) { return a.key; }), d.audiences.map(function (a) { return a.label; }));
+    fill(el('fdisc'), d.disciplines);
+    function show() {
+      var url = new URL('feeds/' + d.feeds[el('faud').value][el('fdisc').value], location.href).href;
+      el('feedurl').textContent = url; el('openfeed').href = url; el('copyfeed').textContent = 'Copy';
+    }
+    el('faud').addEventListener('input', show); el('fdisc').addEventListener('input', show);
+    el('copyfeed').addEventListener('click', function () { navigator.clipboard && navigator.clipboard.writeText(el('feedurl').textContent); el('copyfeed').textContent = 'Copied'; });
+    show();
+  }
+
+  function boardList() {
+    var ul = el('boardlist');
+    state.d.boards.slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).forEach(function (b) {
+      var li = document.createElement('li'); li.appendChild(link(b.url, b.name));
+      if (b.disciplines.length) li.appendChild(document.createTextNode(': ' + b.disciplines.join(', ')));
+      ul.appendChild(li);
+    });
+  }
+
+  function sourceList() {
+    var counts = {};
+    state.d.items.forEach(function (i) { var s = source(i); counts[s] = (counts[s] || 0) + 1; });
+    var names = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a] || a.localeCompare(b); });
+    fill(el('src'), names);
+    names.forEach(function (s) { el('sources').appendChild(node('li', '', s + ': ' + counts[s] + (counts[s] === 1 ? ' job' : ' jobs'))); });
+  }
+
+  function init(d) {
+    state.d = d;
+    fill(el('aud'), d.audiences.map(function (a) { return a.key; }), d.audiences.map(function (a) { return a.label; }));
+    fill(el('disc'), d.disciplines);
+    sourceList();
+    readHash();
+    el('post').href = issueUrl('post-a-job.yml'); ext(el('post'));
+    el('wrong').href = issueUrl('wrong-list.yml'); ext(el('wrong'));
+    el('suggestboard').href = issueUrl('suggest-board.yml'); ext(el('suggestboard'));
+    ext(el('repo'));
+    el('updated').textContent = 'Updated ' + pretty(d.generated.slice(0, 10)) + '.';
+    strip(); feedPicker(); boardList();
+    IDS.forEach(function (id) { el(id).addEventListener('input', changed); });
+    el('more').addEventListener('click', function () { state.shown += PAGE; render(); });
+    el('share').addEventListener('click', function () { navigator.clipboard && navigator.clipboard.writeText(location.href); el('share').textContent = 'Link copied'; });
+    render();
+    var jump = { '#add': 'add', '#rss': 'rss', '#boards': 'boards' }[location.hash];
+    if (jump) el(jump).scrollIntoView();
+  }
+
+  fetch('board.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(init).catch(function () {
+    el('list').appendChild(node('li', 'empty', 'The listings could not be loaded. Please try again later.'));
+  });
+})();
+</script>
+%%FOOTER%%
+</body>
+</html>

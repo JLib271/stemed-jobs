@@ -11,7 +11,7 @@ from stemed_jobs.relevance import is_stem_education_relevant
 
 
 NO_POSTINGS_TITLE = "No current postings"
-CHANNEL_LINK = "https://theseekershub.stemedplus.org/"
+CHANNEL_LINK = "https://jlib271.github.io/stemed-jobs/"
 
 AUDIENCES = ("graduates", "postdocs", "faculty", "staff", "teaching")
 AUDIENCE_LABELS = {"staff": "Professional Staff", "teaching": "Teaching-Focused"}
@@ -36,7 +36,7 @@ def render_rss(jobs: Iterable[Job], audience: str, discipline: str) -> bytes:
     root = ElementTree.Element("rss", {"version": "2.0"})
     channel = ElementTree.SubElement(root, "channel")
     title = "{} jobs — {}".format(discipline, audience_label(audience))
-    ElementTree.SubElement(channel, "title").text = "STEMEd Jobs: " + title
+    ElementTree.SubElement(channel, "title").text = "STEMEd+ Jobs: " + title
     ElementTree.SubElement(channel, "description").text = (
         "{} opportunities in {} across STEM education research and teaching. "
         "Listings are screened for STEM education research, STEM teaching, human dimensions, or cognitive science.".format(

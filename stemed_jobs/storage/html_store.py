@@ -26,7 +26,8 @@ RELATED_SITES = (
 
 
 def _external_link(url: str, text: str) -> str:
-    return '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>'.format(escape(url, quote=True), escape(text))
+    return '<a href="{}" target="_blank" rel="noopener noreferrer">{}<span class="vh"> (opens in a new tab)</span></a>'.format(
+        escape(url, quote=True), escape(text))
 
 
 COLLECTION_URL = "https://works.hcommons.org/collections/humetainstrumentlibrary/"
@@ -55,70 +56,31 @@ THEME_FILES = ("stemedplus-commons-logo-white.png", "stemedplus-theme.css", "man
 # The green STEMEd+ Commons band shared by all STEMEd+ sites (https://github.com/JLib271/stemedplus-theme; refreshed by the build workflow).
 STEMEDPLUS_BAR = '<div class="sp-bar"><div class="sp-in"><a class="sp-logo" href="https://stemedplus.org/"><img src="stemedplus-commons-logo-white.png" alt="STEMEd+ Commons home" width="263" height="91"></a><input type="checkbox" id="sp-menu-toggle" class="sp-toggle"><label for="sp-menu-toggle" class="sp-burger"><span class="sp-burger-icon" aria-hidden="true"></span>Menu</label><nav class="sp-nav" aria-label="STEMEd+ Commons"><ul class="sp-top"><li class="sp-has"><a href="https://stemedplus.org/stemed-features/">Features</a><svg class="sp-chev" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 4L6 8L10.5 4" stroke="currentColor" stroke-width="1.5"/></svg><ul class="sp-sub"><li><a href="https://works.hcommons.org/collections/stemedplus/records?q=&amp;l=list&amp;p=1&amp;s=10&amp;sort=newest">STEMEd+ Library</a></li><li><a href="https://stemedplus.org/sites/">STEMEd+ Sites</a></li><li><a href="https://stemedplus.profile.hcommons.org/members/">STEMEd+ Members</a></li><li><a href="https://stemedplus.org/stemed-groups/">STEMEd+ Groups</a></li></ul></li><li class="sp-has"><a href="https://stemedplus.org/stemed-resources/">Resources</a><svg class="sp-chev" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 4L6 8L10.5 4" stroke="currentColor" stroke-width="1.5"/></svg><ul class="sp-sub"><li><a href="https://stemedplus.org/stemed-commons-frequently-asked-questions/">STEMEd+ Commons FAQ</a></li><li><a href="https://theseekershub.stemedplus.org/">The Seekers’ Hub: A Job Board</a></li><li><a href="https://jlib271.github.io/stemed-funding/">Find Funding</a></li><li><a href="https://jlib271.github.io/STEMEd-Digest/">STEMEd+ Digest</a></li><li><a href="https://jlib271.github.io/stem-ed-research-programs/">STEMEd+ Graduate Programs</a></li><li><a href="https://jlib271.github.io/stemed-conferences/">STEMEd+ Conferences</a></li><li><a href="https://jlib271.github.io/stemed-professional-learning/">Professional Learning: K-12, Informal Education</a></li><li><a href="https://jlib271.github.io/stemed-faculty-development/">STEMEd+ Faculty Development</a></li><li><a href="https://jlib271.github.io/stemed-deadlines/">STEMEd+ Deadlines</a></li></ul></li><li class="sp-has"><a href="https://stemedplus.org/about/">Learn More</a><svg class="sp-chev" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 4L6 8L10.5 4" stroke="currentColor" stroke-width="1.5"/></svg><ul class="sp-sub"><li><a href="https://stemedplus.org/about/">About</a></li><li><a href="https://stemedplus.org/learn-more/">Governance</a></li><li><a href="https://stemedplus.org/vision-research/">Vision &amp; Research</a></li><li><a href="https://support.hcommons.org/">Help &amp; Support</a></li></ul></li><li><a href="https://stemedplus.org/collaborate/">Partner with Us</a></li><li><a href="https://stemedplus.org/contact-us/">Contact Us</a></li><li><a href="https://stemedplus.org/join-stemed/">Join STEMEd+</a></li><li><a href="https://stemedplus.org/stemed-commons-frequently-asked-questions/">Get Started &amp; FAQs</a></li></ul></nav><a class="sp-login" href="https://stemedplus.org/wp-login.php">Log in</a></div></div>'
 # Notice shown under the STEMEd+ menu bar while the site is being built out.
-STEMEDPLUS_NOTICE = '<div class="sp-notice" role="note" style="background:#fff7dc;border-bottom:1px solid #e8d9a0;color:#33301f;font:15px/1.5 system-ui,-apple-system,\'Segoe UI\',Roboto,sans-serif"><div style="max-width:1100px;margin:0 auto;padding:10px 20px"><strong>Under construction.</strong> These resources are currently being built out. We do not scrape the web; instead, we use public RSS feeds and APIs, or request permission where public feeds do not exist. Thank you for your patience! <a href="https://github.com/JLib271/stemed-jobs/issues/new?template=suggest-board.yml" style="color:#014704;font-weight:600">Suggest a resource</a>.</div></div>'
+STEMEDPLUS_NOTICE = '<div class="sp-notice" role="note" style="background:#fff7dc;border-bottom:1px solid #e8d9a0;color:#33301f;font:15px/1.5 system-ui,-apple-system,\'Segoe UI\',Roboto,sans-serif"><div style="max-width:1100px;margin:0 auto;padding:10px 20px"><strong>Under construction.</strong> These resources are currently being built out. We do not scrape the web; instead, we use public RSS feeds and APIs, or request permission where public feeds do not exist. Thank you for your patience! <a href="https://github.com/JLib271/stemed-jobs/issues/new?template=suggest-board.yml" style="color:#014704;font-weight:600">Suggest a resource</a> or <a href="https://stemedplus.org/contact-us/">use our contact form</a>.</div></div>'
 
 # The STEMEd+ Commons footer, as on stemedplus.org; filled in by stemedplus-theme's apply.py.
 STEMEDPLUS_FOOTER = '<footer class="sp-footer"><div class="sp-fin"><p><strong>This site is part of <a href="https://stemedplus.org/">STEMEd+ Commons</a>, a Commons within <a href="https://hcommons.org/">Knowledge Commons</a>. STEMEd+ Commons brings together STEM+ education communities to collectively build research insights and teaching innovations across disciplines. As an open access platform, STEMEd+ Commons helps ensure STEM+ education research and practice is accessible for all people, in all communities. This material is based upon work supported by the National Science Foundation under grants </strong><a href="https://www.nsf.gov/awardsearch/show-award/?AWD_ID=2226271">OAC-2226271</a><strong>, </strong><a href="https://www.nsf.gov/awardsearch/show-award/?AWD_ID=2321946">DRL-2321946</a><strong>, </strong><a href="https://www.nsf.gov/awardsearch/show-award/?AWD_ID=2531819">OAC-2531819</a> and by Michigan State University through the <a href="https://research.msu.edu/find-funding/msu-funding-opportunities/jenison-support">Jenison Fund</a>.</p></div></footer>'
 
 
+BOARD_TEMPLATE = Path(__file__).with_name("board.html")
+
+
 def render_index_html() -> str:
-    lines = [
-        "<!doctype html>",
-        '<html lang="en">',
-        "<head>",
-        '<meta charset="utf-8">',
-        '<meta name="viewport" content="width=device-width, initial-scale=1">',
-        "<title>STEMEd Jobs</title>",
-        "<style>body { margin: 0; font: 16px/1.55 system-ui, sans-serif; color: #1d2433; background: #f7f8fa; } "
-        "main { max-width: 1100px; margin: 0 auto; padding: 20px 20px 40px; } "
-        ".join { border: 1px solid; border-radius: 8px; padding: 10px 14px; margin: 14px 0; } .join p { margin: 4px 0; } "
-        "ul { padding-left: 20px; } li { margin: 4px 0; }</style>",
-        '<link rel="stylesheet" href="stemedplus-theme.css">',
-        "</head>",
-        "<body>",
-        STEMEDPLUS_BAR,
-        STEMEDPLUS_NOTICE,
-        "<main>",
-        _join_box("top"),
-        "<h1>STEMEd Jobs</h1>",
-        "<p>STEM education research and teaching opportunities, organized by audience and discipline.</p>",
-        "<h2>Browse jobs</h2>",
-        "<ul>",
-    ]
-    for audience in AUDIENCES:
-        lines.append(
-            '<li><a href="{}-jobs.html">{}</a></li>'.format(
-                escape(audience), escape(audience_label(audience))
-            )
-        )
-    lines.extend(
-        [
-            "</ul>",
-            "<h2>Subscribe to RSS feeds</h2>",
-            "<p>Choose an audience and discipline for a filtered RSS feed:</p>",
-            "<ul>",
-        ]
+    """The STEMEd+ Jobs page. The listings themselves load from board.json (see board_store.py)."""
+    related = "".join(
+        "<li>{}: {}</li>".format(_external_link(url, name), escape(about)) for name, url, about in RELATED_SITES
     )
-    for audience, discipline in (
-        ("graduates", "science-education"),
-        ("postdocs", "bioscience"),
-        ("faculty", "physics"),
-        ("staff", "learning-science"),
-        ("teaching", "chemistry"),
+    html = BOARD_TEMPLATE.read_text(encoding="utf-8")
+    for key, value in (
+        ("%%BAR%%", STEMEDPLUS_BAR),
+        ("%%NOTICE%%", STEMEDPLUS_NOTICE),
+        ("%%JOIN_TOP%%", _join_box("top")),
+        ("%%JOIN_BOTTOM%%", _join_box("bottom")),
+        ("%%RELATED%%", related),
+        ("%%FOOTER%%", STEMEDPLUS_FOOTER),
     ):
-        relative_url = "feeds/{}/{}.xml".format(audience, discipline)
-        lines.append(
-            '<li><a href="{}">{}, {}</a></li>'.format(
-                escape(relative_url, quote=True),
-                escape(discipline.replace("-", " ").title()),
-                escape(audience_label(audience)),
-            )
-        )
-    lines.extend(["</ul>", _join_box("bottom"), "<h2>{}</h2>".format(_external_link(COMMONS_URL, "More from STEMEd+ Commons")), "<ul>"])
-    for name, url, about in RELATED_SITES:
-        lines.append("<li>{}: {}</li>".format(_external_link(url, name), escape(about)))
-    lines.extend(["</ul>", "</main>", STEMEDPLUS_FOOTER, "</body>", "</html>", ""])
-    return "\n".join(lines)
+        html = html.replace(key, value)
+    return html
 
 
 def write_index_html(path: Path) -> None:
