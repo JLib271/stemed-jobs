@@ -185,7 +185,7 @@ class RssImporterTests(unittest.TestCase):
         self.assertEqual(html.count('<div class="sp-bar">'), 1)
         self.assertEqual(html.count('<footer class="sp-footer">'), 1)
         self.assertIn('href="https://stemedplus.hcommons.org/" target="_blank" rel="noopener noreferrer">More from STEMEd+ Commons', html)
-        self.assertEqual(html.count("STEMEd+ Jobs is part of STEMEd+ Commons."), 2)  # top and bottom
+        self.assertEqual(html.count("STEMEd+ Jobs is part of STEMEd+ Commons</strong>, which brings together"), 2)  # top and bottom
         self.assertLess(html.index("join-top"), html.index('id="list"'))
         self.assertIn("works.hcommons.org/collections/humetainstrumentlibrary/", html)
         for site in ("STEMEd-Digest", "stemed-funding", "stem-ed-research-programs"):
