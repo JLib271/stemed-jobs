@@ -189,7 +189,7 @@ class RssImporterTests(unittest.TestCase):
         self.assertLess(html.index("join-top"), html.index('id="list"'))
         self.assertIn("works.hcommons.org/collections/humetainstrumentlibrary/", html)
         for site in ("STEMEd-Digest", "stemed-funding", "stem-ed-research-programs"):
-            self.assertIn("https://jlib271.github.io/{}/".format(site), html)
+            self.assertIn("https://stemedplus.github.io/{}/".format(site), html)
         self.assertNotIn("theseekershub", html.replace(STEMEDPLUS_BAR, ""))
 
         with tempfile.TemporaryDirectory() as temporary_directory:

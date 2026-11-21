@@ -1,6 +1,6 @@
 # STEMEd+ Jobs
 
-The STEMEd+ Commons job board, at https://jlib271.github.io/stemed-jobs/. A small, source-first job aggregator:
+The STEMEd+ Commons job board, at https://stemedplus.github.io/stemed-jobs/. A small, source-first job aggregator:
 it imports public RSS feeds and positions posted directly to STEMEd+, screens and sorts them by audience and
 discipline, and publishes a searchable page, a JSON file, and RSS feeds. It does not scrape websites.
 
@@ -155,7 +155,7 @@ Bioscience, Chemistry, Earth Science, Engineering, Health Education, History &
 Philosophy of Science, Human Dimensions, Learning Science, Mathematics, Physics, Science & Health
 Communication, and Science Education. The labels, their definitions and the
 words that match them come from the STEMEd+ discipline list shared across
-STEMEd+ Commons (the [HuMeta profile](https://github.com/JLib271/humeta-profile)'s `stemedplus_disciplines.json`, stored
+STEMEd+ Commons (the [HuMeta profile](https://github.com/stemedplus/humeta-profile)'s `stemedplus_disciplines.json`, stored
 here as `stemed_jobs/stemedplus_disciplines.json`); each run refreshes the
 stored copy from HuMeta and keeps it if the download fails. History &
 Philosophy of Science covers HPS, history of medicine and technology, science
@@ -337,4 +337,4 @@ lecturer, instructor, postdoctoral teaching fellow, IRACDA, graduate teaching as
 community, technical, or two-year college. Research posts that only mention teaching duties are not included.
 Positions posted to STEMEd+ (and curated feeds) keep the audiences their editor chose and gain Teaching-Focused by the same rule.
 Teaching postdoc programs that are not job postings (such as NIH IRACDA) are listed on
-[STEMEd+ Professional Development](https://jlib271.github.io/stemed-professional-development/#faculty).
+[STEMEd+ Professional Development](https://stemedplus.github.io/stemed-professional-development/#faculty).
