@@ -5,6 +5,7 @@ disciplines it passed in. Summaries are shortened so the page loads quickly; the
 one click away.
 """
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, List, Optional, Sequence
@@ -27,6 +28,15 @@ def _short(text: str, limit: int = SUMMARY_CHARS) -> str:
     return cut + "…"
 
 
+_EMAIL = re.compile(r"\S+@\S+")
+
+
+def _organization(company: str) -> str:
+    """The employer's name, or "" when the feed gave a contact address instead (Blogger feeds such as PER
+    Jobs list "noreply@blogger.com (Author)" as the post's author)."""
+    return "" if _EMAIL.search(company or "") else (company or "")
+
+
 def board_entry(job: Job) -> Optional[dict]:
     """The job as the page shows it, or None when it is not listed."""
     audiences = [a for a in AUDIENCES if a in job.categories]
@@ -36,7 +46,7 @@ def board_entry(job: Job) -> Optional[dict]:
     return {
         "id": job.id,
         "t": job.title,
-        "org": job.company,
+        "org": _organization(job.company),
         "loc": job.location,
         "url": job.url,
         "pub": (job.published or "")[:10],
