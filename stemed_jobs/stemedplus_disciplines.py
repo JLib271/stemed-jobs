@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 SOURCE_URL = (
-    "https://raw.githubusercontent.com/JLib271/humeta-profile/main/stemedplus_disciplines.json"
+    "https://raw.githubusercontent.com/stemedplus/humeta-profile/main/stemedplus_disciplines.json"
 )
 VENDORED = Path(__file__).with_name("stemedplus_disciplines.json")
 _ID = re.compile(r"^[a-z][a-z0-9_]*$")

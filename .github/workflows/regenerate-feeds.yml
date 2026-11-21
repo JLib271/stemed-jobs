@@ -40,7 +40,7 @@ jobs:
       - name: Refresh the shared STEMEd+ look
         continue-on-error: true
         run: |
-          git clone --depth 1 https://github.com/JLib271/stemedplus-theme.git "$RUNNER_TEMP/stemedplus-theme"
+          git clone --depth 1 https://github.com/stemedplus/stemedplus-theme.git "$RUNNER_TEMP/stemedplus-theme"
           python "$RUNNER_TEMP/stemedplus-theme/apply.py" .
 
       - name: Run tests

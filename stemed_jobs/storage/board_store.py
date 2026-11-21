@@ -16,7 +16,7 @@ from stemed_jobs.relevance import is_stem_education_relevant
 from stemed_jobs.storage.rss_store import AUDIENCES, audience_label, feed_relative_path
 
 SUMMARY_CHARS = 260
-REPO_URL = "https://github.com/JLib271/stemed-jobs"
+REPO_URL = "https://github.com/stemedplus/stemed-jobs"
 CONTACT_URL = "https://stemedplus.org/contact-us/"
 
 

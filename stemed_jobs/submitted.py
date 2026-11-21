@@ -33,7 +33,7 @@ FOLDER = ROOT / "submitted"
 SPEC = ROOT / "docs" / "job-form.md"
 TEMPLATE = ROOT / ".github" / "ISSUE_TEMPLATE" / "add-submitted-position.yml"
 PUBLIC_TEMPLATE = ROOT / ".github" / "ISSUE_TEMPLATE" / "post-a-job.yml"
-FEED = Feed(name="STEMEd+ submissions", url="https://jlib271.github.io/stemed-jobs/", curated=True)
+FEED = Feed(name="STEMEd+ submissions", url="https://stemedplus.github.io/stemed-jobs/", curated=True)
 
 # Field key -> the field's name on the job form (the issue shows these names as headings).
 LABELS: Dict[str, str] = {
